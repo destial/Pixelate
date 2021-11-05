@@ -7,6 +7,8 @@ import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.noise.PerlinNoise;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.environment.tiles.TileCoalOre;
+import xyz.destiall.pixelate.environment.tiles.TileGrass;
 import xyz.destiall.pixelate.environment.tiles.TileGround;
 import xyz.destiall.pixelate.environment.tiles.TileWood;
 import xyz.destiall.pixelate.position.Location;
@@ -25,6 +27,8 @@ public class GeneratorBasic implements Generator {
         double divisor = 1.0/Tile.SIZE;
 
         double min = 1, max = 0;
+
+        //Main terrain generation
         for (int x = -Game.WIDTH; x <= Game.WIDTH; x+=Tile.SIZE) {
             for (int y = -Game.HEIGHT; y <= Game.HEIGHT; y+=Tile.SIZE) {
                 Tile tile;
@@ -35,15 +39,24 @@ public class GeneratorBasic implements Generator {
                 if(noiseValue > max) max = noiseValue;
 
                 if (noiseValue > 0.4) {
-                    tile = new TileWood(i++, (int) x, (int) y, world);
-                } else {
-                    tile = new TileGround(i++, (int) x, (int) y, world);
+                    if(noiseValue > 0.50)
+                        tile = new TileCoalOre(i++, (int) x, (int) y, world);
+                    else
+                        tile = new TileWood(i++, (int) x, (int) y, world);
+
+                } else if (noiseValue < -0.2) {
+                    tile = new TileGrass(i++, (int) x, (int) y, world);
                 }
+                else
+                    tile = new TileGround(i++, (int)x, (int) y, world);
                 if (Math.random() > 0.98) world.spawnEntity(new Location(x, y, world), Entity.Type.ZOMBIE);
                 tiles.add(tile);
             }
         }
 
-        //System.out.println("Noise minmax: " + min + " , " + max);
+        //Primitive ore generation
+
+
+        System.out.println("Noise minmax: " + min + " , " + max);
     }
 }

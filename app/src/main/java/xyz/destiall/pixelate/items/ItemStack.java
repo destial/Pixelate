@@ -16,7 +16,7 @@ public class ItemStack extends Imageable {
     }
 
     public ItemStack(Material material, int amount) {
-        super(Game.getTileMap(), 1, 2);
+        super(Game.getTileMap(), 1, 4);
         this.material = material;
         this.amount = amount;
         if (!material.isBlock()) {

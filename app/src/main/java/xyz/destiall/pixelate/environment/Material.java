@@ -5,6 +5,8 @@ import xyz.destiall.pixelate.R;
 public enum Material {
     STONE(0, 0),
     WOOD(0, 1),
+    GRASS(0,2),
+    COAL_ORE(0,3),
     SWORD(R.drawable.sword);
 
     private final int row;

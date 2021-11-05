@@ -16,7 +16,7 @@ public abstract class Tile extends Imageable implements Renderable, Comparable<T
     protected Type tileType;
     public static final int SIZE = 100;
     public Tile(int id, int x, int y, Material material, World world, Type type) {
-        super(Game.getTileMap(), 1, 2);
+        super(Game.getTileMap(), 1, 4);
         this.material = material;
         this.id = id;
         this.world = world;
