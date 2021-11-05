@@ -56,7 +56,7 @@ public class World implements Updateable, Renderable {
         tiles.remove(tile);
         Tile newTile = new TileGround(tile.getId(), (int) tile.getLocation().getX(), (int) tile.getLocation().getY(), this);
         tiles.add(newTile);
-        return newTile;
+        return tile;
     }
 
     @Override

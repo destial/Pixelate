@@ -13,6 +13,7 @@ import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.Inventory;
+import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
@@ -59,6 +60,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (location.getWorld().isForegroundTile(front)) {
             newLoc.add((Tile.SIZE - 10) / 2f, (Tile.SIZE - 10) / 2f);
             Tile tile = location.getWorld().breakTile(newLoc);
+            ItemStack stack = ItemStack.of(tile);
+            inventory.addItem(stack);
         }
     }
 

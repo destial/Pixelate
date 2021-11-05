@@ -16,7 +16,6 @@ import xyz.destiall.pixelate.timer.Timer;
 public class ViewControls implements View {
     private final Paint outerCirclePaint;
     private final Paint innerCirclePaint;
-    private final Paint textPaint;
     private final Paint minePaint;
     private final int outerCircleRadius;
     private final int innerCircleRadius;
@@ -44,9 +43,6 @@ public class ViewControls implements View {
         innerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         actuator = new Vector2();
         actuator.setZero();
-        textPaint = new Paint();
-        textPaint.setColor(Color.MAGENTA);
-        textPaint.setTextSize(60);
         minePaint = new Paint();
         minePaint.setColor(Color.GRAY);
         minePaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -83,8 +79,6 @@ public class ViewControls implements View {
                 invButtonRadius,
                 minePaint
         );
-        screen.getCanvas().drawText("FPS: " + Timer.getFPS(), 10, 50, textPaint);
-        screen.getCanvas().drawText("Ticks: " + Timer.getTicksThisSecond(), 10, 100, textPaint);
     }
 
     @Override
@@ -150,7 +144,7 @@ public class ViewControls implements View {
 
     @Override
     public void destroy() {
-        Game.HANDLER.registerListener(this);
+        Game.HANDLER.unregisterListener(this);
     }
 
     @EventHandler

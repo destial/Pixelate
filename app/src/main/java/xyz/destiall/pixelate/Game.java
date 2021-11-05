@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import xyz.destiall.java.events.EventHandling;
@@ -77,7 +79,9 @@ public class Game extends Thread {
     }
 
     private void render(Canvas canvas) {
-        gameSurface.draw(canvas);
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(0, 0, Game.WIDTH, Game.HEIGHT, paint);
         manager.render(canvas);
     }
 

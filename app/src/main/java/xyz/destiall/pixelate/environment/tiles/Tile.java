@@ -25,6 +25,7 @@ public abstract class Tile extends Imageable implements Renderable, Comparable<T
         if (!material.isBlock()) {
             this.material = Material.STONE;
         }
+        image = createSubImageAt(material.getRow(), material.getColumn());
     }
 
     public int getId() {
@@ -55,10 +56,7 @@ public abstract class Tile extends Imageable implements Renderable, Comparable<T
 
     @Override
     public void render(Screen screen) {
-        //if (screen.isOutOfBounds(location)) return;
         Vector2 offset = screen.convert(location);
-        screen.getCanvas().drawBitmap(createSubImageAt(material.getRow(), material.getColumn()), (int) offset.getX(), (int) offset.getY(), null);
+        screen.getCanvas().drawBitmap(image, (int) offset.getX(), (int) offset.getY(), null);
     }
-
-
 }

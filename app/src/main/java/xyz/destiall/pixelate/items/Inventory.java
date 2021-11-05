@@ -35,7 +35,13 @@ public class Inventory {
     public boolean addItem(ItemStack itemStack) {
         if (isFull()) return false;
         for (int i = 0; i < size; i++) {
-            if (items[i] != null) continue;
+            if (items[i] != null) {
+                if (items[i].equals(itemStack)) {
+                    items[i].addAmount(1);
+                    break;
+                }
+                continue;
+            }
             items[i] = itemStack;
             return true;
         }
