@@ -8,8 +8,8 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
 
 public class ItemStack extends Imageable {
-    private final int amount;
     private final Material material;
+    private int amount;
 
     public ItemStack(Material material) {
         this(material, 1);
@@ -21,9 +21,25 @@ public class ItemStack extends Imageable {
         this.amount = amount;
         if (!material.isBlock()) {
             image = BitmapFactory.decodeResource(Game.getResources(), material.getDrawable());
-            height = image.getHeight();
-            width = image.getWidth();
+        } else {
+            image = createSubImageAt(material.getRow(), material.getColumn());
         }
+        height = image.getHeight();
+        width = image.getWidth();
+    }
+
+    public void addAmount(int amount) {
+        this.amount += amount;
+    }
+
+    public void removeAmount(int amount) {
+        if (amount == 0) return;
+        this.amount -= amount;
+        if (this.amount < 0) this.amount = 0;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public Material getMaterial() {
@@ -41,5 +57,9 @@ public class ItemStack extends Imageable {
     @Override
     public ItemStack clone() {
         return new ItemStack(material, amount);
+    }
+
+    public boolean equals(ItemStack other) {
+        return other.material == material;
     }
 }

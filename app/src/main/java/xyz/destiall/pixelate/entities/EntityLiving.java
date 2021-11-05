@@ -42,6 +42,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     @Override
     public void update() {
         super.update();
+
+        // Set direction of entity based on velocity
         if (!velocity.isZero()) {
             if (velocity.getX() > 0) {
                 facing = Direction.RIGHT;
@@ -49,41 +51,67 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
                 facing = Direction.LEFT;
             }
         }
-        location.add(velocity);
-        constraint();
-        updateAABB();
-        if (location.getWorld().isForegroundTile(collision)) {
-            location.subtract(velocity);
-            location.add(velocity.getX(), 0);
-            updateAABB();
-            if (location.getWorld().isForegroundTile(collision)) {
-                location.subtract(velocity.getX(), 0);
-                location.add(0, velocity.getY());
-            }
-            location.add(0, velocity.getY());
-            updateAABB();
-            if (location.getWorld().isForegroundTile(collision)) {
-                location.subtract(0, velocity.getY());
-                location.add(velocity.getX(), 0);
-            }
-            updateAABB();
-            if (location.getWorld().isForegroundTile(collision)) {
-                location.subtract(velocity);
-            }
-        }
+
+        // Set animation sprite for entity based on velocity
         String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
         spriteSheet.setCurrentSprite(anim);
+
+        // Move entity
+        location.add(velocity);
+
+        // Constraint with in world borders
+        constraint();
+
+        // Update collision model
+        updateAABB();
+
+        // Only update collision if entity is moving and is in a valid world
+        if (!velocity.isZero() && location.getWorld() != null) {
+
+            // If the tile stepping into is a collidable tile
+            if (location.getWorld().isForegroundTile(collision)) {
+
+                // Revert position
+                location.subtract(velocity);
+
+                // Check x direction
+                location.add(velocity.getX(), 0);
+                updateAABB();
+
+                // If the tile in the x direction is also collidable
+                if (location.getWorld().isForegroundTile(collision)) {
+
+                    // Revert position
+                    location.subtract(velocity.getX(), 0);
+                }
+
+                // Check y direction
+                location.add(0, velocity.getY());
+                updateAABB();
+
+                // If the tile in the y direction is also collidable
+                if (location.getWorld().isForegroundTile(collision)) {
+
+                    // Revert position
+                    location.subtract(0, velocity.getY());
+                }
+            }
+        }
     }
 
     protected void updateAABB() {
+
+        // Get the scale and size of the entity based on the animation image (lazy hack)
         Bitmap map = spriteSheet.getCurrentAnimation();
         if (scale != 1 && scale > 0) {
+
+            // Scale image if there is scaling
             map = Bitmap.createScaledBitmap(map, (int)(map.getWidth() * scale), (int)(map.getHeight() * scale), false);
         }
-        collision.getMin().setX(location.getX());
-        collision.getMin().setY(location.getY());
-        collision.getMax().setX(location.getX() + map.getWidth());
-        collision.getMax().setY(location.getY() + map.getHeight());
+
+        // Set collision bounds based on image
+        collision.setMin(location.getX(), location.getY());
+        collision.setMax(location.getX() + map.getWidth(), location.getY() + map.getHeight());
     }
 
     protected void constraint() {

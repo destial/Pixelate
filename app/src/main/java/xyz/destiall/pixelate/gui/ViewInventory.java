@@ -3,7 +3,9 @@ package xyz.destiall.pixelate.gui;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.DrawFilter;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +25,7 @@ public class ViewInventory implements View {
     private final Inventory inventory;
     private final Bitmap image;
     private final Paint exitPaint;
+    private final Paint amountPaint;
     private final Vector2 exitButton;
     private final int exitButtonRadius;
     private ItemStack dragging;
@@ -32,11 +35,15 @@ public class ViewInventory implements View {
     private final Map<Integer, AABB> positions;
 
     public ViewInventory(Inventory inventory) {
+        this.inventory = inventory;
         exitPaint = new Paint();
         exitPaint.setColor(Color.RED);
         exitButton = new Vector2(Game.WIDTH - 100, 100);
         exitButtonRadius = 40;
-        this.inventory = inventory;
+        amountPaint = new Paint();
+        amountPaint.setTextSize(50);
+        amountPaint.setColor(Color.WHITE);
+        amountPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         image = Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), R.drawable.hotbar));
         positions = new HashMap<>();
         Game.HANDLER.registerListener(this);
@@ -78,17 +85,27 @@ public class ViewInventory implements View {
                             posX + 15,
                             posY + 5,
                             null);
+                        if (item.getAmount() > 1) {
+                            screen.getCanvas().drawText(""+item.getAmount(),
+                                posX + this.image.getWidth(),
+                                posY + this.image.getHeight(),
+                                amountPaint);
+                        }
                     } else {
                         screen.getCanvas().drawBitmap(
                             image,
                             draggingX - image.getWidth() / 2f,
                             draggingY - image.getHeight() / 2f,
                             null);
+                        if (item.getAmount() > 1) {
+                            screen.getCanvas().drawText(""+(item.getAmount() - 1),
+                                posX + this.image.getWidth(),
+                                posY + this.image.getHeight(),
+                                amountPaint);
+                        }
                     }
-
                 }
-                AABB aabb = new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight());
-                positions.put(i, aabb);
+                positions.putIfAbsent(i, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
                 i++;
             }
         }

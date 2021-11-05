@@ -48,6 +48,8 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     @Override
     public void update() {
+
+        // Update sprite animation
         currentAnimation++;
         if (currentAnimation >= columns)  {
             currentAnimation = 0;

@@ -29,6 +29,11 @@ public class Vector2 implements Cloneable {
         this.y = y;
     }
 
+    public void set(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public double dot(Vector2 other) {
         if (isZero()) return 0;
         return (x * other.x) + (y * other.y);
@@ -64,7 +69,6 @@ public class Vector2 implements Cloneable {
         y /= n;
         return this;
     }
-
 
     public Vector2 multiply(double n) {
         x *= n;
@@ -103,7 +107,6 @@ public class Vector2 implements Cloneable {
     public Vector2 clone() {
         return new Vector2(x, y);
     }
-
 
     @Override
     public String toString() {
