@@ -12,6 +12,7 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
@@ -27,6 +28,7 @@ public class ViewHotbar implements View {
     private Inventory inventory;
     private int currentSlot;
     private final HashMap<Integer, AABB> positions;
+    private final HashMap<Material, Bitmap> images;
     public ViewHotbar(Inventory inventory) {
         this.inventory = inventory;
         Bitmap image = Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), R.drawable.hotbar));
@@ -35,8 +37,9 @@ public class ViewHotbar implements View {
         positions = new HashMap<>();
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(50);
+        textPaint.setTextSize(55);
         Game.HANDLER.registerListener(this);
+        images = new HashMap<>();
     }
 
     public void setInventory(Inventory inventory) {
@@ -74,8 +77,13 @@ public class ViewHotbar implements View {
                 y - a,
                 null);
             if (item != null) {
-                Bitmap itemImage = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
-                screen.getCanvas().drawBitmap(
+                Bitmap itemImage;
+                if (images.containsKey(item.getMaterial())) {
+                    itemImage = images.get(item.getMaterial());
+                } else {
+                    itemImage = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                    images.put(item.getMaterial(), itemImage);
+                } screen.getCanvas().drawBitmap(
                         itemImage,
                         x + 15,
                         y + 10,
@@ -83,12 +91,14 @@ public class ViewHotbar implements View {
                 if (item.getAmount() > 1) {
                     screen.getCanvas().drawText(
                         "" + item.getAmount(),
-                        x + this.image.getWidth(),
-                        y + this.image.getHeight(),
+                        x + this.image.getWidth() / 2f,
+                        y + this.image.getHeight() / 2f,
                         textPaint);
                 }
             }
-            positions.putIfAbsent(i, new AABB(x, y, x + image.getWidth(), y + image.getHeight()));
+            if (!positions.containsKey(i)) {
+                positions.put(i, new AABB(x, y, x + image.getWidth(), y + image.getHeight()));
+            }
         }
     }
 
@@ -104,6 +114,8 @@ public class ViewHotbar implements View {
 
     @Override
     public void destroy() {
+        positions.clear();
+        images.clear();
         Game.HANDLER.unregisterListener(this);
     }
 

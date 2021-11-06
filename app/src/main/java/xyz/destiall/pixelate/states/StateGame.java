@@ -20,18 +20,17 @@ import xyz.destiall.pixelate.position.Location;
 public class StateGame implements State {
     private final EntityPlayer player;
     private final List<Object> objects;
+    private final Screen screen;
 
     public StateGame(GameSurface gameSurface) {
         objects = new ArrayList<>();
         World world = new World();
         player = new EntityPlayer(gameSurface);
         player.teleport(new Location(Game.WIDTH / 2f, Game.HEIGHT / 2f, world));
-        if (player.getInventory().addItem(new ItemStack(Material.SWORD))) {
-            System.out.println("Added item");
-        }
         world.getEntities().add(player);
         objects.add(world);
         objects.add(HUD.INSTANCE);
+        screen = new Screen(null, player, Game.WIDTH, Game.HEIGHT);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class StateGame implements State {
 
     @Override
     public void render(Canvas canvas) {
-        Screen screen = new Screen(canvas, player, Game.WIDTH, Game.HEIGHT);
+        screen.update(canvas, player, Game.WIDTH, Game.HEIGHT);
         for (Object o : objects) {
             if (o instanceof Renderable) {
                 ((Renderable) o).render(screen);

@@ -9,10 +9,12 @@ public class Location implements Cloneable {
     private double x;
     private double y;
     private World world;
+    private final Vector2 vector;
     public Location(double x, double y, World world) {
         this.x = x;
         this.y = y;
         this.world = world;
+        vector = new Vector2(x, y);
     }
 
     public Location(double x, double y) {
@@ -55,7 +57,8 @@ public class Location implements Cloneable {
     }
 
     public Vector2 toVector() {
-        return new Vector2(x, y);
+        vector.set(x, y);
+        return vector;
     }
 
     public int getX() {

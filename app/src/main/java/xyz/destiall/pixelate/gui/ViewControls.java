@@ -11,7 +11,6 @@ import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
-import xyz.destiall.pixelate.timer.Timer;
 
 public class ViewControls implements View {
     private final Paint outerCirclePaint;
@@ -26,6 +25,7 @@ public class ViewControls implements View {
     private final Vector2 invButton;
     private final int invButtonRadius;
     private final int mineButtonRadius;
+    private final EventJoystick eventJoystick;
     private boolean joystick;
     private boolean mine;
 
@@ -50,6 +50,7 @@ public class ViewControls implements View {
         mineButtonRadius = 100;
         invButton = new Vector2(Game.WIDTH - 150, 900);
         invButtonRadius = 50;
+        eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
         Game.HANDLER.registerListener(this);
     }
 
@@ -139,7 +140,7 @@ public class ViewControls implements View {
             actuator.setX(deltaX / distance);
             actuator.setY(deltaY / distance);
         }
-        Game.HANDLER.call(new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN));
+        Game.HANDLER.call(eventJoystick.update(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN));
     }
 
     @Override
@@ -179,7 +180,7 @@ public class ViewControls implements View {
                 if (isJoystick()) {
                     setJoystick(false);
                     setActuator(0, 0);
-                    Game.HANDLER.call(new EventJoystick(0, 0, EventJoystick.Action.UP));
+                    Game.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
                 }
                 break;
             default: break;

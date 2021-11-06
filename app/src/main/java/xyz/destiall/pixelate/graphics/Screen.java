@@ -12,14 +12,24 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class Screen {
-    private final Canvas canvas;
-    private final Vector2 offset;
+    private Canvas canvas;
+    private Vector2 offset;
+    private Location gameCenter;
+    private final Vector2 displayCenter;
 
     public Screen(Canvas canvas, Entity center, int width, int height) {
         this.canvas = canvas;
-        Vector2 gameCenter = center.getLocation().toVector();
-        Vector2 displayCenter = new Vector2(width / 2f, height / 2f);
-        offset = displayCenter.subtract(center.getBounds().getWidth() / 2, center.getBounds().getHeight() / 2).subtract(gameCenter);
+        gameCenter = center.getLocation();
+        displayCenter = new Vector2(width / 2f, height / 2f);
+        offset = displayCenter.subtract(center.getBounds().getWidth() / 2, center.getBounds().getHeight() / 2).subtract(gameCenter.getRawX(), gameCenter.getRawY());
+        constraint();
+    }
+
+    public void update(Canvas canvas, Entity center, int width, int height) {
+        this.canvas = canvas;
+        gameCenter = center.getLocation();
+        displayCenter.set(width / 2f, height / 2f);
+        offset = displayCenter.subtract(center.getBounds().getWidth() / 2, center.getBounds().getHeight() / 2).subtract(gameCenter.getRawX(), gameCenter.getRawY());
         constraint();
     }
 
@@ -28,7 +38,7 @@ public class Screen {
     }
 
     public Vector2 convert(@NonNull Location location) {
-        return location.toVector().add(offset);
+        return convert(location.toVector());
     }
 
     public Canvas getCanvas() {
@@ -42,21 +52,11 @@ public class Screen {
         if (offset.getY() > Game.HEIGHT) {
             offset.setY(Game.HEIGHT);
         }
-        if (offset.getX() < -Game.WIDTH) {
-            offset.setX(-Game.WIDTH);
+        if (offset.getX() < -Game.WIDTH / 2f) {
+            offset.setX(-Game.WIDTH / 2f);
         }
-        if (offset.getY() < -Game.HEIGHT) {
-            offset.setY(-Game.HEIGHT);
+        if (offset.getY() < -Game.HEIGHT / 2f) {
+            offset.setY(-Game.HEIGHT / 2f);
         }
     }
-
-    /*public boolean isOutOfBounds(Location location) {
-        Vector2 offset = convert(location);
-        return offset.getX() < 0 || offset.getX() > Game.WIDTH || offset.getY() < 0 || offset.getY() > Game.HEIGHT;
-    }
-
-    public boolean isOutOfBounds(Vector2 location) {
-        Vector2 offset = convert(location);
-        return offset.getX() < 0 || offset.getX() > Game.WIDTH || offset.getY() < 0 || offset.getY() > Game.HEIGHT;
-    }*/
 }

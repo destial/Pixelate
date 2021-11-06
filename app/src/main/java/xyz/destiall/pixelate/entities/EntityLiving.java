@@ -103,15 +103,11 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
 
         // Get the scale and size of the entity based on the animation image (lazy hack)
         Bitmap map = spriteSheet.getCurrentAnimation();
-        if (scale != 1 && scale > 0) {
-
-            // Scale image if there is scaling
-            map = Bitmap.createScaledBitmap(map, (int)(map.getWidth() * scale), (int)(map.getHeight() * scale), false);
-        }
+        if (scale == 0) scale = 1;
 
         // Set collision bounds based on image
         collision.setMin(location.getX(), location.getY());
-        collision.setMax(location.getX() + map.getWidth(), location.getY() + map.getHeight());
+        collision.setMax(location.getX() + (int)(map.getWidth() * scale), location.getY() + (int)(map.getHeight() * scale));
     }
 
     protected void constraint() {

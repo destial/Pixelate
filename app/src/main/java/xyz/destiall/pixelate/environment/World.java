@@ -19,6 +19,7 @@ import xyz.destiall.pixelate.position.Location;
 
 public class World implements Updateable, Renderable {
     private final List<Entity> entities;
+    // TODO: Maybe split tiles into chunks?
     private final Set<Tile> tiles;
     private final Generator generator;
     public World() {

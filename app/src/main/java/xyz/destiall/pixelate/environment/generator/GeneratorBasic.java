@@ -40,15 +40,15 @@ public class GeneratorBasic implements Generator {
 
                 if (noiseValue > 0.4) {
                     if(noiseValue > 0.50)
-                        tile = new TileCoalOre(i++, (int) x, (int) y, world);
+                        tile = new TileCoalOre(i++, x, y, world);
                     else
-                        tile = new TileWood(i++, (int) x, (int) y, world);
+                        tile = new TileWood(i++, x, y, world);
 
                 } else if (noiseValue < -0.2) {
-                    tile = new TileGrass(i++, (int) x, (int) y, world);
+                    tile = new TileGrass(i++, x, y, world);
                 }
                 else
-                    tile = new TileGround(i++, (int)x, (int) y, world);
+                    tile = new TileGround(i++, x, y, world);
                 if (Math.random() > 0.98) world.spawnEntity(new Location(x, y, world), Entity.Type.ZOMBIE);
                 tiles.add(tile);
             }
