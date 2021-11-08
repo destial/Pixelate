@@ -62,7 +62,6 @@ public class World implements Updateable, Renderable {
 
     @Override
     public void update() {
-        generateWorld(1, false);
         for (Entity entity : entities) {
             entity.update();
         }

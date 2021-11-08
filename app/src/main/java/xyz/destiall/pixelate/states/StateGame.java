@@ -26,6 +26,7 @@ public class StateGame implements State {
         objects = new ArrayList<>();
         World world = new World();
         player = new EntityPlayer(gameSurface);
+        world.generateWorld(0, true);
         player.teleport(new Location(Game.WIDTH / 2f, Game.HEIGHT / 2f, world));
         world.getEntities().add(player);
         objects.add(world);
