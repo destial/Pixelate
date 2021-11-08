@@ -163,10 +163,17 @@ public class ViewInventory implements View {
                 ItemStack itemStack = getItem(x, y);
                 if (itemStack == dragging) {
                     dragging = null;
+                    return;
                 }
                 if (itemStack == null) {
                     inventory.setItem(slot, dragging);
                     inventory.setItem(draggingSlot, null);
+                    dragging = null;
+                    return;
+                }
+                if (itemStack.equals(dragging)) {
+                    inventory.setItem(draggingSlot, null);
+                    itemStack.addAmount(dragging.getAmount());
                     dragging = null;
                 }
             }

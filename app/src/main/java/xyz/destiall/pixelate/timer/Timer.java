@@ -29,6 +29,8 @@ public class Timer implements Updateable {
             elapsedTime = 0;
             fps = fpsCount;
             fpsCount = 0;
+            ticksThisSecond = ticks;
+            ticks = 0;
             isSecond = true;
         }
         lastNanoTime = now;
@@ -37,10 +39,6 @@ public class Timer implements Updateable {
     @Override
     public void tick() {
         ticks++;
-        if (isSecond()) {
-            ticksThisSecond = ticks;
-            ticks = 0;
-        }
     }
 
     public static long getLastNanoTime() {
