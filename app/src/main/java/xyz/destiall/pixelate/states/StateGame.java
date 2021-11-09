@@ -18,12 +18,13 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.position.Location;
 
-public class StateGame implements State {
+public class StateGame extends State {
     private final EntityPlayer player;
     private final List<Object> objects;
     private final Screen screen;
 
     public StateGame(GameSurface gameSurface) {
+        super(gameSurface);
         objects = new ArrayList<>();
         World world = new World();
         player = new EntityPlayer(gameSurface);

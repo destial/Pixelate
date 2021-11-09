@@ -13,10 +13,12 @@ import xyz.destiall.java.events.EventHandling;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
+import xyz.destiall.pixelate.states.StateMenu;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class Game extends Thread {
     public static final EventHandling HANDLER = new EventHandling();
+    private static final Map<String, Recipe> recipeMap = new HashMap<>();
     public static int HEIGHT;
     public static int WIDTH;
 
@@ -24,10 +26,9 @@ public class Game extends Thread {
     private static SurfaceHolder surfaceHolder;
     private static Canvas canvas;
     private static Bitmap tileMap;
+    private static GSM manager;
     private final Timer timer;
-    private final GSM manager;
     private boolean running;
-    private static final Map<String, Recipe> recipeMap = new HashMap<>();
 
     public Game(GameSurface gameSurface, SurfaceHolder surfaceHolder)  {
         super();
@@ -40,6 +41,7 @@ public class Game extends Thread {
         timer = new Timer();
         manager = new GSM();
         manager.addState("Game", new StateGame(gameSurface));
+        manager.addState("Main Menu", new StateMenu(gameSurface));
         manager.setState("Game");
     }
 
@@ -105,5 +107,9 @@ public class Game extends Thread {
 
     public static Map<String, Recipe> getRecipes() {
         return recipeMap;
+    }
+
+    public static GSM getGSM() {
+        return manager;
     }
 }
