@@ -1,5 +1,7 @@
 package xyz.destiall.pixelate.environment;
 
+import java.util.Arrays;
+
 import xyz.destiall.pixelate.R;
 
 public enum Material {
@@ -34,6 +36,10 @@ public enum Material {
         this.column = column;
         this.block = block;
         this.drawable = drawable;
+    }
+
+    public static long amtOfBlocks() {
+        return Arrays.stream(values()).filter(Material::isBlock).count();
     }
 
     public int getDrawable() {
