@@ -4,8 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import java.util.HashMap;
@@ -35,8 +33,8 @@ public class Game extends Thread {
         super();
         Game.gameSurface = gameSurface;
         Game.surfaceHolder = surfaceHolder;
-        Game.tileMap = Bitmap.createBitmap(BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.tilemap));
-        Game.tileMap = Bitmap.createScaledBitmap(tileMap, (int) (tileMap.getWidth() * 1.52), (int) (tileMap.getHeight() * 1.52), false);
+        tileMap = Bitmap.createBitmap(BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.tilemap));
+        tileMap = Bitmap.createScaledBitmap(tileMap, (int) (tileMap.getWidth() * 1.52), (int) (tileMap.getHeight() * 1.52), false);
         HEIGHT = gameSurface.getHeight();
         WIDTH = gameSurface.getWidth();
         timer = new Timer();
@@ -84,9 +82,7 @@ public class Game extends Thread {
     }
 
     private void render(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        canvas.drawRect(0, 0, Game.WIDTH, Game.HEIGHT, paint);
+        canvas.drawRGB(0, 0, 0);
         manager.render(canvas);
     }
 
