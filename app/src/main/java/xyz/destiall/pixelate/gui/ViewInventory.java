@@ -17,6 +17,7 @@ import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
@@ -58,15 +59,83 @@ public class ViewInventory implements View {
             exitButtonRadius,
             exitPaint
         );
-        int startingCrafting = Game.WIDTH / 2 - image.getWidth();
+        int startingCrafting = Game.WIDTH / 3 - image.getWidth();
+        int a = 0;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
+                int posX = startingCrafting + (x * image.getWidth());
+                int posY = 100 + (y * image.getWidth());
+                ItemStack item = inventory.getCraftingItem(a);
+                if (item != null) {
+                    Bitmap image;
+                    if (images.containsKey(item.getMaterial())) {
+                        image = images.get(item.getMaterial());
+                    } else {
+                        image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                        images.put(item.getMaterial(), image);
+                    }
+                    if (item == dragging) {
+                        screen.getCanvas().drawBitmap(
+                                image,
+                                draggingX - image.getWidth() / 2f,
+                                draggingY - image.getHeight() / 2f,
+                                null);
+                        if (item.getAmount() > 1) {
+                            screen.getCanvas().drawText(""+(item.getAmount() - 1),
+                                    posX + this.image.getWidth(),
+                                    posY + this.image.getHeight(),
+                                    amountPaint);
+                        }
+                    } else {
+                        screen.getCanvas().drawBitmap(
+                                image,
+                                posX + 15,
+                                posY + 5,
+                                null);
+                        if (item.getAmount() > 1) {
+                            screen.getCanvas().drawText("" + item.getAmount(),
+                                    posX + this.image.getWidth() / 2f,
+                                    posY + this.image.getHeight() / 2f,
+                                    amountPaint);
+                        }
+                    }
+                }
+                if (!positions.containsKey(inventory.getSize() + a)) {
+                    positions.put(inventory.getSize() + a, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
+                }
+                a++;
                 screen.getCanvas().drawBitmap(image,
-                        startingCrafting + (x * image.getWidth()),
-                    100 + (y * image.getWidth()),
+                    posX,
+                    posY,
                     null);
             }
         }
+        int cOutX = startingCrafting + (6 * image.getWidth());
+        int cOutY = 100 + (image.getWidth() / 2);
+        if (!positions.containsKey(100)) {
+            positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
+        }
+        for (Recipe recipe : Game.getRecipes().values()) {
+            if (recipe.isFulfilled(inventory)) {
+                ItemStack item = recipe.getItem();
+                Bitmap image;
+                if (images.containsKey(item.getMaterial())) {
+                    image = images.get(item.getMaterial());
+                } else {
+                    image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                    images.put(item.getMaterial(), image);
+                }
+                screen.getCanvas().drawBitmap(image,
+                        cOutX + 15,
+                        cOutY + 5,
+                        null);
+                break;
+            }
+        }
+        screen.getCanvas().drawBitmap(image,
+            cOutX,
+            cOutY,
+            null);
         int starting = (int) (Game.WIDTH / 2 - image.getWidth() * 4.5);
         int i = 0;
         for (int y = 0; y < (inventory.getSize() / 9); y++) {
@@ -135,7 +204,26 @@ public class ViewInventory implements View {
         float x = e.getX();
         float y = e.getY();
         if (e.getAction() == ControlEvent.Action.DOWN) {
+            int slot = getSlot(x, y);
+            if (slot == 100) {
+                for (Recipe recipe : Game.getRecipes().values()) {
+                    if (recipe.isFulfilled(inventory)) {
+                        inventory.setItem(draggingSlot, null);
+                        if (inventory.addItem(recipe.getItem())) {
+                            inventory.clearCrafting();
+                            dragging = null;
+                        }
+                        break;
+                    }
+                }
+                return;
+            }
             if (isOnExit(x, y)) {
+                for (ItemStack crafting : inventory.getCrafting()) {
+                    if (crafting == null) continue;
+                    inventory.addItem(crafting);
+                }
+                inventory.clearCrafting();
                 HUD.INSTANCE.setInventory(null);
             }
         }
@@ -150,6 +238,9 @@ public class ViewInventory implements View {
                     draggingX = (int) x;
                     draggingY = (int) y;
                     draggingSlot = inventory.getSlot(dragging);
+                    if (draggingSlot == -1) {
+                        draggingSlot = inventory.getCraftingSlot(dragging) + inventory.getSize();
+                    }
                 }
             }
         }
@@ -165,14 +256,32 @@ public class ViewInventory implements View {
                     dragging = null;
                     return;
                 }
-                if (itemStack == null) {
-                    inventory.setItem(slot, dragging);
-                    inventory.setItem(draggingSlot, null);
+                if (slot >= inventory.getSize() && slot != 100) {
+                    inventory.setCrafting(slot - inventory.getSize(), dragging);
+                    if (draggingSlot >= inventory.getSize()) {
+                        inventory.setCrafting(draggingSlot - inventory.getSize(), null);
+                    } else {
+                        inventory.setItem(draggingSlot, null);
+                    }
                     dragging = null;
                     return;
                 }
-                if (itemStack.equals(dragging)) {
-                    inventory.setItem(draggingSlot, null);
+                if (itemStack == null) {
+                    inventory.setItem(slot, dragging);
+                    if (draggingSlot >= inventory.getSize()) {
+                        inventory.setCrafting(draggingSlot - inventory.getSize(), null);
+                    } else {
+                        inventory.setItem(draggingSlot, null);
+                    }
+                    dragging = null;
+                    return;
+                }
+                if (itemStack.getMaterial() == dragging.getMaterial()) {
+                    if (draggingSlot >= inventory.getSize()) {
+                        inventory.setCrafting(draggingSlot - inventory.getSize(), null);
+                    } else {
+                        inventory.setItem(draggingSlot, null);
+                    }
                     itemStack.addAmount(dragging.getAmount());
                     dragging = null;
                 }
@@ -189,6 +298,9 @@ public class ViewInventory implements View {
     private ItemStack getItem(float x, float y) {
         int slot = getSlot(x, y);
         if (slot == -1) return null;
+        if (slot >= inventory.getSize() && slot != 100) {
+            return inventory.getCraftingItem(slot - inventory.getSize());
+        }
         return inventory.getItem(slot);
     }
 

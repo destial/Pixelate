@@ -8,7 +8,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import xyz.destiall.java.events.EventHandling;
+import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
@@ -25,6 +29,7 @@ public class Game extends Thread {
     private final Timer timer;
     private final GSM manager;
     private boolean running;
+    private static final Map<String, Recipe> recipeMap = new HashMap<>();
 
     public Game(GameSurface gameSurface, SurfaceHolder surfaceHolder)  {
         super();
@@ -96,5 +101,13 @@ public class Game extends Thread {
 
     public static Resources getResources() {
         return gameSurface.getResources();
+    }
+
+    public static void addRecipe(Recipe recipe) {
+        recipeMap.put(recipe.getKey(), recipe);
+    }
+
+    public static Map<String, Recipe> getRecipes() {
+        return recipeMap;
     }
 }

@@ -15,6 +15,7 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.position.Location;
 
 public class StateGame implements State {
@@ -32,6 +33,11 @@ public class StateGame implements State {
         objects.add(world);
         objects.add(HUD.INSTANCE);
         screen = new Screen(null, player, Game.WIDTH, Game.HEIGHT);
+
+        Recipe plankRecipe = new Recipe("plank", new ItemStack(Material.PLANKS));
+        plankRecipe.setShape("W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        Game.addRecipe(plankRecipe);
     }
 
     @Override

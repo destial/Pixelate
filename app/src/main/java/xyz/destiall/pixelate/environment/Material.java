@@ -7,6 +7,7 @@ public enum Material {
     WOOD(0, 1),
     GRASS(0,2),
     COAL_ORE(0,3),
+    PLANKS(0,4),
     SWORD(R.drawable.sword);
 
     private final int row;

@@ -16,7 +16,7 @@ public class ItemStack extends Imageable {
     }
 
     public ItemStack(Material material, int amount) {
-        super(Game.getTileMap(), 1, 4);
+        super(Game.getTileMap(), 1, Material.values().length - 1);
         this.material = material;
         this.amount = amount;
         if (!material.isBlock()) {
@@ -59,7 +59,7 @@ public class ItemStack extends Imageable {
         return new ItemStack(material, amount);
     }
 
-    public boolean equals(ItemStack other) {
-        return other.material == material;
+    public boolean equalsWithAmount(ItemStack other) {
+        return other.material == material && other.amount == amount;
     }
 }
