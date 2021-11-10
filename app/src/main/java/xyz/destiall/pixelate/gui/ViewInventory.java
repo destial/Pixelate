@@ -65,6 +65,10 @@ public class ViewInventory implements View {
             for (int y = 0; y < 2; y++) {
                 int posX = startingCrafting + (x * image.getWidth());
                 int posY = 100 + (y * image.getWidth());
+                screen.getCanvas().drawBitmap(image,
+                        posX,
+                        posY,
+                        null);
                 ItemStack item = inventory.getCraftingItem(a);
                 if (item != null) {
                     Bitmap image;
@@ -104,10 +108,6 @@ public class ViewInventory implements View {
                     positions.put(inventory.getSize() + a, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
                 }
                 a++;
-                screen.getCanvas().drawBitmap(image,
-                    posX,
-                    posY,
-                    null);
             }
         }
         int cOutX = startingCrafting + (6 * image.getWidth());
@@ -115,6 +115,10 @@ public class ViewInventory implements View {
         if (!positions.containsKey(100)) {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
+        screen.getCanvas().drawBitmap(image,
+                cOutX,
+                cOutY,
+                null);
         for (Recipe recipe : Game.getRecipes().values()) {
             if (recipe.isFulfilled(inventory)) {
                 ItemStack item = recipe.getItem();
@@ -132,10 +136,6 @@ public class ViewInventory implements View {
                 break;
             }
         }
-        screen.getCanvas().drawBitmap(image,
-            cOutX,
-            cOutY,
-            null);
         int starting = (int) (Game.WIDTH / 2 - image.getWidth() * 4.5);
         int i = 0;
         for (int y = 0; y < (inventory.getSize() / 9); y++) {
@@ -247,7 +247,7 @@ public class ViewInventory implements View {
         if (e.getAction() == ControlEvent.Action.UP) {
             if (dragging != null) {
                 int slot = getSlot(x, y);
-                if (slot == -1) {
+                if (slot == -1 || slot == 100) {
                     dragging = null;
                     return;
                 }

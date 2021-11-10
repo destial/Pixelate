@@ -2,6 +2,7 @@ package xyz.destiall.pixelate.environment;
 
 import java.util.Arrays;
 
+import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.R;
 
 public enum Material {
@@ -16,6 +17,20 @@ public enum Material {
     private final int column;
     private final boolean block;
     private final int drawable;
+
+    private static int columns;
+    private static int rows;
+
+    static {
+        for (Material material : Material.values()) {
+            if (material.getColumn() > columns) {
+                columns = material.getColumn();
+            }
+            if (material.getRow() > rows) {
+                rows = material.getRow();
+            }
+        }
+    }
 
     Material(int drawable) {
         row = 0;
@@ -36,6 +51,14 @@ public enum Material {
         this.column = column;
         this.block = block;
         this.drawable = drawable;
+    }
+
+    public static int getColumns() {
+        return columns;
+    }
+
+    public static int getRows() {
+        return rows;
     }
 
     public static long amtOfBlocks() {
