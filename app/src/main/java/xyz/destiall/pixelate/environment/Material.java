@@ -30,6 +30,8 @@ public enum Material {
                 rows = material.getRow();
             }
         }
+        columns += 1;
+        rows += 1;
     }
 
     Material(int drawable) {

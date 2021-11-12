@@ -1,5 +1,7 @@
 package xyz.destiall.pixelate.environment.tiles;
 
+import android.graphics.Bitmap;
+
 import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
@@ -9,28 +11,24 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class Tile extends Imageable implements Renderable {
-    //protected final int id; no longer needed
+    public static final long SIZE = Game.getTileMap().getWidth() / Material.getColumns();
+
     protected Vector2 location;
     protected Material material;
     protected World world;
     protected TILE_TYPE tileType;
-    public static final long SIZE = Game.getTileMap().getWidth() / Material.getColumns() + 1;
+
     public Tile(int x, int y, Material material, World world, TILE_TYPE type) {
-        super(Game.getTileMap(), Material.getRows() + 1, Material.getColumns() + 1);
+        super(Game.getTileMap(), Material.getRows(), Material.getColumns());
         this.material = material;
-        //this.id = id;
         this.world = world;
         location = new Vector2(x, y);
         tileType = type;
         if (!material.isBlock()) {
             this.material = Material.STONE;
         }
-        image = createSubImageAt(material.getRow(), material.getColumn());
+        image = createSubImageAt(this.material.getRow(), this.material.getColumn());
     }
-
-    /*public int getId() {
-        return id;
-    }*/
 
     public Vector2 getLocation() {
         return location;
@@ -45,12 +43,10 @@ public class Tile extends Imageable implements Renderable {
     }
 
     public void setMaterial(Material mat) {
-        this.material = mat;
-        image = createSubImageAt(material.getRow(), material.getColumn());
-        this.tileType = TileFactory.materialTileType.getOrDefault(mat,TILE_TYPE.BACKGROUND);
+        material = mat;
+        image = Bitmap.createBitmap(Game.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
+        tileType = TileFactory.materialTileType.getOrDefault(mat, TILE_TYPE.BACKGROUND);
     }
-
-
 
     public enum TILE_TYPE {
         BACKGROUND,

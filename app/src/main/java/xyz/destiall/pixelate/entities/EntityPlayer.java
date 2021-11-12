@@ -59,8 +59,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         AABB front = new AABB(newLoc.getX(), newLoc.getY(), newLoc.getX() + Tile.SIZE - 10, newLoc.getY() + Tile.SIZE - 10);
         if (location.getWorld().isForegroundTile(front)) {
             newLoc.add((Tile.SIZE - 10) / 2f, (Tile.SIZE - 10) / 2f);
-            Tile tile = location.getWorld().breakTile(newLoc);
-            ItemStack stack = ItemStack.of(tile);
+            ItemStack stack = location.getWorld().breakTile(newLoc);
             inventory.addItem(stack);
         }
     }
