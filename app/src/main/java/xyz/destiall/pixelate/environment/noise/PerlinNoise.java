@@ -6,6 +6,7 @@ public class PerlinNoise {
 
     //Randomised permutation array as designed by Perlin
     private static int[] P = makePermutation();
+    private static final float m_707 = 1.414427157001414f;
 
     //2D noise generation
     public static double noise(double x, double y)
@@ -35,7 +36,11 @@ public class PerlinNoise {
         double u = fade(xf);
         double v = fade(yf);
 
-        return lerp(u, lerp(v, dotBottomLeft, dotTopLeft), lerp(v, dotBottomRight, dotTopRight));
+        //Value normalisation converting into 0 to 1 range
+        double val = lerp(u, lerp(v, dotBottomLeft, dotTopLeft), lerp(v, dotBottomRight, dotTopRight));
+        //Since in 2D, perlin generates estimated [-0.707, 0.707] we multiply returned value by 1/0.707 and interpolate it
+        val *= m_707 * 0.5 + 0.5;
+        return val;
     }
 
     //Permutation table initializer
