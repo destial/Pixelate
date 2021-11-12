@@ -1,5 +1,6 @@
 package xyz.destiall.pixelate.environment;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,7 @@ import xyz.destiall.pixelate.entities.EntityMonster;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.tiles.Tile;
-import xyz.destiall.pixelate.environment.tiles.TileGround;
+import xyz.destiall.pixelate.environment.tiles.TileFactory;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -24,7 +25,7 @@ public class World implements Updateable, Renderable {
     private final Generator generator;
     public World() {
         entities = new LinkedList<>();
-        tiles = new ConcurrentSkipListSet<>();
+        tiles = new HashSet<>();
         generator = new GeneratorBasic();
     }
 
@@ -33,7 +34,7 @@ public class World implements Updateable, Renderable {
     }
 
     public boolean isForegroundTile(AABB aabb) {
-        return tiles.stream().anyMatch(t -> aabb.isAABB(t) && t.getTileType() == Tile.Type.FOREGROUND);
+        return tiles.stream().anyMatch(t -> aabb.isAABB(t) && t.getTileType() == Tile.TILE_TYPE.FOREGROUND);
     }
 
     public void generateWorld(int seed, boolean force) {
@@ -49,13 +50,21 @@ public class World implements Updateable, Renderable {
         return monster;
     }
 
-    public Tile breakTile(Location location) {
-        Tile tile = tiles.stream()
-                .filter(t -> AABB.isAABB(location, t) && t.getTileType() == Tile.Type.FOREGROUND)
+    public Tile findTile(Location location)
+    {
+        return tiles.stream()
+                .filter(t -> AABB.isAABB(location, t))
                 .findFirst().orElse(null);
-        if (tile == null) return null;
+    }
+
+    public Tile breakTile(Location location) {
+        Tile tile = findTile(location);
+        if (tile == null
+        || tile.getTileType() != Tile.TILE_TYPE.FOREGROUND)
+            return null;
+
         tiles.remove(tile);
-        Tile newTile = new TileGround(tile.getId(), (int) tile.getLocation().getX(), (int) tile.getLocation().getY(), this);
+        Tile newTile = TileFactory.createTile(Material.STONE, (int) tile.getLocation().getX(), (int) tile.getLocation().getY(), this);
         tiles.add(newTile);
         return tile;
     }

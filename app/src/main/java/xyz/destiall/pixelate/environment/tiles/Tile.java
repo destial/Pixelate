@@ -8,17 +8,17 @@ import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
-public abstract class Tile extends Imageable implements Renderable, Comparable<Tile> {
-    protected final int id;
+public class Tile extends Imageable implements Renderable {
+    //protected final int id; no longer needed
     protected Vector2 location;
     protected Material material;
     protected World world;
-    protected Type tileType;
+    protected TILE_TYPE tileType;
     public static final long SIZE = Game.getTileMap().getWidth() / Material.getColumns() + 1;
-    public Tile(int id, int x, int y, Material material, World world, Type type) {
+    public Tile(int x, int y, Material material, World world, TILE_TYPE type) {
         super(Game.getTileMap(), Material.getRows() + 1, Material.getColumns() + 1);
         this.material = material;
-        this.id = id;
+        //this.id = id;
         this.world = world;
         location = new Vector2(x, y);
         tileType = type;
@@ -28,15 +28,15 @@ public abstract class Tile extends Imageable implements Renderable, Comparable<T
         image = createSubImageAt(material.getRow(), material.getColumn());
     }
 
-    public int getId() {
+    /*public int getId() {
         return id;
-    }
+    }*/
 
     public Vector2 getLocation() {
         return location;
     }
 
-    public Type getTileType() {
+    public TILE_TYPE getTileType() {
         return tileType;
     }
 
@@ -44,12 +44,15 @@ public abstract class Tile extends Imageable implements Renderable, Comparable<T
         return material;
     }
 
-    @Override
-    public int compareTo(Tile o) {
-        return Integer.compare(id, o.id);
+    public void setMaterial(Material mat) {
+        this.material = mat;
+        image = createSubImageAt(material.getRow(), material.getColumn());
+        this.tileType = TileFactory.materialTileType.getOrDefault(mat,TILE_TYPE.BACKGROUND);
     }
 
-    public enum Type {
+
+
+    public enum TILE_TYPE {
         BACKGROUND,
         FOREGROUND
     }
