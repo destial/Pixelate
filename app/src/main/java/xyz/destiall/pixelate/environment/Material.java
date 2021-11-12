@@ -14,11 +14,11 @@ public enum Material {
     PLANKS(0,4, Tile.TILE_TYPE.FOREGROUND),
     SWORD(R.drawable.sword);
 
+    private final Tile.TILE_TYPE tileType;
     private final int row;
     private final int column;
-    private Tile.TILE_TYPE tileType;
-    private final boolean block;
     private final int drawable;
+    private final boolean block;
 
     private static int columns;
     private static int rows;
@@ -37,26 +37,23 @@ public enum Material {
     }
 
     Material(int drawable) {
-        row = 0;
-        column = 0;
-        this.tileType = Tile.TILE_TYPE.UNKNOWN;
-        block = false;
-        this.drawable = drawable;
+        this(0, 0, false, drawable);
     }
 
     Material(int row, int column, Tile.TILE_TYPE type) {
-        this.row = row;
-        this.column = column;
-        this.tileType = type;
-        block = true;
-        drawable = -1;
+        this(row, column, true, -1, type);
     }
 
     Material(int row, int column, boolean block, int drawable) {
+        this(row, column, block, drawable, Tile.TILE_TYPE.UNKNOWN);
+    }
+
+    Material(int row, int column, boolean block, int drawable, Tile.TILE_TYPE type) {
         this.row = row;
         this.column = column;
         this.block = block;
         this.drawable = drawable;
+        this.tileType = type;
     }
 
     public static int getColumns() {
@@ -66,8 +63,6 @@ public enum Material {
     public static int getRows() {
         return rows;
     }
-
-    public Tile.TILE_TYPE getTileType() {return tileType;}
 
     public static long amtOfBlocks() {
         return Arrays.stream(values()).filter(Material::isBlock).count();
@@ -87,5 +82,9 @@ public enum Material {
 
     public int getRow() {
         return row;
+    }
+
+    public Tile.TILE_TYPE getTileType() {
+        return tileType;
     }
 }

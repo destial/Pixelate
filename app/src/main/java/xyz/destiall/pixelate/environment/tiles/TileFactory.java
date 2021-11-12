@@ -1,7 +1,5 @@
 package xyz.destiall.pixelate.environment.tiles;
 
-import java.util.HashMap;
-
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
 

@@ -13,12 +13,10 @@ import android.widget.Button;
 
 
 public class MainMenu extends Activity implements View.OnClickListener {
-
     private Button btn_start, btn_back;
 
     @Override
-    protected void onCreate(Bundle saveInstanceState)
-    {
+    protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
 
         //Hide Title
@@ -29,12 +27,11 @@ public class MainMenu extends Activity implements View.OnClickListener {
 
         setContentView(R.layout.mainmenu);
 
-        btn_start = (Button)findViewById(R.id.btn_start);
+        btn_start = findViewById(R.id.btn_start);
         btn_start.setOnClickListener(this);
 
-        btn_back = (Button)findViewById(R.id.btn_back);
+        btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(this);
-
     }
 
     @Override
@@ -43,32 +40,11 @@ public class MainMenu extends Activity implements View.OnClickListener {
         //Intent is an object that provides runtime binding
 
         Intent intent = new Intent();
-        if(v == btn_start)
-        {
+        if (v == btn_start) {
             intent.setClass(this, GameActivity.class);
-        }else if (v == btn_back)
-        {
+        } else if (v == btn_back) {
             intent.setClass(this, MainMenu.class);
         }
         startActivity(intent);
-
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
     }
 }

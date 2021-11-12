@@ -14,6 +14,7 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -22,6 +23,8 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class ViewInventory implements View {
+    private final Map<Integer, AABB> positions;
+    private final HashMap<Material, Bitmap> images;
     private final Inventory inventory;
     private final Bitmap image;
     private final Paint exitPaint;
@@ -32,8 +35,6 @@ public class ViewInventory implements View {
     private int draggingSlot;
     private int draggingX;
     private int draggingY;
-    private final Map<Integer, AABB> positions;
-    private final HashMap<Material, Bitmap> images;
 
     public ViewInventory(Inventory inventory) {
         this.inventory = inventory;
@@ -45,7 +46,7 @@ public class ViewInventory implements View {
         amountPaint.setTextSize(55);
         amountPaint.setColor(Color.WHITE);
         amountPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        image = Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), R.drawable.hotbar));
+        image = Imageable.getImage(R.drawable.hotbar);
         positions = new HashMap<>();
         images = new HashMap<>();
         Game.HANDLER.registerListener(this);

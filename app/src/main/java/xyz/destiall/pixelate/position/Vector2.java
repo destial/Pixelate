@@ -2,6 +2,8 @@ package xyz.destiall.pixelate.position;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 public class Vector2 implements Cloneable {
     private double x;
     private double y;
@@ -101,6 +103,19 @@ public class Vector2 implements Cloneable {
     public void setZero() {
         x = 0;
         y = 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector2 vector2 = (Vector2) o;
+        return Double.compare(vector2.x, x) == 0 && Double.compare(vector2.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     @NonNull

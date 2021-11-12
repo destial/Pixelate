@@ -2,6 +2,8 @@ package xyz.destiall.pixelate.environment.tiles;
 
 import android.graphics.Bitmap;
 
+import java.util.Objects;
+
 import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
@@ -59,5 +61,18 @@ public class Tile extends Imageable implements Renderable {
         Vector2 offset = screen.convert(location);
         if (offset.getX() + Tile.SIZE < 0 || offset.getX() > Game.WIDTH || offset.getY() + Tile.SIZE < 0 || offset.getY() > Game.HEIGHT) return;
         screen.getCanvas().drawBitmap(image, (int) offset.getX(), (int) offset.getY(), null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tile tile = (Tile) o;
+        return Objects.equals(location, tile.location) && material == tile.material && Objects.equals(world, tile.world) && tileType == tile.tileType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(location, material, world, tileType);
     }
 }

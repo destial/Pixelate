@@ -1,6 +1,9 @@
 package xyz.destiall.pixelate.graphics;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import xyz.destiall.pixelate.Game;
 
 public abstract class Imageable {
     protected Bitmap image;
@@ -46,5 +49,9 @@ public abstract class Imageable {
 
     public int getWidth() {
         return width;
+    }
+
+    public static Bitmap getImage(int id) {
+        return Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), id));
     }
 }

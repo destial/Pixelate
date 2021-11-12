@@ -76,11 +76,11 @@ public class HUD implements Updateable, Renderable, Listener {
 
     @Override
     public void tick() {
-        if (inventory != null) {
-            inventory.tick();
-        } else {
+        if (inventory == null) {
             buttons.tick();
             hotbar.tick();
+        } else {
+            inventory.tick();
         }
     }
 }

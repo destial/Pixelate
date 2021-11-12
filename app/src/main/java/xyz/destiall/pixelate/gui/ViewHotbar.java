@@ -16,22 +16,24 @@ import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 
 public class ViewHotbar implements View {
+    private final HashMap<Integer, AABB> positions;
+    private final HashMap<Material, Bitmap> images;
     private final Bitmap image;
     private final Bitmap currentSlotImage;
     private final Paint textPaint;
     private Inventory inventory;
     private int currentSlot;
-    private final HashMap<Integer, AABB> positions;
-    private final HashMap<Material, Bitmap> images;
+
     public ViewHotbar(Inventory inventory) {
         this.inventory = inventory;
-        Bitmap image = Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), R.drawable.hotbar));
+        Bitmap image = Imageable.getImage(R.drawable.hotbar);
         currentSlotImage = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.85), (int) (image.getHeight() * 0.85), false);
         this.image = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.8), (int) (image.getHeight() * 0.8), false);
         positions = new HashMap<>();
