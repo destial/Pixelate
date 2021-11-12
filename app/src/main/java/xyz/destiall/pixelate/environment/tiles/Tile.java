@@ -1,5 +1,7 @@
 package xyz.destiall.pixelate.environment.tiles;
 
+import android.graphics.Bitmap;
+
 import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
@@ -46,7 +48,7 @@ public class Tile extends Imageable implements Renderable {
 
     public void setMaterial(Material mat) {
         this.material = mat;
-        image = createSubImageAt(material.getRow(), material.getColumn());
+        image = Bitmap.createBitmap(Game.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
         this.tileType = TileFactory.materialTileType.getOrDefault(mat,TILE_TYPE.BACKGROUND);
     }
 

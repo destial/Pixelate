@@ -11,6 +11,7 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.noise.PerlinNoise;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.TileFactory;
+import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
 public class GeneratorBasic implements Generator {
@@ -41,23 +42,14 @@ public class GeneratorBasic implements Generator {
                 if(noiseValue > max) max = noiseValue;
 
                 if (noiseValue > 0.59) {
-                    if(noiseValue > 0.7 && noiseValue < 0.8)
-                    {
+                    if(noiseValue > 0.7 && noiseValue < 0.8) {
                         //Ore Spawning Algorithm
-                        if(Math.random() < 0.1) //Chance to populate area with ores
+                        if (Math.random() < 0.05) //Chance to populate area with ores
                         {
-                            orePopulationZones.add(new Location(x*Tile.SIZE, y*Tile.SIZE, world));
+                            orePopulationZones.add(new Location(x, y, world));
                         }
-                        else
-                        {
-                            tile = TileFactory.createTile(Material.WOOD, x,y,world);
-                        }
-
                     }
-
-
-                    else
-                        tile = TileFactory.createTile(Material.WOOD, x,y,world);
+                    tile = TileFactory.createTile(Material.WOOD, x, y, world);
 
                 } else if (noiseValue < 0.35) {
                     tile = TileFactory.createTile(Material.GRASS, x,y,world);
@@ -65,6 +57,7 @@ public class GeneratorBasic implements Generator {
 
                 if(tile == null)
                     tile = TileFactory.createTile(Material.STONE, x,y,world);
+
                 if (Math.random() > 0.98) world.spawnEntity(new Location(x, y, world), Entity.Type.ZOMBIE);
                 tiles.add(tile);
             }
@@ -75,20 +68,28 @@ public class GeneratorBasic implements Generator {
         for(Location loc : orePopulationZones)
         {
             //Max Radius 3x3
-            for(int x = loc.getX()-(int)Tile.SIZE*2; x<loc.getX()+(int)Tile.SIZE; ++x)
+            for(int x = loc.getX()-(int)Tile.SIZE*2; x<loc.getX()+(int)Tile.SIZE; x+=Tile.SIZE)
             {
-                for(int y = loc.getY()-(int)Tile.SIZE*2; y<loc.getY()+(int)Tile.SIZE; ++y)
+                for(int y = loc.getY()-(int)Tile.SIZE*2; y<loc.getY()+(int)Tile.SIZE; y+=Tile.SIZE)
                 {
-                    double noiseValue = PerlinNoise.noise(x*divisor*generationScale,y*divisor*generationScale);
-                    if(noiseValue > 0.4 && noiseValue < 0.55)
+                    double noiseValue = PerlinNoise.noise(x*divisor*oreGenerationScale,y*divisor*oreGenerationScale);
+                    if(noiseValue > 0.45 && noiseValue < 0.6)
                     {
-                        Tile tile = world.findTile(new Location(x,y,world));
+
+                        Location location = new Location(x,y,world);
+                        location.add((Tile.SIZE - 10) / 2f, (Tile.SIZE - 10) / 2f);
+                        Tile tile = tiles.stream()
+                                .filter(t -> AABB.isAABB(location, t))
+                                .findFirst().orElse(null);
+                        if(tile != null && tile.getMaterial() == oreCanvas)
+                        {
+                            tile.setMaterial(Material.COAL_ORE);
+                        }
 
                     }
                 }
             }
         }
-
 
         System.out.println("Noise minmax: " + min + " , " + max);
     }
