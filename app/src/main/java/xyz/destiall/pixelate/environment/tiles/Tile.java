@@ -49,14 +49,15 @@ public class Tile extends Imageable implements Renderable {
     public void setMaterial(Material mat) {
         this.material = mat;
         image = Bitmap.createBitmap(Game.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
-        this.tileType = TileFactory.materialTileType.getOrDefault(mat,TILE_TYPE.BACKGROUND);
+        this.tileType = mat.getTileType();
     }
 
 
 
     public enum TILE_TYPE {
         BACKGROUND,
-        FOREGROUND
+        FOREGROUND,
+        UNKNOWN
     }
 
     @Override
