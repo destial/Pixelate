@@ -65,10 +65,10 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     public void render(Screen screen) {
         Bitmap map = spriteSheet.getCurrentAnimation();
         if (scale != 1 && scale > 0) {
-            map = Bitmap.createScaledBitmap(map, (int)(map.getWidth() * scale), (int)(map.getHeight() * scale), false);
+            map = Imageable.scaleImage(map, scale);
         }
         Vector2 offset = screen.convert(location.toVector());
-        screen.getCanvas().drawBitmap(map, (int) offset.getX(), (int) offset.getY(), null);
+        screen.draw(map, offset.getX(), offset.getY());
     }
 
     @Override

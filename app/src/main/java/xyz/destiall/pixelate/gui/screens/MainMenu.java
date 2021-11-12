@@ -1,6 +1,4 @@
 package xyz.destiall.pixelate.gui.screens;
-import xyz.destiall.pixelate.GameActivity;
-import xyz.destiall.pixelate.R;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +7,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import xyz.destiall.pixelate.GameActivity;
+import xyz.destiall.pixelate.R;
 
 
 

@@ -60,7 +60,7 @@ public class Tile extends Imageable implements Renderable {
     public void render(Screen screen) {
         Vector2 offset = screen.convert(location);
         if (offset.getX() + Tile.SIZE < 0 || offset.getX() > Game.WIDTH || offset.getY() + Tile.SIZE < 0 || offset.getY() > Game.HEIGHT) return;
-        screen.getCanvas().drawBitmap(image, (int) offset.getX(), (int) offset.getY(), null);
+        screen.draw(image, offset.getX(), offset.getY());
     }
 
     @Override

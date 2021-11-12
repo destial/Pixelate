@@ -1,9 +1,7 @@
 package xyz.destiall.pixelate.gui;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Paint;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +25,6 @@ public class ViewInventory implements View {
     private final HashMap<Material, Bitmap> images;
     private final Inventory inventory;
     private final Bitmap image;
-    private final Paint exitPaint;
-    private final Paint amountPaint;
     private final Vector2 exitButton;
     private final int exitButtonRadius;
     private ItemStack dragging;
@@ -38,14 +34,8 @@ public class ViewInventory implements View {
 
     public ViewInventory(Inventory inventory) {
         this.inventory = inventory;
-        exitPaint = new Paint();
-        exitPaint.setColor(Color.RED);
         exitButton = new Vector2(Game.WIDTH - 100, 100);
         exitButtonRadius = 40;
-        amountPaint = new Paint();
-        amountPaint.setTextSize(55);
-        amountPaint.setColor(Color.WHITE);
-        amountPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         image = Imageable.getImage(R.drawable.hotbar);
         positions = new HashMap<>();
         images = new HashMap<>();
@@ -54,22 +44,14 @@ public class ViewInventory implements View {
 
     @Override
     public void render(Screen screen) {
-        screen.getCanvas().drawCircle(
-            (int) exitButton.getX(),
-            (int) exitButton.getY(),
-            exitButtonRadius,
-            exitPaint
-        );
+        screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
         int startingCrafting = Game.WIDTH / 3 - image.getWidth();
         int a = 0;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
                 int posX = startingCrafting + (x * image.getWidth());
                 int posY = 100 + (y * image.getWidth());
-                screen.getCanvas().drawBitmap(image,
-                        posX,
-                        posY,
-                        null);
+                screen.draw(image, posX, posY);
                 ItemStack item = inventory.getCraftingItem(a);
                 if (item != null) {
                     Bitmap image;
@@ -80,28 +62,20 @@ public class ViewInventory implements View {
                         images.put(item.getMaterial(), image);
                     }
                     if (item == dragging) {
-                        screen.getCanvas().drawBitmap(
-                                image,
-                                draggingX - image.getWidth() / 2f,
-                                draggingY - image.getHeight() / 2f,
-                                null);
+                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
                         if (item.getAmount() > 1) {
-                            screen.getCanvas().drawText(""+(item.getAmount() - 1),
+                            screen.text("" + (item.getAmount() - 1),
                                     posX + this.image.getWidth(),
                                     posY + this.image.getHeight(),
-                                    amountPaint);
+                                    40, Color.WHITE);
                         }
                     } else {
-                        screen.getCanvas().drawBitmap(
-                                image,
-                                posX + 15,
-                                posY + 5,
-                                null);
+                        screen.draw(image, posX + 15, posY + 5);
                         if (item.getAmount() > 1) {
-                            screen.getCanvas().drawText("" + item.getAmount(),
+                            screen.text("" + item.getAmount(),
                                     posX + this.image.getWidth() / 2f,
                                     posY + this.image.getHeight() / 2f,
-                                    amountPaint);
+                                    40, Color.WHITE);
                         }
                     }
                 }
@@ -116,10 +90,7 @@ public class ViewInventory implements View {
         if (!positions.containsKey(100)) {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
-        screen.getCanvas().drawBitmap(image,
-                cOutX,
-                cOutY,
-                null);
+        screen.draw(image, cOutX, cOutY);
         for (Recipe recipe : Game.getRecipes().values()) {
             if (recipe.isFulfilled(inventory)) {
                 ItemStack item = recipe.getItem();
@@ -130,10 +101,7 @@ public class ViewInventory implements View {
                     image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
                     images.put(item.getMaterial(), image);
                 }
-                screen.getCanvas().drawBitmap(image,
-                        cOutX + 15,
-                        cOutY + 5,
-                        null);
+                screen.draw(image, cOutX + 15, cOutY + 5);
                 break;
             }
         }
@@ -143,10 +111,7 @@ public class ViewInventory implements View {
             for (int x = 0; x < 9; x++) {
                 int posX = starting + (x * image.getWidth());
                 int posY = 400 + (y * image.getHeight());
-                screen.getCanvas().drawBitmap(image,
-                    posX,
-                    posY,
-                    null);
+                screen.draw(image, posX, posY);
                 ItemStack item = inventory.getItem(i);
                 if (item != null) {
                     Bitmap image;
@@ -157,28 +122,17 @@ public class ViewInventory implements View {
                         images.put(item.getMaterial(), image);
                     }
                     if (item != dragging) {
-                        screen.getCanvas().drawBitmap(
-                            image,
-                            posX + 15,
-                            posY + 5,
-                            null);
+                        screen.draw(image, posX + 15, posY + 5);
                         if (item.getAmount() > 1) {
-                            screen.getCanvas().drawText(""+item.getAmount(),
+                            screen.text(""+item.getAmount(),
                                 posX + this.image.getWidth() / 2f,
                                 posY + this.image.getHeight() / 2f,
-                                amountPaint);
+                                40, Color.WHITE);
                         }
                     } else {
-                        screen.getCanvas().drawBitmap(
-                            image,
-                            draggingX - image.getWidth() / 2f,
-                            draggingY - image.getHeight() / 2f,
-                            null);
+                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
                         if (item.getAmount() > 1) {
-                            screen.getCanvas().drawText(""+(item.getAmount() - 1),
-                                posX + this.image.getWidth(),
-                                posY + this.image.getHeight(),
-                                amountPaint);
+                            screen.text(""+(item.getAmount() - 1), posX + this.image.getWidth(), posY + this.image.getHeight(), 40, Color.WHITE);
                         }
                     }
                 }

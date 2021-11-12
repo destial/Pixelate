@@ -23,10 +23,15 @@ public class World implements Updateable, Renderable {
     // TODO: Maybe split tiles into chunks?
     private final Set<Tile> tiles;
     private final Generator generator;
+
     public World() {
+        this(new GeneratorBasic());
+    }
+
+    public World(Generator generator) {
         entities = new LinkedList<>();
         tiles = new HashSet<>();
-        generator = new GeneratorBasic();
+        this.generator = generator;
     }
 
     public List<Entity> getEntities() {

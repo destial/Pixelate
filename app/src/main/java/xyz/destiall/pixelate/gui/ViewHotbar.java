@@ -1,9 +1,7 @@
 package xyz.destiall.pixelate.gui;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.KeyEvent;
 
 import java.util.HashMap;
@@ -27,7 +25,6 @@ public class ViewHotbar implements View {
     private final HashMap<Material, Bitmap> images;
     private final Bitmap image;
     private final Bitmap currentSlotImage;
-    private final Paint textPaint;
     private Inventory inventory;
     private int currentSlot;
 
@@ -37,9 +34,6 @@ public class ViewHotbar implements View {
         currentSlotImage = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.85), (int) (image.getHeight() * 0.85), false);
         this.image = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.8), (int) (image.getHeight() * 0.8), false);
         positions = new HashMap<>();
-        textPaint = new Paint();
-        textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(55);
         Game.HANDLER.registerListener(this);
         images = new HashMap<>();
     }
@@ -73,11 +67,7 @@ public class ViewHotbar implements View {
             int x = starting + (i * this.image.getWidth());
             int y = Game.HEIGHT - 200;
             ItemStack item = inventory.getItem(i);
-            screen.getCanvas().drawBitmap(
-                image,
-                x,
-                y - a,
-                null);
+            screen.draw(image, x, y - a);
             if (item != null) {
                 Bitmap itemImage;
                 if (images.containsKey(item.getMaterial())) {
@@ -85,17 +75,13 @@ public class ViewHotbar implements View {
                 } else {
                     itemImage = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
                     images.put(item.getMaterial(), itemImage);
-                } screen.getCanvas().drawBitmap(
-                        itemImage,
-                        x + 15,
-                        y + 10,
-                        null);
+                } screen.draw(itemImage, x + 15, y + 10);
                 if (item.getAmount() > 1) {
-                    screen.getCanvas().drawText(
+                    screen.text(
                         "" + item.getAmount(),
                         x + this.image.getWidth() / 2f,
                         y + this.image.getHeight() / 2f,
-                        textPaint);
+                        40, Color.WHITE);
                 }
             }
             if (!positions.containsKey(i)) {

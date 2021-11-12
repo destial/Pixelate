@@ -1,7 +1,6 @@
 package xyz.destiall.pixelate.gui;
 
 import android.graphics.Color;
-import android.graphics.Paint;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Game;
@@ -13,9 +12,6 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class ViewControls implements View {
-    private final Paint outerCirclePaint;
-    private final Paint innerCirclePaint;
-    private final Paint minePaint;
     private final int outerCircleRadius;
     private final int innerCircleRadius;
     private final Vector2 outerCircleCenter;
@@ -34,18 +30,8 @@ public class ViewControls implements View {
         innerCircleCenter = new Vector2(275, 800);
         outerCircleRadius = 100;
         innerCircleRadius = 50;
-        outerCirclePaint = new Paint();
-        outerCirclePaint.setColor(Color.GRAY);
-        outerCirclePaint.setStyle(Paint.Style.STROKE);
-        outerCirclePaint.setStrokeWidth(5);
-        innerCirclePaint = new Paint();
-        innerCirclePaint.setColor(Color.BLUE);
-        innerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         actuator = new Vector2();
         actuator.setZero();
-        minePaint = new Paint();
-        minePaint.setColor(Color.GRAY);
-        minePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mineButton = new Vector2(Game.WIDTH - 275, 800);
         mineButtonRadius = 100;
         invButton = new Vector2(Game.WIDTH - 150, 900);
@@ -56,29 +42,30 @@ public class ViewControls implements View {
 
     @Override
     public void render(Screen screen) {
-        screen.getCanvas().drawCircle(
-                (int) outerCircleCenter.getX(),
-                (int) outerCircleCenter.getY(),
+        screen.ring(
+                outerCircleCenter.getX(),
+                outerCircleCenter.getY(),
                 outerCircleRadius,
-                outerCirclePaint
+                20,
+                Color.GRAY
         );
-        screen.getCanvas().drawCircle(
-                (int) innerCircleCenter.getX(),
-                (int) innerCircleCenter.getY(),
+        screen.circle(
+                innerCircleCenter.getX(),
+                innerCircleCenter.getY(),
                 innerCircleRadius,
-                innerCirclePaint
+                Color.BLUE
         );
-        screen.getCanvas().drawCircle(
-                (int) mineButton.getX(),
-                (int) mineButton.getY(),
+        screen.circle(
+                mineButton.getX(),
+                mineButton.getY(),
                 mineButtonRadius * (mine ? 0.8f : 1),
-                minePaint
+                Color.GRAY
         );
-        screen.getCanvas().drawCircle(
-                (int) invButton.getX(),
-                (int) invButton.getY(),
+        screen.circle(
+                invButton.getX(),
+                invButton.getY(),
                 invButtonRadius,
-                minePaint
+                Color.GRAY
         );
     }
 
