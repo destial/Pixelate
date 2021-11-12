@@ -6,7 +6,7 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 
 public enum Material {
-    STONE(0, 0, Tile.TILE_TYPE.UNKNOWN),
+    STONE(0, 0, Tile.TILE_TYPE.BACKGROUND),
     WOOD(0, 1, Tile.TILE_TYPE.FOREGROUND),
     GRASS(0,2, Tile.TILE_TYPE.BACKGROUND),
     COAL_ORE(0,3, Tile.TILE_TYPE.FOREGROUND),
