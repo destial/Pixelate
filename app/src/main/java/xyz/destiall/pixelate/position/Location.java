@@ -3,6 +3,8 @@ package xyz.destiall.pixelate.position;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 import xyz.destiall.pixelate.environment.World;
 
 public class Location implements Cloneable {
@@ -75,6 +77,19 @@ public class Location implements Cloneable {
 
     public double getRawY() {
         return y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return Double.compare(location.x, x) == 0 && Double.compare(location.y, y) == 0 && Objects.equals(world, location.world);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, world, vector);
     }
 
     @NonNull

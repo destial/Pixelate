@@ -4,22 +4,22 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityMonster;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.tiles.Tile;
-import xyz.destiall.pixelate.environment.tiles.TileFactory;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
 public class World implements Updateable, Renderable {
     private final List<Entity> entities;
+
     // TODO: Maybe split tiles into chunks?
     private final Set<Tile> tiles;
     private final Generator generator;
@@ -50,23 +50,18 @@ public class World implements Updateable, Renderable {
         return monster;
     }
 
-    public Tile findTile(Location location)
-    {
+    public Tile findTile(Location location) {
         return tiles.stream()
                 .filter(t -> AABB.isAABB(location, t))
                 .findFirst().orElse(null);
     }
 
-    public Tile breakTile(Location location) {
+    public ItemStack breakTile(Location location) {
         Tile tile = findTile(location);
-        if (tile == null
-        || tile.getTileType() != Tile.TILE_TYPE.FOREGROUND)
-            return null;
-
-        tiles.remove(tile);
-        Tile newTile = TileFactory.createTile(Material.STONE, (int) tile.getLocation().getX(), (int) tile.getLocation().getY(), this);
-        tiles.add(newTile);
-        return tile;
+        if (tile == null || tile.getTileType() != Tile.TILE_TYPE.FOREGROUND) return null;
+        Material prev = tile.getMaterial();
+        tile.setMaterial(Material.STONE);
+        return new ItemStack(prev);
     }
 
     @Override
