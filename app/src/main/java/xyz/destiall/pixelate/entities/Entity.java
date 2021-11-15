@@ -101,6 +101,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         }
     }
 
+    // TODO: Implement up and down, with a different animation sprite
     public enum Direction {
         UP(0, -1),
         DOWN(0, 1),

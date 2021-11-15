@@ -91,14 +91,10 @@ public class ViewHotbar implements View {
     }
 
     @Override
-    public void update() {
-
-    }
+    public void update() {}
 
     @Override
-    public void tick() {
-
-    }
+    public void tick() {}
 
     @Override
     public void destroy() {

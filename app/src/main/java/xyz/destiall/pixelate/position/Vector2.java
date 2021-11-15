@@ -36,6 +36,11 @@ public class Vector2 implements Cloneable {
         this.y = y;
     }
 
+    public void set(Vector2 other) {
+        this.x = other.x;
+        this.y = other.y;
+    }
+
     public double dot(Vector2 other) {
         if (isZero()) return 0;
         return (x * other.x) + (y * other.y);

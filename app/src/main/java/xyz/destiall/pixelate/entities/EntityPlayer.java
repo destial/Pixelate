@@ -11,6 +11,7 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
+import xyz.destiall.pixelate.events.EventPlace;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -55,12 +56,28 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private void onMine(EventMining e) {
         if (location.getWorld() == null) return;
         updateAABB();
-        Location newLoc = location.clone().add(facing.getVector().multiply((Tile.SIZE - 10)));
-        AABB front = new AABB(newLoc.getX(), newLoc.getY(), newLoc.getX() + Tile.SIZE - 10, newLoc.getY() + Tile.SIZE - 10);
-        if (location.getWorld().isForegroundTile(front)) {
-            newLoc.add((Tile.SIZE - 10) / 2f, (Tile.SIZE - 10) / 2f);
+        Location newLoc = location.clone().add(facing.getVector().multiply(Tile.SIZE));
+        Tile tile = newLoc.getTile();
+        if (tile != null && tile.getTileType() == Tile.TILE_TYPE.FOREGROUND) {
             ItemStack stack = location.getWorld().breakTile(newLoc);
             inventory.addItem(stack);
+        }
+    }
+
+    @EventHandler
+    private void onPlace(EventPlace e) {
+        if (location.getWorld() == null) return;
+        updateAABB();
+        Location newLoc = location.clone().add(facing.getVector().multiply(Tile.SIZE));
+        Tile tile = newLoc.getTile();
+        if (tile != null && tile.getTileType() != Tile.TILE_TYPE.FOREGROUND) {
+            ItemStack current = inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
+            if (current != null) {
+                tile.setMaterial(current.getMaterial());
+                if (current.getAmount() == 1) {
+                    inventory.setItem(HUD.INSTANCE.getHotbar().getCurrentSlot(), null);
+                } else current.removeAmount(1);
+            }
         }
     }
 

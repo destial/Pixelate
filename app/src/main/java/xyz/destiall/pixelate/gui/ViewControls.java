@@ -7,6 +7,7 @@ import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
+import xyz.destiall.pixelate.events.EventPlace;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
@@ -18,12 +19,15 @@ public class ViewControls implements View {
     private final Vector2 innerCircleCenter;
     private final Vector2 actuator;
     private final Vector2 mineButton;
+    private final Vector2 placeButton;
     private final Vector2 invButton;
     private final int invButtonRadius;
     private final int mineButtonRadius;
+    private final int placeButtonRadius;
     private final EventJoystick eventJoystick;
     private boolean joystick;
     private boolean mine;
+    private boolean place;
 
     public ViewControls() {
         outerCircleCenter = new Vector2(275, 800);
@@ -32,8 +36,10 @@ public class ViewControls implements View {
         innerCircleRadius = 50;
         actuator = new Vector2();
         actuator.setZero();
-        mineButton = new Vector2(Game.WIDTH - 275, 800);
-        mineButtonRadius = 100;
+        mineButton = new Vector2(Game.WIDTH - 300, 850);
+        placeButton = new Vector2(Game.WIDTH - 200, 750);
+        placeButtonRadius = 50;
+        mineButtonRadius = 50;
         invButton = new Vector2(Game.WIDTH - 150, 900);
         invButtonRadius = 50;
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
@@ -47,7 +53,7 @@ public class ViewControls implements View {
                 outerCircleCenter.getY(),
                 outerCircleRadius,
                 20,
-                Color.GRAY
+                Color.RED
         );
         screen.circle(
                 innerCircleCenter.getX(),
@@ -59,26 +65,34 @@ public class ViewControls implements View {
                 mineButton.getX(),
                 mineButton.getY(),
                 mineButtonRadius * (mine ? 0.8f : 1),
-                Color.GRAY
+                Color.YELLOW
+        );
+        screen.circle(
+                placeButton.getX(),
+                placeButton.getY(),
+                placeButtonRadius * (place ? 0.8f: 1),
+                Color.YELLOW
         );
         screen.circle(
                 invButton.getX(),
                 invButton.getY(),
                 invButtonRadius,
-                Color.GRAY
+                Color.GREEN
         );
     }
 
     @Override
     public void update() {
-        innerCircleCenter.setX(outerCircleCenter.getX() + actuator.getX() * outerCircleRadius);
-        innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
+        if (actuator.isZero()) {
+            innerCircleCenter.set(outerCircleCenter);
+        } else {
+            innerCircleCenter.setX(outerCircleCenter.getX() + actuator.getX() * outerCircleRadius);
+            innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
+        }
     }
 
     @Override
-    public void tick() {
-
-    }
+    public void tick() {}
 
     public boolean isOnJoystick(float x, float y) {
         double distance = Math.sqrt(Math.pow(outerCircleCenter.getX() - x, 2) + Math.pow(outerCircleCenter.getY() - y, 2));
@@ -88,6 +102,11 @@ public class ViewControls implements View {
     public boolean isOnMineButton(float x, float y) {
         double distance = Math.sqrt(Math.pow(mineButton.getX() - x, 2) + Math.pow(mineButton.getY() - y, 2));
         return distance < mineButtonRadius;
+    }
+
+    public boolean isOnPlaceButton(float x, float y) {
+        double distance = Math.sqrt(Math.pow(placeButton.getX() - x, 2) + Math.pow(placeButton.getY() - y, 2));
+        return distance < placeButtonRadius;
     }
 
     public boolean isOnInvButton(float x, float y) {
@@ -103,6 +122,10 @@ public class ViewControls implements View {
         return mine;
     }
 
+    public boolean isPlacing() {
+        return place;
+    }
+
     public void setJoystick(boolean joystick) {
         this.joystick = joystick;
     }
@@ -110,6 +133,11 @@ public class ViewControls implements View {
     public void setMining(boolean mine) {
         this.mine = mine;
         if (mine) Game.HANDLER.call(new EventMining());
+    }
+
+    public void setPlacing(boolean place) {
+        this.place = place;
+        if (place) Game.HANDLER.call(new EventPlace());
     }
 
     public void setActuator(float x, float y) {
@@ -143,31 +171,34 @@ public class ViewControls implements View {
             case DOWN:
                 if (isOnJoystick(x, y)) {
                     setJoystick(true);
-                }
-                if (isOnMineButton(x, y)) {
+                } else if (isOnMineButton(x, y)) {
                     setMining(true);
-                }
-                if (isOnInvButton(x, y)) {
+                } else if (isOnInvButton(x, y)) {
                     Game.HANDLER.call(new EventOpenInventory());
+                } else if (isOnPlaceButton(x, y)) {
+                    setPlacing(true);
                 }
                 break;
             case MOVE:
                 if (isJoystick()) {
                     setActuator(x, y);
-                }
-                if (isMining()) {
+                } else if (isMining()) {
                     if (!isOnMineButton(x, y))
                         setMining(false);
+                } else if (isPlacing()) {
+                    if (!isOnPlaceButton(x, y))
+                        setPlacing(false);
                 }
                 break;
             case UP:
                 if (isOnMineButton(x, y)) {
                     setMining(false);
-                }
-                if (isJoystick()) {
+                } else if (isJoystick()) {
                     setJoystick(false);
                     setActuator(0, 0);
                     Game.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
+                } else if (isOnPlaceButton(x, y)) {
+                    setPlacing(false);
                 }
                 break;
             default: break;

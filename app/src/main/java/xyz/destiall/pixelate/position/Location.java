@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import java.util.Objects;
 
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 
 public class Location implements Cloneable {
     private double x;
@@ -61,6 +62,11 @@ public class Location implements Cloneable {
     public Vector2 toVector() {
         vector.set(x, y);
         return vector;
+    }
+
+    public Tile getTile() {
+        if (world == null) return null;
+        return world.findTile(this);
     }
 
     public int getX() {

@@ -92,7 +92,7 @@ public class ViewInventory implements View {
         }
         screen.draw(image, cOutX, cOutY);
         for (Recipe recipe : Game.getRecipes().values()) {
-            if (recipe.isFulfilled(inventory)) {
+            if (recipe.isFulfilled(inventory.getCrafting())) {
                 ItemStack item = recipe.getItem();
                 Bitmap image;
                 if (images.containsKey(item.getMaterial())) {
@@ -145,14 +145,10 @@ public class ViewInventory implements View {
     }
 
     @Override
-    public void update() {
-
-    }
+    public void update() {}
 
     @Override
-    public void tick() {
-
-    }
+    public void tick() {}
 
     @EventHandler
     private void onTouch(EventTouch e) {
@@ -162,7 +158,7 @@ public class ViewInventory implements View {
             int slot = getSlot(x, y);
             if (slot == 100) {
                 for (Recipe recipe : Game.getRecipes().values()) {
-                    if (recipe.isFulfilled(inventory)) {
+                    if (recipe.isFulfilled(inventory.getCrafting())) {
                         inventory.setItem(draggingSlot, null);
                         if (inventory.addItem(recipe.getItem())) {
                             inventory.clearCrafting();

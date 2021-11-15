@@ -10,6 +10,7 @@ import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -29,14 +30,33 @@ public class StateGame extends State {
         World world = new World();
         player = new EntityPlayer(gameSurface);
         world.generateWorld(0, true);
-        player.teleport(new Location(Game.WIDTH / 2f, Game.HEIGHT / 2f, world));
+        Location location = new Location(0, 0, world);
+        while (location.getTile().getTileType() != Tile.TILE_TYPE.BACKGROUND) {
+            location.add(Tile.SIZE, Tile.SIZE);
+        }
+        player.teleport(location);
         world.getEntities().add(player);
         objects.add(world);
         objects.add(HUD.INSTANCE);
         screen = new Screen(null, player, Game.WIDTH, Game.HEIGHT);
 
-        Recipe plankRecipe = new Recipe("plank", new ItemStack(Material.PLANKS));
+        Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS));
         plankRecipe.setShape("W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        Game.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank2", new ItemStack(Material.PLANKS));
+        plankRecipe.setShape(null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        Game.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank3", new ItemStack(Material.PLANKS));
+        plankRecipe.setShape(null, null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        Game.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank4", new ItemStack(Material.PLANKS));
+        plankRecipe.setShape(null, null, null, "W");
         plankRecipe.setIngredient("W", Material.WOOD);
         Game.addRecipe(plankRecipe);
     }

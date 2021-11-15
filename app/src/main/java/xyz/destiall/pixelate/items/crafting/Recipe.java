@@ -16,7 +16,6 @@ public class Recipe {
     public Recipe(String key, ItemStack item) {
         this.key = key;
         this.item = item;
-
     }
 
     public String getKey() {
@@ -24,8 +23,7 @@ public class Recipe {
     }
 
     // TODO: Make crafting recipes fulfill if they are just in the correct order, regardless of position
-    public boolean isFulfilled(Inventory inventory) {
-        ItemStack[] crafting = inventory.getCrafting();
+    public boolean isFulfilled(ItemStack[] crafting) {
         int i = 0;
         for (ItemStack stack : crafting) {
             if (stack != null) {
@@ -47,7 +45,7 @@ public class Recipe {
     }
 
     public void setIngredient(String element, Material material) {
-        format.entrySet().stream().filter(en -> en.getValue().equals(element)).forEach(en -> recipe[en.getKey()] = material);
+        format.entrySet().stream().filter(en -> en.getValue() != null && en.getValue().equals(element)).forEach(en -> recipe[en.getKey()] = material);
     }
 
     public ItemStack getItem() {
