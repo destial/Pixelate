@@ -4,8 +4,8 @@ import android.graphics.Canvas;
 
 import xyz.destiall.pixelate.GameSurface;
 
-public class StateMenu extends State {
-    public StateMenu(GameSurface surface) {
+public class StatePauseMenu extends State {
+    public StatePauseMenu(GameSurface surface) {
         super(surface);
 
     }

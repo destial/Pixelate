@@ -10,6 +10,9 @@ import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.WorldManager;
+import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
+import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -21,22 +24,32 @@ import xyz.destiall.pixelate.position.Location;
 
 public class StateGame extends State {
     private final EntityPlayer player;
-    private final List<Object> objects;
+    private List<Object> objects;
+    private WorldManager worldsManagement;
     private final Screen screen;
+
 
     public StateGame(GameSurface gameSurface) {
         super(gameSurface);
         objects = new ArrayList<>();
-        World world = new World();
-        player = new EntityPlayer(gameSurface);
+
+        World world = new World(new GeneratorBasic());
         world.generateWorld(0, true);
-        Location location = new Location(0, 0, world);
-        while (location.getTile().getTileType() != Tile.TILE_TYPE.BACKGROUND) {
-            location.add(Tile.SIZE, Tile.SIZE);
-        }
-        player.teleport(location);
-        world.getEntities().add(player);
-        objects.add(world);
+
+        World cave = new World(new GeneratorUnderground());
+        cave.generateWorld(0, true);
+
+        worldsManagement = new WorldManager();
+
+        worldsManagement.addWorld("Overworld", world);
+        worldsManagement.addWorld("Cave", cave);
+
+        player = new EntityPlayer(gameSurface);
+        Location location = new Location(0, 0, worldsManagement.getCurrentWorld());
+
+        player.teleport(worldsManagement.getCurrentWorld().useBestEmptyLocation(location));
+        worldsManagement.getCurrentWorld().getEntities().add(player);
+
         objects.add(HUD.INSTANCE);
         screen = new Screen(null, player, Game.WIDTH, Game.HEIGHT);
 
@@ -61,8 +74,12 @@ public class StateGame extends State {
         Game.addRecipe(plankRecipe);
     }
 
+    public EntityPlayer getPlayer() { return player; }
+    public WorldManager getWorldManager() { return worldsManagement; }
+
     @Override
     public void update() {
+        worldsManagement.getCurrentWorld().update();
         for (Object o : objects) {
             if (o instanceof Updateable) {
                 ((Updateable) o).update();
@@ -72,6 +89,7 @@ public class StateGame extends State {
 
     @Override
     public void tick() {
+        worldsManagement.getCurrentWorld().tick();
         for (Object o : objects) {
             if (o instanceof Updateable) {
                 ((Updateable) o).tick();
@@ -82,6 +100,7 @@ public class StateGame extends State {
     @Override
     public void render(Canvas canvas) {
         screen.update(canvas, player, Game.WIDTH, Game.HEIGHT);
+        worldsManagement.getCurrentWorld().render(screen);
         for (Object o : objects) {
             if (o instanceof Renderable) {
                 ((Renderable) o).render(screen);

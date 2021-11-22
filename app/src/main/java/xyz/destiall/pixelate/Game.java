@@ -10,10 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import xyz.destiall.java.events.EventHandling;
+import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.items.crafting.Recipe;
+import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
-import xyz.destiall.pixelate.states.StateMenu;
+import xyz.destiall.pixelate.states.StatePauseMenu;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class Game extends Thread {
@@ -27,6 +30,7 @@ public class Game extends Thread {
     private static Canvas canvas;
     private static Bitmap tileMap;
     private static GSM manager;
+    public static boolean paused = false;
     private final Timer timer;
     private boolean running;
 
@@ -41,7 +45,7 @@ public class Game extends Thread {
         timer = new Timer();
         manager = new GSM();
         manager.addState("Game", new StateGame(gameSurface));
-        manager.addState("Main Menu", new StateMenu(gameSurface));
+        manager.addState("PauseMenu", new StatePauseMenu(gameSurface));
         manager.setState("Game");
     }
 
@@ -50,17 +54,20 @@ public class Game extends Thread {
         long nsPerTick = 1000000000 / 60;
         long lastTime = System.nanoTime();
         long unprocessed = 0;
-        while (running)  {
+        while (running && !paused)  {
             try {
                 canvas = surfaceHolder.lockCanvas();
-                HEIGHT = canvas.getHeight();
-                WIDTH = canvas.getWidth();
-                update();
-                unprocessed += (Timer.getLastNanoTime() - lastTime) / nsPerTick;
-                lastTime = Timer.getLastNanoTime();
-                while (unprocessed >= 1) {
-                    tick();
-                    unprocessed -= 1;
+                if(!paused)
+                {
+                    HEIGHT = canvas.getHeight();
+                    WIDTH = canvas.getWidth();
+                    update();
+                    unprocessed += (Timer.getLastNanoTime() - lastTime) / nsPerTick;
+                    lastTime = Timer.getLastNanoTime();
+                    while (unprocessed >= 1) {
+                        tick();
+                        unprocessed -= 1;
+                    }
                 }
                 render(canvas);
             } catch (Exception e) {
@@ -79,18 +86,50 @@ public class Game extends Thread {
     }
 
     private void update() {
-        timer.update();
-        manager.update();
+        if(!paused)
+        {
+            timer.update();
+            manager.update();
+        }
     }
 
     private void render(Canvas canvas) {
-        canvas.drawRGB(0, 0, 0);
-        manager.render(canvas);
+        if(!paused)
+        {
+            canvas.drawRGB(0, 0, 0);
+            manager.render(canvas);
+        }
     }
 
     private void tick() {
-        manager.tick();
-        timer.tick();
+        if(!paused)
+        {
+            manager.tick();
+            timer.tick();
+        }
+    }
+
+    public static boolean setWorld(String world)
+    {
+        StateGame gameState = ((StateGame)manager.getState("Game"));
+        WorldManager wm = gameState.getWorldManager();
+        if(wm.isAWorld(world) && !wm.isWorldActive(world))
+        {
+            World current = wm.getCurrentWorld();
+            current.getEntities().remove(gameState.getPlayer());
+
+            //Set new active world
+            wm.setActive(world);
+
+            //Player codes
+            World next = wm.getCurrentWorld();
+            System.out.println("Current world: " + wm.getCurrentWorldName());
+            next.getEntities().add(gameState.getPlayer());
+            gameState.getPlayer().teleport(wm.getCurrentWorld().useBestEmptyLocation(new Location(0,0, wm.getCurrentWorld())));
+
+            return true;
+        }
+        return false;
     }
 
     public static Bitmap getTileMap() {
@@ -112,4 +151,6 @@ public class Game extends Thread {
     public static GSM getGSM() {
         return manager;
     }
+
+    public static GameSurface getGameSurface() { return gameSurface; }
 }

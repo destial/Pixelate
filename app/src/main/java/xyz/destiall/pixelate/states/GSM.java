@@ -18,6 +18,8 @@ public class GSM implements Updateable {
         states.put(name, state);
     }
 
+    public State getState(String name) { return states.get(name); }
+
     public void setState(String name) {
         currentState = name;
     }
@@ -41,4 +43,6 @@ public class GSM implements Updateable {
             states.get(currentState).render(canvas);
         }
     }
+
+
 }

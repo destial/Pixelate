@@ -20,6 +20,8 @@ import xyz.destiall.pixelate.position.Location;
 public class World implements Updateable, Renderable {
     private final List<Entity> entities;
 
+    private WORLD_TYPE worldType;
+
     // TODO: Maybe split tiles into chunks?
     private final Set<Tile> tiles;
     private final Generator generator;
@@ -32,6 +34,11 @@ public class World implements Updateable, Renderable {
         entities = new LinkedList<>();
         tiles = new HashSet<>();
         this.generator = generator;
+
+        if(generator instanceof GeneratorBasic)
+        {
+            worldType = WORLD_TYPE.OVERWORLD;
+        }
     }
 
     public List<Entity> getEntities() {
@@ -46,6 +53,16 @@ public class World implements Updateable, Renderable {
         if (tiles.size() == 0 || force) {
             generator.generate(seed, this, tiles);
         }
+    }
+
+    public Location useBestEmptyLocation(Location requestedLocation)
+    {
+        //Find empty location
+        //TODO a better location finding alogrithm based on recursive function that searches surrounding locations)
+        while (requestedLocation.getTile().getTileType() != Tile.TILE_TYPE.BACKGROUND) {
+            requestedLocation.add(Tile.SIZE, Tile.SIZE);
+        }
+        return requestedLocation;
     }
 
     public EntityMonster spawnEntity(Location location, Entity.Type type) {
