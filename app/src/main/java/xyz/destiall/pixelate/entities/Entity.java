@@ -11,15 +11,17 @@ import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class Entity extends Imageable implements Updateable, Renderable {
+    protected final SpriteSheet spriteSheet;
     protected Location location;
     protected float scale;
     protected Vector2 velocity;
-    protected int currentAnimation;
-    protected final SpriteSheet spriteSheet;
+    protected float currentAnimation;
     protected AABB collision;
     protected Direction facing;
+    protected Direction target;
 
     public Entity(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
@@ -28,6 +30,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         scale = 1;
         location = new Location(0, 0);
         facing = Direction.RIGHT;
+        target = facing;
     }
 
     public Location getLocation() {
@@ -48,13 +51,12 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     @Override
     public void update() {
-
         // Update sprite animation
-        currentAnimation++;
+        currentAnimation += Timer.getDeltaTime() * Timer.getFPS();
         if (currentAnimation >= columns)  {
             currentAnimation = 0;
         }
-        spriteSheet.setCurrentAnimation(currentAnimation);
+        spriteSheet.setCurrentAnimation((int) currentAnimation);
     }
 
     public AABB getBounds() {
@@ -103,8 +105,8 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     // TODO: Implement up and down, with a different animation sprite
     public enum Direction {
-        UP(0, -1),
-        DOWN(0, 1),
+        UP(0, 1),
+        DOWN(0, -1),
         LEFT(-1, 0),
         RIGHT(1, 0);
 

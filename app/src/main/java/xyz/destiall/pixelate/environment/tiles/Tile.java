@@ -18,9 +18,9 @@ public class Tile extends Imageable implements Renderable {
     protected Vector2 location;
     protected Material material;
     protected World world;
-    protected TILE_TYPE tileType;
+    protected TileType tileType;
 
-    public Tile(int x, int y, Material material, World world, TILE_TYPE type) {
+    public Tile(int x, int y, Material material, World world, TileType type) {
         super(Game.getTileMap(), Material.getRows(), Material.getColumns());
         this.material = material;
         this.world = world;
@@ -36,7 +36,7 @@ public class Tile extends Imageable implements Renderable {
         return location;
     }
 
-    public TILE_TYPE getTileType() {
+    public TileType getTileType() {
         return tileType;
     }
 
@@ -50,7 +50,7 @@ public class Tile extends Imageable implements Renderable {
         this.tileType = mat.getTileType();
     }
 
-    public enum TILE_TYPE {
+    public enum TileType {
         BACKGROUND,
         FOREGROUND,
         UNKNOWN

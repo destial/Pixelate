@@ -98,11 +98,16 @@ public class Vector2 implements Cloneable {
         return Math.sqrt((x * x) + (y * y));
     }
 
-    public Vector2 normalise() {
+    public Vector2 normalized() {
         if (isZero()) return this;
         this.x = x / length();
         this.y = y / length();
         return this;
+    }
+
+    public Vector2 normalize() {
+        if (isZero()) return new Vector2(0, 0);
+        return new Vector2(x / length(), y / length());
     }
 
     public void setZero() {

@@ -3,31 +3,29 @@ package xyz.destiall.pixelate.environment;
 import java.util.HashMap;
 import java.util.Set;
 
-public class WorldManager {
+import xyz.destiall.pixelate.graphics.Renderable;
+import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.graphics.Updateable;
 
-    HashMap<String, World> worlds;
-    String activeWorld;
+public class WorldManager implements Updateable, Renderable {
+    private final HashMap<String, World> worlds;
+    private String activeWorld;
 
-    public WorldManager()
-    {
-        worlds = new HashMap<String, World>();
+    public WorldManager() {
+        worlds = new HashMap<>();
     }
 
-    public boolean addWorld(String name, World world)
-    {
-        if(!worlds.containsKey(name))
-        {
+    public boolean addWorld(String name, World world) {
+        if (!worlds.containsKey(name)) {
             worlds.put(name, world);
-            if(worlds.size() == 1) activeWorld = name;
+            if (worlds.size() == 1) return setActive(name);
             return true;
         }
         return false;
     }
 
-    public boolean setActive(String name)
-    {
-        if(worlds.containsKey(name))
-        {
+    public boolean setActive(String name) {
+        if (worlds.containsKey(name)) {
             activeWorld = name;
             return true;
         }
@@ -49,15 +47,27 @@ public class WorldManager {
         return worlds.keySet();
     }
 
-    public boolean isWorldActive(String name)
-    {
-        if(worlds.containsKey(name) && activeWorld.equals(name))
-            return true;
-        return false;
+    public boolean isWorldActive(String name) {
+        return worlds.containsKey(name) && activeWorld.equals(name);
     }
 
     public boolean isAWorld(String name)
     {
         return worlds.containsKey(name);
+    }
+
+    @Override
+    public void render(Screen screen) {
+        getCurrentWorld().render(screen);
+    }
+
+    @Override
+    public void update() {
+        getCurrentWorld().update();
+    }
+
+    @Override
+    public void tick() {
+        getCurrentWorld().tick();
     }
 }

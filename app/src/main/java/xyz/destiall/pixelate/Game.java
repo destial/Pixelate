@@ -12,6 +12,7 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandling;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.states.GSM;
@@ -29,7 +30,7 @@ public class Game extends Thread {
     private static SurfaceHolder surfaceHolder;
     private static Canvas canvas;
     private static Bitmap tileMap;
-    private static GSM manager;
+    private static GSM stateManager;
     public static boolean paused = false;
     private final Timer timer;
     private boolean running;
@@ -38,15 +39,15 @@ public class Game extends Thread {
         super();
         Game.gameSurface = gameSurface;
         Game.surfaceHolder = surfaceHolder;
-        tileMap = Bitmap.createBitmap(BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.tilemap));
+        tileMap = ResourceManager.getBitmap(R.drawable.tilemap);
         tileMap = Bitmap.createScaledBitmap(tileMap, (int) (tileMap.getWidth() * 1.52), (int) (tileMap.getHeight() * 1.52), false);
         HEIGHT = gameSurface.getHeight();
         WIDTH = gameSurface.getWidth();
         timer = new Timer();
-        manager = new GSM();
-        manager.addState("Game", new StateGame(gameSurface));
-        manager.addState("PauseMenu", new StatePauseMenu(gameSurface));
-        manager.setState("Game");
+        stateManager = new GSM();
+        stateManager.addState("Game", new StateGame(gameSurface));
+        stateManager.addState("PauseMenu", new StatePauseMenu(gameSurface));
+        stateManager.setState("Game");
     }
 
     @Override
@@ -89,7 +90,7 @@ public class Game extends Thread {
         if(!paused)
         {
             timer.update();
-            manager.update();
+            stateManager.update();
         }
     }
 
@@ -97,24 +98,22 @@ public class Game extends Thread {
         if(!paused)
         {
             canvas.drawRGB(0, 0, 0);
-            manager.render(canvas);
+            stateManager.render(canvas);
         }
     }
 
     private void tick() {
         if(!paused)
         {
-            manager.tick();
+            stateManager.tick();
             timer.tick();
         }
     }
 
-    public static boolean setWorld(String world)
-    {
-        StateGame gameState = ((StateGame)manager.getState("Game"));
+    public static boolean setWorld(String world) {
+        StateGame gameState = ((StateGame) stateManager.getState("Game"));
         WorldManager wm = gameState.getWorldManager();
-        if(wm.isAWorld(world) && !wm.isWorldActive(world))
-        {
+        if (wm.isAWorld(world) && !wm.isWorldActive(world)) {
             World current = wm.getCurrentWorld();
             current.getEntities().remove(gameState.getPlayer());
 
@@ -125,7 +124,7 @@ public class Game extends Thread {
             World next = wm.getCurrentWorld();
             System.out.println("Current world: " + wm.getCurrentWorldName());
             next.getEntities().add(gameState.getPlayer());
-            gameState.getPlayer().teleport(wm.getCurrentWorld().useBestEmptyLocation(new Location(0,0, wm.getCurrentWorld())));
+            gameState.getPlayer().teleport(wm.getCurrentWorld().getNearestEmpty(new Location(0,0, wm.getCurrentWorld())));
 
             return true;
         }
@@ -149,8 +148,10 @@ public class Game extends Thread {
     }
 
     public static GSM getGSM() {
-        return manager;
+        return stateManager;
     }
 
-    public static GameSurface getGameSurface() { return gameSurface; }
+    public static GameSurface getGameSurface() {
+        return gameSurface;
+    }
 }

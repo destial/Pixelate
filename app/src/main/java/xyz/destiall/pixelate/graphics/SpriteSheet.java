@@ -29,6 +29,10 @@ public class SpriteSheet {
         current = name;
     }
 
+    public boolean hasAnimation(String name) {
+        return sprites.containsKey(name);
+    }
+
     public Bitmap[] getCurrentSprites() {
         if (current != null) {
             return sprites.get(current);

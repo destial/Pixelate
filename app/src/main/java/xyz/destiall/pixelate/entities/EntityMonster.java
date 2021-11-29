@@ -1,10 +1,8 @@
 package xyz.destiall.pixelate.entities;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
@@ -12,7 +10,7 @@ import xyz.destiall.pixelate.position.Location;
 public class EntityMonster extends EntityLiving {
     private final Type type;
     public EntityMonster(Entity.Type type) {
-        super(Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), type.getDrawable())), type.getRows(), type.getColumns());
+        super(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
         location = new Location((int) (Game.WIDTH * 0.5), (int) (Game.HEIGHT * 0.5));
         spriteSheet.addSprite("LOOK RIGHT", createAnimation(0));
         spriteSheet.addSprite("LOOK LEFT", createAnimation(1));

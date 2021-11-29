@@ -31,12 +31,14 @@ public class ViewInventory implements View {
     private int draggingSlot;
     private int draggingX;
     private int draggingY;
+    private int scale;
 
     public ViewInventory(Inventory inventory) {
         this.inventory = inventory;
         exitButton = new Vector2(Game.WIDTH - 100, 100);
         exitButtonRadius = 40;
         image = Imageable.getImage(R.drawable.hotbar);
+        scale = (int) (image.getWidth() * 0.8);
         positions = new HashMap<>();
         images = new HashMap<>();
         Game.HANDLER.registerListener(this);
@@ -58,7 +60,7 @@ public class ViewInventory implements View {
                     if (images.containsKey(item.getMaterial())) {
                         image = images.get(item.getMaterial());
                     } else {
-                        image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                        image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getMaterial(), image);
                     }
                     if (item == dragging) {
@@ -98,7 +100,7 @@ public class ViewInventory implements View {
                 if (images.containsKey(item.getMaterial())) {
                     image = images.get(item.getMaterial());
                 } else {
-                    image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                    image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                     images.put(item.getMaterial(), image);
                 }
                 screen.draw(image, cOutX + 15, cOutY + 5);
@@ -118,7 +120,7 @@ public class ViewInventory implements View {
                     if (images.containsKey(item.getMaterial())) {
                         image = images.get(item.getMaterial());
                     } else {
-                        image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                        image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getMaterial(), image);
                     }
                     if (item != dragging) {
@@ -207,7 +209,7 @@ public class ViewInventory implements View {
                     dragging = null;
                     return;
                 }
-                if (slot >= inventory.getSize() && slot != 100) {
+                if (slot >= inventory.getSize()) {
                     inventory.setCrafting(slot - inventory.getSize(), dragging);
                     if (draggingSlot >= inventory.getSize()) {
                         inventory.setCrafting(draggingSlot - inventory.getSize(), null);

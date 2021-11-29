@@ -13,7 +13,6 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
-import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -24,10 +23,9 @@ import xyz.destiall.pixelate.position.Location;
 
 public class StateGame extends State {
     private final EntityPlayer player;
-    private List<Object> objects;
-    private WorldManager worldsManagement;
+    private final List<Object> objects;
+    private final WorldManager worldsManagement;
     private final Screen screen;
-
 
     public StateGame(GameSurface gameSurface) {
         super(gameSurface);
@@ -43,18 +41,21 @@ public class StateGame extends State {
 
         worldsManagement.addWorld("Overworld", world);
         worldsManagement.addWorld("Cave", cave);
+        worldsManagement.setActive("Overworld");
 
-        player = new EntityPlayer(gameSurface);
+        objects.add(worldsManagement);
+        player = new EntityPlayer();
         Location location = new Location(0, 0, worldsManagement.getCurrentWorld());
 
-        player.teleport(worldsManagement.getCurrentWorld().useBestEmptyLocation(location));
+        player.teleport(worldsManagement.getCurrentWorld().getNearestEmpty(location));
         worldsManagement.getCurrentWorld().getEntities().add(player);
 
         objects.add(HUD.INSTANCE);
         screen = new Screen(null, player, Game.WIDTH, Game.HEIGHT);
 
         Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS));
-        plankRecipe.setShape("W");
+        plankRecipe.setShape("W"); // { W  , null
+                                    // null, null }
         plankRecipe.setIngredient("W", Material.WOOD);
         Game.addRecipe(plankRecipe);
 
@@ -74,12 +75,16 @@ public class StateGame extends State {
         Game.addRecipe(plankRecipe);
     }
 
-    public EntityPlayer getPlayer() { return player; }
-    public WorldManager getWorldManager() { return worldsManagement; }
+    public EntityPlayer getPlayer() {
+        return player;
+    }
+
+    public WorldManager getWorldManager() {
+        return worldsManagement;
+    }
 
     @Override
     public void update() {
-        worldsManagement.getCurrentWorld().update();
         for (Object o : objects) {
             if (o instanceof Updateable) {
                 ((Updateable) o).update();
@@ -89,7 +94,6 @@ public class StateGame extends State {
 
     @Override
     public void tick() {
-        worldsManagement.getCurrentWorld().tick();
         for (Object o : objects) {
             if (o instanceof Updateable) {
                 ((Updateable) o).tick();
@@ -100,7 +104,6 @@ public class StateGame extends State {
     @Override
     public void render(Canvas canvas) {
         screen.update(canvas, player, Game.WIDTH, Game.HEIGHT);
-        worldsManagement.getCurrentWorld().render(screen);
         for (Object o : objects) {
             if (o instanceof Renderable) {
                 ((Renderable) o).render(screen);

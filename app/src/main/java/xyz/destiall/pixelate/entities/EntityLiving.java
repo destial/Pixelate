@@ -42,7 +42,18 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     @Override
     public void update() {
         super.update();
+        updateDirection();
+        updateSprite();
+        collide();
+    }
 
+    public void updateSprite() {
+        // Set animation sprite for entity based on velocity
+        String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
+        if (spriteSheet.hasAnimation(anim)) spriteSheet.setCurrentSprite(anim);
+    }
+
+    public void updateDirection() {
         // Set direction of entity based on velocity
         if (!velocity.isZero()) {
             if (velocity.getX() > 0) {
@@ -50,12 +61,15 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
             } else if (velocity.getX() < 0) {
                 facing = Direction.LEFT;
             }
+            if (velocity.getY() > 0 && velocity.getY() > velocity.getX()) {
+                facing = Direction.UP;
+            } else if (velocity.getY() < 0 && velocity.getY() < velocity.getX()) {
+                facing = Direction.DOWN;
+            }
         }
+    }
 
-        // Set animation sprite for entity based on velocity
-        String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
-        spriteSheet.setCurrentSprite(anim);
-
+    public void collide() {
         // Move entity
         location.add(velocity);
 
@@ -99,8 +113,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         }
     }
 
-    protected void updateAABB() {
-
+    public void updateAABB() {
         // Get the scale and size of the entity based on the animation image (lazy hack)
         Bitmap map = spriteSheet.getCurrentAnimation();
         if (scale == 0) scale = 1;
@@ -110,7 +123,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         collision.setMax(location.getX() + (int)(map.getWidth() * scale), location.getY() + (int)(map.getHeight() * scale));
     }
 
-    protected void constraint() {
+    public void constraint() {
         if (location.getX() < -Game.WIDTH) {
             location.set(-Game.WIDTH, location.getY());
         }

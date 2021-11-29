@@ -1,19 +1,15 @@
 package xyz.destiall.pixelate.gui;
 
-import android.content.Intent;
 import android.graphics.Color;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Game;
-import xyz.destiall.pixelate.GameActivity;
-import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.screens.MainMenu;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class ViewControls implements View {
@@ -43,9 +39,6 @@ public class ViewControls implements View {
         actuator = new Vector2();
         actuator.setZero();
 
-        placeButtonRadius = 50;
-        mineButtonRadius = 50;
-
         // Button location initialisation
         pauseButton = new Vector2(Game.WIDTH - (Game.WIDTH * 0.9), Game.HEIGHT - (Game.HEIGHT * 0.9));
         invButton = new Vector2(Game.WIDTH - 150, Game.HEIGHT - 100);
@@ -55,6 +48,8 @@ public class ViewControls implements View {
         // Button radius
         pauseButtonRadius = 25;
         invButtonRadius = 50;
+        placeButtonRadius = 50;
+        mineButtonRadius = 50;
 
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
         Game.HANDLER.registerListener(this);
@@ -81,33 +76,36 @@ public class ViewControls implements View {
     }
 
     @Override
-    public void tick() {
-    }
+    public void tick() {}
 
-    public boolean isOnJoystick(float x, float y) {
+    private boolean isOnJoystick(float x, float y) {
         double distance = Math
                 .sqrt(Math.pow(outerCircleCenter.getX() - x, 2) + Math.pow(outerCircleCenter.getY() - y, 2));
         return distance < outerCircleRadius;
     }
 
-    public boolean isOnPauseButton(float x, float y) {
-        double distance = Math.sqrt(Math.pow(pauseButton.getX() - x, 2) + Math.pow(pauseButton.getY() - y, 2));
-        return distance < pauseButtonRadius;
+    private boolean isOnPauseButton(float x, float y) {
+        return isOnButton(pauseButton, x, y, pauseButtonRadius);
     }
 
-    public boolean isOnMineButton(float x, float y) {
-        double distance = Math.sqrt(Math.pow(mineButton.getX() - x, 2) + Math.pow(mineButton.getY() - y, 2));
-        return distance < mineButtonRadius;
+    private boolean isOnMineButton(float x, float y) {
+        return isOnButton(mineButton, x, y, mineButtonRadius);
     }
 
-    public boolean isOnPlaceButton(float x, float y) {
-        double distance = Math.sqrt(Math.pow(placeButton.getX() - x, 2) + Math.pow(placeButton.getY() - y, 2));
-        return distance < placeButtonRadius;
+    private boolean isOnPlaceButton(float x, float y) {
+        return isOnButton(placeButton, x, y, placeButtonRadius);
     }
 
-    public boolean isOnInvButton(float x, float y) {
-        double distance = Math.sqrt(Math.pow(invButton.getX() - x, 2) + Math.pow(invButton.getY() - y, 2));
-        return distance < invButtonRadius;
+    private boolean isOnInvButton(float x, float y) {
+        return isOnButton(invButton, x, y, invButtonRadius);
+    }
+
+    private boolean isOnButton(Vector2 vect, float x, float y, int radius) {
+        return getDistance(vect, x, y) < radius;
+    }
+
+    private double getDistance(Vector2 vect, float x, float y) {
+        return Math.sqrt(Math.pow(vect.getX() - x, 2) + Math.pow(vect.getY() - y, 2));
     }
 
     public boolean isJoystick() {

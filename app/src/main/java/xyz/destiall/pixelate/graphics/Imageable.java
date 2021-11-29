@@ -52,7 +52,7 @@ public abstract class Imageable {
     }
 
     public static Bitmap getImage(int id) {
-        return Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), id));
+        return ResourceManager.getBitmap(id);
     }
 
     public static Bitmap scaleImage(Bitmap image, float scale) {

@@ -1,6 +1,6 @@
 package xyz.destiall.pixelate.environment;
 
-enum WORLD_TYPE {
+enum Environment {
     OVERWORLD,
     CAVE,
     NETHER,
