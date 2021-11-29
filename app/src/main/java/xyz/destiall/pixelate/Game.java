@@ -103,7 +103,7 @@ public class Game extends Thread {
 
     public static boolean setWorld(String world) {
         StateGame gameState = ((StateGame) stateManager.getState("Game"));
-        WorldManager wm = gameState.getWorldManager();
+        WorldManager wm = gameState.getObject(WorldManager.class);
         if (wm.isAWorld(world) && !wm.isWorldActive(world)) {
             // Remove player from current world
             World current = wm.getCurrentWorld();

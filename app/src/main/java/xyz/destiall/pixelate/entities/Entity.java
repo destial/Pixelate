@@ -2,19 +2,24 @@ package xyz.destiall.pixelate.entities;
 
 import android.graphics.Bitmap;
 
+import java.util.HashMap;
+
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.modular.Modular;
+import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.timer.Timer;
 
-public abstract class Entity extends Imageable implements Updateable, Renderable {
+public abstract class Entity extends Imageable implements Updateable, Renderable, Modular {
     protected final SpriteSheet spriteSheet;
+    protected final HashMap<Class<? extends Module>, Module> modules;
     protected Location location;
     protected float scale;
     protected Vector2 velocity;
@@ -31,6 +36,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         location = new Location(0, 0);
         facing = Direction.RIGHT;
         target = facing;
+        modules = new HashMap<>();
     }
 
     public Location getLocation() {
@@ -57,6 +63,10 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
             currentAnimation = 0;
         }
         spriteSheet.setCurrentAnimation((int) currentAnimation);
+
+        for (Module m : modules.values()) {
+            m.update();
+        }
     }
 
     public AABB getBounds() {
@@ -74,7 +84,11 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     }
 
     @Override
-    public void tick() {}
+    public void tick() {
+        for (Module m : modules.values()) {
+            m.tick();
+        }
+    }
 
     public enum Type {
         ZOMBIE(R.drawable.zombie, 4, 3),
@@ -118,5 +132,30 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         public Vector2 getVector() {
             return vector.clone();
         }
+    }
+
+    @Override
+    public <N extends Module> N getModule(Class<N> clazz) {
+        return (N) modules.get(clazz);
+    }
+
+    @Override
+    public <N extends Module> void addModule(N module) {
+        modules.putIfAbsent(module.getClass(), module);
+    }
+
+    @Override
+    public <N extends Module> boolean hasModule(Class<N> clazz) {
+        return modules.containsKey(clazz);
+    }
+
+    @Override
+    public <N extends Module> N removeModule(Class<N> clazz) {
+        N module = getModule(clazz);
+        if (module != null) {
+            module.destroy();
+            modules.remove(clazz);
+        }
+        return module;
     }
 }
