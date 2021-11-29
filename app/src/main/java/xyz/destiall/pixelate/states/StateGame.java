@@ -91,6 +91,9 @@ public class StateGame extends State implements Modular {
                 ((Updateable) o).update();
             }
         }
+        for (Module m : modules.values()) {
+            m.update();
+        }
     }
 
     @Override
@@ -99,6 +102,9 @@ public class StateGame extends State implements Modular {
             if (o instanceof Updateable) {
                 ((Updateable) o).tick();
             }
+        }
+        for (Module m : modules.values()) {
+            m.tick();
         }
     }
 
