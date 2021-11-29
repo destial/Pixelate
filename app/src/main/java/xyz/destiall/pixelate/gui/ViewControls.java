@@ -30,17 +30,17 @@ public class ViewControls implements View {
     private boolean place;
 
     public ViewControls() {
-        outerCircleCenter = new Vector2(275, 800);
-        innerCircleCenter = new Vector2(275, 800);
+        outerCircleCenter = new Vector2(275, Game.HEIGHT - 200);
+        innerCircleCenter = new Vector2(275, Game.HEIGHT - 200);
         outerCircleRadius = 100;
         innerCircleRadius = 50;
         actuator = new Vector2();
         actuator.setZero();
-        mineButton = new Vector2(Game.WIDTH - 300, 850);
-        placeButton = new Vector2(Game.WIDTH - 200, 750);
+        mineButton = new Vector2(Game.WIDTH - 300, Game.HEIGHT - 150);
+        placeButton = new Vector2(Game.WIDTH - 200, Game.HEIGHT - 250);
         placeButtonRadius = 50;
         mineButtonRadius = 50;
-        invButton = new Vector2(Game.WIDTH - 150, 900);
+        invButton = new Vector2(Game.WIDTH - 150, Game.HEIGHT - 100);
         invButtonRadius = 50;
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
         Game.HANDLER.registerListener(this);
