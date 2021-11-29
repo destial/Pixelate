@@ -14,7 +14,7 @@ import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
-import xyz.destiall.pixelate.graphics.Imageable;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -30,7 +30,7 @@ public class ViewHotbar implements View {
 
     public ViewHotbar(Inventory inventory) {
         this.inventory = inventory;
-        Bitmap image = Imageable.getImage(R.drawable.hotbar);
+        Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
         currentSlotImage = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.85), (int) (image.getHeight() * 0.85), false);
         this.image = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.8), (int) (image.getHeight() * 0.8), false);
         positions = new HashMap<>();

@@ -6,14 +6,14 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 
 public enum Material {
-    STONE(0, 0, Tile.TILE_TYPE.BACKGROUND),
-    WOOD(0, 1, Tile.TILE_TYPE.FOREGROUND),
-    GRASS(0,2, Tile.TILE_TYPE.BACKGROUND),
-    COAL_ORE(0,3, Tile.TILE_TYPE.FOREGROUND),
-    PLANKS(0,4, Tile.TILE_TYPE.FOREGROUND),
+    STONE(0, 0, Tile.TileType.BACKGROUND),
+    WOOD(0, 1, Tile.TileType.FOREGROUND),
+    GRASS(0,2, Tile.TileType.BACKGROUND),
+    COAL_ORE(0,3, Tile.TileType.FOREGROUND),
+    PLANKS(0,4, Tile.TileType.FOREGROUND),
     SWORD(R.drawable.sword);
 
-    private final Tile.TILE_TYPE tileType;
+    private final Tile.TileType tileType;
     private final int row;
     private final int column;
     private final int drawable;
@@ -39,15 +39,15 @@ public enum Material {
         this(0, 0, false, drawable);
     }
 
-    Material(int row, int column, Tile.TILE_TYPE type) {
+    Material(int row, int column, Tile.TileType type) {
         this(row, column, true, -1, type);
     }
 
     Material(int row, int column, boolean block, int drawable) {
-        this(row, column, block, drawable, Tile.TILE_TYPE.UNKNOWN);
+        this(row, column, block, drawable, Tile.TileType.UNKNOWN);
     }
 
-    Material(int row, int column, boolean block, int drawable, Tile.TILE_TYPE type) {
+    Material(int row, int column, boolean block, int drawable, Tile.TileType type) {
         this.row = row;
         this.column = column;
         this.block = block;
@@ -83,7 +83,7 @@ public enum Material {
         return row;
     }
 
-    public Tile.TILE_TYPE getTileType() {
+    public Tile.TileType getTileType() {
         return tileType;
     }
 }

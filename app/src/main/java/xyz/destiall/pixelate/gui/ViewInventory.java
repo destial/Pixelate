@@ -12,11 +12,12 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
-import xyz.destiall.pixelate.graphics.Imageable;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
+import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
@@ -31,12 +32,14 @@ public class ViewInventory implements View {
     private int draggingSlot;
     private int draggingX;
     private int draggingY;
+    private int scale;
 
     public ViewInventory(Inventory inventory) {
         this.inventory = inventory;
         exitButton = new Vector2(Game.WIDTH - 100, 100);
         exitButtonRadius = 40;
-        image = Imageable.getImage(R.drawable.hotbar);
+        image = ResourceManager.getBitmap(R.drawable.hotbar);
+        scale = (int) (image.getWidth() * 0.8);
         positions = new HashMap<>();
         images = new HashMap<>();
         Game.HANDLER.registerListener(this);
@@ -58,7 +61,7 @@ public class ViewInventory implements View {
                     if (images.containsKey(item.getMaterial())) {
                         image = images.get(item.getMaterial());
                     } else {
-                        image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                        image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getMaterial(), image);
                     }
                     if (item == dragging) {
@@ -91,14 +94,14 @@ public class ViewInventory implements View {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
         screen.draw(image, cOutX, cOutY);
-        for (Recipe recipe : Game.getRecipes().values()) {
+        for (Recipe recipe : RecipeManager.getRecipes()) {
             if (recipe.isFulfilled(inventory.getCrafting())) {
                 ItemStack item = recipe.getItem();
                 Bitmap image;
                 if (images.containsKey(item.getMaterial())) {
                     image = images.get(item.getMaterial());
                 } else {
-                    image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                    image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                     images.put(item.getMaterial(), image);
                 }
                 screen.draw(image, cOutX + 15, cOutY + 5);
@@ -118,7 +121,7 @@ public class ViewInventory implements View {
                     if (images.containsKey(item.getMaterial())) {
                         image = images.get(item.getMaterial());
                     } else {
-                        image = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
+                        image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getMaterial(), image);
                     }
                     if (item != dragging) {
@@ -157,7 +160,7 @@ public class ViewInventory implements View {
         if (e.getAction() == ControlEvent.Action.DOWN) {
             int slot = getSlot(x, y);
             if (slot == 100) {
-                for (Recipe recipe : Game.getRecipes().values()) {
+                for (Recipe recipe : RecipeManager.getRecipes()) {
                     if (recipe.isFulfilled(inventory.getCrafting())) {
                         inventory.setItem(draggingSlot, null);
                         if (inventory.addItem(recipe.getItem())) {
@@ -207,7 +210,7 @@ public class ViewInventory implements View {
                     dragging = null;
                     return;
                 }
-                if (slot >= inventory.getSize() && slot != 100) {
+                if (slot >= inventory.getSize()) {
                     inventory.setCrafting(slot - inventory.getSize(), dragging);
                     if (draggingSlot >= inventory.getSize()) {
                         inventory.setCrafting(draggingSlot - inventory.getSize(), null);

@@ -2,22 +2,15 @@ package xyz.destiall.pixelate;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.zip.Inflater;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.events.EventGamePause;
-import xyz.destiall.pixelate.gui.screens.MainMenu;
 import xyz.destiall.pixelate.gui.screens.PauseMenu;
 
 public class GameActivity extends AppCompatActivity implements Listener {

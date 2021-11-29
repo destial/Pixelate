@@ -1,17 +1,15 @@
 package xyz.destiall.pixelate.entities;
 
-import android.graphics.BitmapFactory;
-
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Game;
-import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -19,8 +17,8 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
 public class EntityPlayer extends EntityLiving implements Listener {
-    public EntityPlayer(GameSurface gameSurface) {
-        super(BitmapFactory.decodeResource(gameSurface.getResources(), R.drawable.player), 8, 3);
+    public EntityPlayer() {
+        super(ResourceManager.getBitmap(R.drawable.player), 6, 3);
         location = new Location((int) (Game.WIDTH * 0.5), (int) (Game.HEIGHT * 0.5));
         spriteSheet.addSprite("LOOK RIGHT", createAnimation(0));
         spriteSheet.addSprite("LOOK LEFT", createAnimation(1));
@@ -33,6 +31,14 @@ public class EntityPlayer extends EntityLiving implements Listener {
         inventory = new Inventory(this, 27);
         HUD.INSTANCE.setHotbar(inventory);
         Game.HANDLER.registerListener(this);
+    }
+
+    @Override
+    public void updateSprite() {
+        if (velocity.getX() > 0) facing = Direction.RIGHT;
+        else if (velocity.getX() < 0) facing = Direction.LEFT;
+        String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
+        spriteSheet.setCurrentSprite(anim);
     }
 
     @Override
@@ -58,7 +64,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         updateAABB();
         Location newLoc = location.clone().add(facing.getVector().multiply(Tile.SIZE));
         Tile tile = newLoc.getTile();
-        if (tile != null && tile.getTileType() == Tile.TILE_TYPE.FOREGROUND) {
+        if (tile != null && tile.getTileType() == Tile.TileType.FOREGROUND) {
             ItemStack stack = location.getWorld().breakTile(newLoc);
             inventory.addItem(stack);
         }
@@ -70,7 +76,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         updateAABB();
         Location newLoc = location.clone().add(facing.getVector().multiply(Tile.SIZE));
         Tile tile = newLoc.getTile();
-        if (tile != null && tile.getTileType() != Tile.TILE_TYPE.FOREGROUND) {
+        if (tile != null && tile.getTileType() != Tile.TileType.FOREGROUND) {
             ItemStack current = inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
             if (current != null) {
                 tile.setMaterial(current.getMaterial());

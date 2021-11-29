@@ -2,24 +2,31 @@ package xyz.destiall.pixelate.entities;
 
 import android.graphics.Bitmap;
 
+import java.util.HashMap;
+
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.modular.Modular;
+import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.timer.Timer;
 
-public abstract class Entity extends Imageable implements Updateable, Renderable {
+public abstract class Entity extends Imageable implements Updateable, Renderable, Modular {
+    protected final SpriteSheet spriteSheet;
+    protected final HashMap<Class<? extends Module>, Module> modules;
     protected Location location;
     protected float scale;
     protected Vector2 velocity;
-    protected int currentAnimation;
-    protected final SpriteSheet spriteSheet;
+    protected float currentAnimation;
     protected AABB collision;
     protected Direction facing;
+    protected Direction target;
 
     public Entity(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
@@ -28,6 +35,8 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         scale = 1;
         location = new Location(0, 0);
         facing = Direction.RIGHT;
+        target = facing;
+        modules = new HashMap<>();
     }
 
     public Location getLocation() {
@@ -48,13 +57,16 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     @Override
     public void update() {
-
         // Update sprite animation
-        currentAnimation++;
+        currentAnimation += Timer.getDeltaTime() * Timer.getFPS();
         if (currentAnimation >= columns)  {
             currentAnimation = 0;
         }
-        spriteSheet.setCurrentAnimation(currentAnimation);
+        spriteSheet.setCurrentAnimation((int) currentAnimation);
+
+        for (Module m : modules.values()) {
+            m.update();
+        }
     }
 
     public AABB getBounds() {
@@ -72,7 +84,11 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     }
 
     @Override
-    public void tick() {}
+    public void tick() {
+        for (Module m : modules.values()) {
+            m.tick();
+        }
+    }
 
     public enum Type {
         ZOMBIE(R.drawable.zombie, 4, 3),
@@ -103,8 +119,8 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     // TODO: Implement up and down, with a different animation sprite
     public enum Direction {
-        UP(0, -1),
-        DOWN(0, 1),
+        UP(0, 1),
+        DOWN(0, -1),
         LEFT(-1, 0),
         RIGHT(1, 0);
 
@@ -116,5 +132,30 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         public Vector2 getVector() {
             return vector.clone();
         }
+    }
+
+    @Override
+    public <N extends Module> N getModule(Class<N> clazz) {
+        return (N) modules.get(clazz);
+    }
+
+    @Override
+    public <N extends Module> void addModule(N module) {
+        modules.putIfAbsent(module.getClass(), module);
+    }
+
+    @Override
+    public <N extends Module> boolean hasModule(Class<N> clazz) {
+        return modules.containsKey(clazz);
+    }
+
+    @Override
+    public <N extends Module> N removeModule(Class<N> clazz) {
+        N module = getModule(clazz);
+        if (module != null) {
+            module.destroy();
+            modules.remove(clazz);
+        }
+        return module;
     }
 }
