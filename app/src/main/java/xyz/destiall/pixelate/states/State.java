@@ -10,5 +10,6 @@ public abstract class State implements Updateable {
     public State(GameSurface surface) {
         this.surface = surface;
     }
+
     public abstract void render(Canvas canvas);
 }

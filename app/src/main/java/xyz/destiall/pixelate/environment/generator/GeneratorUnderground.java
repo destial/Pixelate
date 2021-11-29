@@ -14,7 +14,7 @@ import xyz.destiall.pixelate.environment.tiles.TileFactory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
-public class GeneratorBasic implements Generator {
+public class GeneratorUnderground implements Generator {
     @Override
     public void generate(World world, Collection<Tile> tiles) {
         generate(0, world, tiles);
@@ -30,6 +30,8 @@ public class GeneratorBasic implements Generator {
 
         double min = 1, max = 0;
         List<Location> orePopulationZones = new ArrayList<Location>();
+
+        PerlinNoise.reshufflePermutation(); //Reshuffle Permutation
 
         //Main terrain generation
         for (int x = -Game.WIDTH; x <= Game.WIDTH; x+=Tile.SIZE) {
@@ -49,10 +51,10 @@ public class GeneratorBasic implements Generator {
                             orePopulationZones.add(new Location(x, y, world));
                         }
                     }
-                    tile = TileFactory.createTile(Material.WOOD, x, y, world);
+                    tile = TileFactory.createTile(Material.COAL_ORE, x, y, world);
 
                 } else if (noiseValue < 0.35) {
-                    tile = TileFactory.createTile(Material.GRASS, x,y,world);
+                    tile = TileFactory.createTile(Material.WOOD, x,y,world);
                 }
 
                 if(tile == null)
@@ -83,7 +85,7 @@ public class GeneratorBasic implements Generator {
                                 .findFirst().orElse(null);
                         if(tile != null && tile.getMaterial() == oreCanvas)
                         {
-                            tile.setMaterial(Material.COAL_ORE);
+                            tile.setMaterial(Material.GRASS);
                         }
 
                     }

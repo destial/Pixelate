@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@drawable/background">
+
+
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+
+        android:layout_centerInParent="true"
+        android:background="@drawable/button"
+        android:text="Start"
+        android:textColor="#fff"
+        android:textSize="10dp">
+
+    </Button>
+
+    <Button
+        android:id="@+id/btn_quit"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+
+        android:layout_above="@id/btn_start"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-108dp"
+        android:background="@drawable/button"
+        android:text="MainMenu"
+        android:textColor="#fff"
+        android:textSize="10dp"></Button>
+
+</RelativeLayout>

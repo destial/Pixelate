@@ -1,15 +1,19 @@
 package xyz.destiall.pixelate.gui;
 
+import android.content.Intent;
 import android.graphics.Color;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.GameActivity;
+import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.gui.screens.MainMenu;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class ViewControls implements View {
@@ -21,9 +25,11 @@ public class ViewControls implements View {
     private final Vector2 mineButton;
     private final Vector2 placeButton;
     private final Vector2 invButton;
+    private final Vector2 pauseButton;
     private final int invButtonRadius;
     private final int mineButtonRadius;
     private final int placeButtonRadius;
+    private final int pauseButtonRadius;
     private final EventJoystick eventJoystick;
     private boolean joystick;
     private boolean mine;
@@ -36,49 +42,32 @@ public class ViewControls implements View {
         innerCircleRadius = 50;
         actuator = new Vector2();
         actuator.setZero();
-        mineButton = new Vector2(Game.WIDTH - 300, Game.HEIGHT - 150);
-        placeButton = new Vector2(Game.WIDTH - 200, Game.HEIGHT - 250);
+
         placeButtonRadius = 50;
         mineButtonRadius = 50;
+
+        // Button location initialisation
+        pauseButton = new Vector2(Game.WIDTH - (Game.WIDTH * 0.9), Game.HEIGHT - (Game.HEIGHT * 0.9));
         invButton = new Vector2(Game.WIDTH - 150, Game.HEIGHT - 100);
+        mineButton = new Vector2(Game.WIDTH - 300, Game.HEIGHT - 150);
+        placeButton = new Vector2(Game.WIDTH - 200, Game.HEIGHT - 250);
+
+        // Button radius
+        pauseButtonRadius = 25;
         invButtonRadius = 50;
+
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
         Game.HANDLER.registerListener(this);
     }
 
     @Override
     public void render(Screen screen) {
-        screen.ring(
-                outerCircleCenter.getX(),
-                outerCircleCenter.getY(),
-                outerCircleRadius,
-                20,
-                Color.RED
-        );
-        screen.circle(
-                innerCircleCenter.getX(),
-                innerCircleCenter.getY(),
-                innerCircleRadius,
-                Color.BLUE
-        );
-        screen.circle(
-                mineButton.getX(),
-                mineButton.getY(),
-                mineButtonRadius * (mine ? 0.8f : 1),
-                Color.YELLOW
-        );
-        screen.circle(
-                placeButton.getX(),
-                placeButton.getY(),
-                placeButtonRadius * (place ? 0.8f: 1),
-                Color.YELLOW
-        );
-        screen.circle(
-                invButton.getX(),
-                invButton.getY(),
-                invButtonRadius,
-                Color.GREEN
-        );
+        screen.ring(outerCircleCenter.getX(), outerCircleCenter.getY(), outerCircleRadius, 20, Color.RED);
+        screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.BLUE);
+        screen.circle(mineButton.getX(), mineButton.getY(), mineButtonRadius * (mine ? 0.8f : 1), Color.YELLOW);
+        screen.circle(placeButton.getX(), placeButton.getY(), placeButtonRadius * (place ? 0.8f : 1), Color.YELLOW);
+        screen.circle(invButton.getX(), invButton.getY(), invButtonRadius, Color.GREEN);
+        screen.circle(pauseButton.getX(), pauseButton.getY(), pauseButtonRadius, Color.RED);
     }
 
     @Override
@@ -92,11 +81,18 @@ public class ViewControls implements View {
     }
 
     @Override
-    public void tick() {}
+    public void tick() {
+    }
 
     public boolean isOnJoystick(float x, float y) {
-        double distance = Math.sqrt(Math.pow(outerCircleCenter.getX() - x, 2) + Math.pow(outerCircleCenter.getY() - y, 2));
+        double distance = Math
+                .sqrt(Math.pow(outerCircleCenter.getX() - x, 2) + Math.pow(outerCircleCenter.getY() - y, 2));
         return distance < outerCircleRadius;
+    }
+
+    public boolean isOnPauseButton(float x, float y) {
+        double distance = Math.sqrt(Math.pow(pauseButton.getX() - x, 2) + Math.pow(pauseButton.getY() - y, 2));
+        return distance < pauseButtonRadius;
     }
 
     public boolean isOnMineButton(float x, float y) {
@@ -132,12 +128,14 @@ public class ViewControls implements View {
 
     public void setMining(boolean mine) {
         this.mine = mine;
-        if (mine) Game.HANDLER.call(new EventMining());
+        if (mine)
+            Game.HANDLER.call(new EventMining());
     }
 
     public void setPlacing(boolean place) {
         this.place = place;
-        if (place) Game.HANDLER.call(new EventPlace());
+        if (place)
+            Game.HANDLER.call(new EventPlace());
     }
 
     public void setActuator(float x, float y) {
@@ -177,6 +175,10 @@ public class ViewControls implements View {
                     Game.HANDLER.call(new EventOpenInventory());
                 } else if (isOnPlaceButton(x, y)) {
                     setPlacing(true);
+                } else if (isOnPauseButton(x, y) && !Game.paused) {
+
+                    Game.setWorld("Cave");
+                    // Game.HANDLER.call(new EventGamePause());
                 }
                 break;
             case MOVE:
@@ -201,7 +203,8 @@ public class ViewControls implements View {
                     setPlacing(false);
                 }
                 break;
-            default: break;
+            default:
+                break;
         }
     }
 }

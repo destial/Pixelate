@@ -5,7 +5,7 @@ import xyz.destiall.pixelate.position.Vector2;
 public class PerlinNoise {
 
     //Randomised permutation array as designed by Perlin
-    private static final int[] P = makePermutation();
+    private static int[] P = makePermutation();
     private static final float m_707 = 1.414213562373095f;
 
     //2D noise generation
@@ -54,6 +54,11 @@ public class PerlinNoise {
             permutation[i] = permutation[i-256];
 
         return permutation;
+    }
+
+    public static void reshufflePermutation()
+    {
+        P = makePermutation();
     }
 
     //Optimized perlin fade function
