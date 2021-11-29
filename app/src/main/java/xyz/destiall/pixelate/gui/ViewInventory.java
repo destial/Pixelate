@@ -12,11 +12,12 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
-import xyz.destiall.pixelate.graphics.Imageable;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
+import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
@@ -37,7 +38,7 @@ public class ViewInventory implements View {
         this.inventory = inventory;
         exitButton = new Vector2(Game.WIDTH - 100, 100);
         exitButtonRadius = 40;
-        image = Imageable.getImage(R.drawable.hotbar);
+        image = ResourceManager.getBitmap(R.drawable.hotbar);
         scale = (int) (image.getWidth() * 0.8);
         positions = new HashMap<>();
         images = new HashMap<>();
@@ -93,7 +94,7 @@ public class ViewInventory implements View {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
         screen.draw(image, cOutX, cOutY);
-        for (Recipe recipe : Game.getRecipes().values()) {
+        for (Recipe recipe : RecipeManager.getRecipes()) {
             if (recipe.isFulfilled(inventory.getCrafting())) {
                 ItemStack item = recipe.getItem();
                 Bitmap image;
@@ -159,7 +160,7 @@ public class ViewInventory implements View {
         if (e.getAction() == ControlEvent.Action.DOWN) {
             int slot = getSlot(x, y);
             if (slot == 100) {
-                for (Recipe recipe : Game.getRecipes().values()) {
+                for (Recipe recipe : RecipeManager.getRecipes()) {
                     if (recipe.isFulfilled(inventory.getCrafting())) {
                         inventory.setItem(draggingSlot, null);
                         if (inventory.addItem(recipe.getItem())) {

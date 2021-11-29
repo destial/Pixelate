@@ -1,11 +1,10 @@
 package xyz.destiall.pixelate.items;
 
-import android.graphics.BitmapFactory;
-
 import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 
 public class ItemStack extends Imageable {
     private final Material material;
@@ -20,7 +19,7 @@ public class ItemStack extends Imageable {
         this.material = material;
         this.amount = amount;
         if (!material.isBlock()) {
-            image = BitmapFactory.decodeResource(Game.getResources(), material.getDrawable());
+            image = ResourceManager.getBitmap(material.getDrawable());
         } else {
             image = createSubImageAt(material.getRow(), material.getColumn());
         }

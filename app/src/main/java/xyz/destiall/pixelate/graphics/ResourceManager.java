@@ -1,5 +1,6 @@
 package xyz.destiall.pixelate.graphics;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -13,8 +14,12 @@ public class ResourceManager {
 
     public static Bitmap getBitmap(int id) {
         if (RESOURCES.containsKey(id)) return RESOURCES.get(id);
-        Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeResource(Game.getResources(), id));
+        Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), id));
         RESOURCES.put(id, bitmap);
         return bitmap;
+    }
+
+    public static Resources getResources() {
+        return Game.getResources();
     }
 }

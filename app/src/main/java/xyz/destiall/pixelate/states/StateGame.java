@@ -19,17 +19,18 @@ import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
+import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.position.Location;
 
 public class StateGame extends State {
     private final EntityPlayer player;
-    private final List<Object> objects;
-    private final WorldManager worldsManagement;
+    private final List<Object> allObjects;
+    private final WorldManager worldManager;
     private final Screen screen;
 
     public StateGame(GameSurface gameSurface) {
         super(gameSurface);
-        objects = new ArrayList<>();
+        allObjects = new ArrayList<>();
 
         World world = new World(new GeneratorBasic());
         world.generateWorld(0, true);
@@ -37,42 +38,42 @@ public class StateGame extends State {
         World cave = new World(new GeneratorUnderground());
         cave.generateWorld(0, true);
 
-        worldsManagement = new WorldManager();
+        worldManager = new WorldManager();
 
-        worldsManagement.addWorld("Overworld", world);
-        worldsManagement.addWorld("Cave", cave);
-        worldsManagement.setActive("Overworld");
+        worldManager.addWorld("Overworld", world);
+        worldManager.addWorld("Cave", cave);
+        worldManager.setActive("Overworld");
+        allObjects.add(worldManager);
 
-        objects.add(worldsManagement);
         player = new EntityPlayer();
-        Location location = new Location(0, 0, worldsManagement.getCurrentWorld());
+        Location location = new Location(0, 0, worldManager.getCurrentWorld());
 
-        player.teleport(worldsManagement.getCurrentWorld().getNearestEmpty(location));
-        worldsManagement.getCurrentWorld().getEntities().add(player);
+        player.teleport(worldManager.getCurrentWorld().getNearestEmpty(location));
+        worldManager.getCurrentWorld().getEntities().add(player);
 
-        objects.add(HUD.INSTANCE);
+        allObjects.add(HUD.INSTANCE);
         screen = new Screen(null, player, Game.WIDTH, Game.HEIGHT);
 
         Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS));
         plankRecipe.setShape("W"); // { W  , null
                                     // null, null }
         plankRecipe.setIngredient("W", Material.WOOD);
-        Game.addRecipe(plankRecipe);
+        RecipeManager.addRecipe(plankRecipe);
 
         plankRecipe = new Recipe("plank2", new ItemStack(Material.PLANKS));
         plankRecipe.setShape(null, "W");
         plankRecipe.setIngredient("W", Material.WOOD);
-        Game.addRecipe(plankRecipe);
+        RecipeManager.addRecipe(plankRecipe);
 
         plankRecipe = new Recipe("plank3", new ItemStack(Material.PLANKS));
         plankRecipe.setShape(null, null, "W");
         plankRecipe.setIngredient("W", Material.WOOD);
-        Game.addRecipe(plankRecipe);
+        RecipeManager.addRecipe(plankRecipe);
 
         plankRecipe = new Recipe("plank4", new ItemStack(Material.PLANKS));
         plankRecipe.setShape(null, null, null, "W");
         plankRecipe.setIngredient("W", Material.WOOD);
-        Game.addRecipe(plankRecipe);
+        RecipeManager.addRecipe(plankRecipe);
     }
 
     public EntityPlayer getPlayer() {
@@ -80,12 +81,12 @@ public class StateGame extends State {
     }
 
     public WorldManager getWorldManager() {
-        return worldsManagement;
+        return worldManager;
     }
 
     @Override
     public void update() {
-        for (Object o : objects) {
+        for (Object o : allObjects) {
             if (o instanceof Updateable) {
                 ((Updateable) o).update();
             }
@@ -94,7 +95,7 @@ public class StateGame extends State {
 
     @Override
     public void tick() {
-        for (Object o : objects) {
+        for (Object o : allObjects) {
             if (o instanceof Updateable) {
                 ((Updateable) o).tick();
             }
@@ -104,7 +105,7 @@ public class StateGame extends State {
     @Override
     public void render(Canvas canvas) {
         screen.update(canvas, player, Game.WIDTH, Game.HEIGHT);
-        for (Object o : objects) {
+        for (Object o : allObjects) {
             if (o instanceof Renderable) {
                 ((Renderable) o).render(screen);
             }

@@ -1,11 +1,8 @@
 package xyz.destiall.pixelate.entities;
 
-import android.graphics.BitmapFactory;
-
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Game;
-import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventJoystick;

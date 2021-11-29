@@ -2,18 +2,14 @@ package xyz.destiall.pixelate;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import xyz.destiall.java.events.EventHandling;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
-import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
@@ -22,7 +18,6 @@ import xyz.destiall.pixelate.timer.Timer;
 
 public class Game extends Thread {
     public static final EventHandling HANDLER = new EventHandling();
-    private static final Map<String, Recipe> recipeMap = new HashMap<>();
     public static int HEIGHT;
     public static int WIDTH;
 
@@ -40,7 +35,7 @@ public class Game extends Thread {
         Game.gameSurface = gameSurface;
         Game.surfaceHolder = surfaceHolder;
         tileMap = ResourceManager.getBitmap(R.drawable.tilemap);
-        tileMap = Bitmap.createScaledBitmap(tileMap, (int) (tileMap.getWidth() * 1.52), (int) (tileMap.getHeight() * 1.52), false);
+        tileMap = Imageable.scaleImage(tileMap, 1.52f);
         HEIGHT = gameSurface.getHeight();
         WIDTH = gameSurface.getWidth();
         timer = new Timer();
@@ -58,10 +53,9 @@ public class Game extends Thread {
         while (running && !paused)  {
             try {
                 canvas = surfaceHolder.lockCanvas();
-                if(!paused)
-                {
-                    HEIGHT = canvas.getHeight();
-                    WIDTH = canvas.getWidth();
+                HEIGHT = canvas.getHeight();
+                WIDTH = canvas.getWidth();
+                if (!paused) {
                     update();
                     unprocessed += (Timer.getLastNanoTime() - lastTime) / nsPerTick;
                     lastTime = Timer.getLastNanoTime();
@@ -87,26 +81,23 @@ public class Game extends Thread {
     }
 
     private void update() {
-        if(!paused)
-        {
+        if (!paused) {
             timer.update();
             stateManager.update();
         }
     }
 
     private void render(Canvas canvas) {
-        if(!paused)
-        {
+        if (!paused) {
             canvas.drawRGB(0, 0, 0);
             stateManager.render(canvas);
         }
     }
 
     private void tick() {
-        if(!paused)
-        {
-            stateManager.tick();
+        if (!paused) {
             timer.tick();
+            stateManager.tick();
         }
     }
 
@@ -114,18 +105,18 @@ public class Game extends Thread {
         StateGame gameState = ((StateGame) stateManager.getState("Game"));
         WorldManager wm = gameState.getWorldManager();
         if (wm.isAWorld(world) && !wm.isWorldActive(world)) {
+            // Remove player from current world
             World current = wm.getCurrentWorld();
             current.getEntities().remove(gameState.getPlayer());
 
             //Set new active world
             wm.setActive(world);
 
-            //Player codes
+            // Teleport player to new world
             World next = wm.getCurrentWorld();
             System.out.println("Current world: " + wm.getCurrentWorldName());
             next.getEntities().add(gameState.getPlayer());
             gameState.getPlayer().teleport(wm.getCurrentWorld().getNearestEmpty(new Location(0,0, wm.getCurrentWorld())));
-
             return true;
         }
         return false;
@@ -136,15 +127,7 @@ public class Game extends Thread {
     }
 
     public static Resources getResources() {
-        return gameSurface.getResources();
-    }
-
-    public static void addRecipe(Recipe recipe) {
-        recipeMap.put(recipe.getKey(), recipe);
-    }
-
-    public static Map<String, Recipe> getRecipes() {
-        return recipeMap;
+        return getGameSurface().getResources();
     }
 
     public static GSM getGSM() {
