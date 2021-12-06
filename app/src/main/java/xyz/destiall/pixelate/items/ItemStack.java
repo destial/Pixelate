@@ -6,8 +6,10 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 
+@SuppressWarnings("all")
 public class ItemStack extends Imageable {
     private final Material material;
+    private Inventory inventory;
     private int amount;
 
     public ItemStack(Material material) {
@@ -25,6 +27,7 @@ public class ItemStack extends Imageable {
         }
         height = image.getHeight();
         width = image.getWidth();
+        inventory = null;
     }
 
     public void addAmount(int amount) {
@@ -34,14 +37,24 @@ public class ItemStack extends Imageable {
     public void removeAmount(int amount) {
         if (amount == 0) return;
         this.amount -= amount;
-        if (this.amount < 0) this.amount = 0;
+        if (this.amount <= 0) removeFromInventory();
     }
 
     public void setAmount(int amount) {
         this.amount = amount;
+        if (amount == 0) {
+            removeFromInventory();
+        }
     }
 
-    public Material getMaterial() {
+    private void removeFromInventory() {
+        this.amount = 0;
+        if (inventory != null) {
+            inventory.removeItem(this);
+        }
+    }
+
+    public Material getType() {
         return material;
     }
 
@@ -58,7 +71,11 @@ public class ItemStack extends Imageable {
         return new ItemStack(material, amount);
     }
 
-    public boolean equalsWithAmount(ItemStack other) {
+    public boolean equals(ItemStack other) {
         return other.material == material && other.amount == amount;
+    }
+
+    public boolean similar(ItemStack other) {
+        return other.material == material;
     }
 }

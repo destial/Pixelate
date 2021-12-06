@@ -50,35 +50,35 @@ public class AABB {
         return max.getY() - min.getY();
     }
 
-    public boolean isAABB(double x, double y) {
-        return x > min.getX() &&
-                x < max.getX() &&
-                y > min.getY() &&
-                y < max.getY();
+    public boolean isOverlap(double x, double y) {
+        return x >= min.getX() &&
+                x <= max.getX() &&
+                y >= min.getY() &&
+                y <= max.getY();
     }
 
-    public boolean isAABB(AABB other) {
-        return min.getX() < other.getMax().getX() &&
-                max.getX() > other.getMin().getX() &&
-                min.getY() < other.getMax().getY() &&
-                max.getY() > other.getMin().getY();
+    public boolean isOverlap(AABB other) {
+        return min.getX() <= other.getMax().getX() &&
+                max.getX() >= other.getMin().getX() &&
+                min.getY() <= other.getMax().getY() &&
+                max.getY() >= other.getMin().getY();
     }
 
-    public boolean isAABB(Tile tile) {
-        return min.getX() < tile.getLocation().getX() + Tile.SIZE &&
-                max.getX() > tile.getLocation().getX() &&
-                min.getY() < tile.getLocation().getY() + Tile.SIZE &&
-                max.getY() > tile.getLocation().getY();
+    public boolean isOverlap(Tile tile) {
+        return min.getX() <= tile.getLocation().getX() + Tile.SIZE &&
+                max.getX() >= tile.getLocation().getX() &&
+                min.getY() <= tile.getLocation().getY() + Tile.SIZE &&
+                max.getY() >= tile.getLocation().getY();
     }
 
-    public static boolean isAABB(int x, int y, Tile tile) {
-        return x < tile.getLocation().getX() + Tile.SIZE &&
-                x > tile.getLocation().getX() &&
-                y < tile.getLocation().getY() + Tile.SIZE &&
-                y > tile.getLocation().getY();
+    public static boolean isOverlap(int x, int y, Tile tile) {
+        return x <= tile.getLocation().getX() + Tile.SIZE &&
+                x >= tile.getLocation().getX() &&
+                y <= tile.getLocation().getY() + Tile.SIZE &&
+                y >= tile.getLocation().getY();
     }
 
-    public static boolean isAABB(Location location, Tile tile) {
-        return isAABB(location.getX(), location.getY(), tile);
+    public static boolean isOverlap(Location location, Tile tile) {
+        return isOverlap(location.getX(), location.getY(), tile);
     }
 }

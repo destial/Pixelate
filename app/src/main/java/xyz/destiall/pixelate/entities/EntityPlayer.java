@@ -2,6 +2,8 @@ package xyz.destiall.pixelate.entities;
 
 import android.graphics.Color;
 
+import java.util.List;
+
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
@@ -67,9 +69,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler
     private void onMine(EventMining e) {
         if (location.getWorld() == null) return;
-        updateAABB();
+        List<Tile> currentTiles = location.getWorld().findTiles(collision);
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
+        if (currentTiles.contains(tile)) return;
         if (tile != null && tile.getTileType() == Tile.TileType.FOREGROUND) {
             ItemStack stack = location.getWorld().breakTile(newLoc);
             inventory.addItem(stack);
@@ -79,16 +82,13 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler
     private void onPlace(EventPlace e) {
         if (location.getWorld() == null) return;
-        updateAABB();
-        Location newLoc = location.clone().add(facing.getVector().multiply(Tile.SIZE));
+        Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (tile != null && tile.getTileType() != Tile.TileType.FOREGROUND) {
             ItemStack current = inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
             if (current != null) {
-                tile.setMaterial(current.getMaterial());
-                if (current.getAmount() == 1) {
-                    inventory.setItem(HUD.INSTANCE.getHotbar().getCurrentSlot(), null);
-                } else current.removeAmount(1);
+                tile.setMaterial(current.getType());
+                current.setAmount(current.getAmount() - 1);
             }
         }
     }

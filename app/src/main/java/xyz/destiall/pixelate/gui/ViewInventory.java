@@ -59,11 +59,11 @@ public class ViewInventory implements View {
                 ItemStack item = inventory.getCraftingItem(a);
                 if (item != null) {
                     Bitmap image;
-                    if (images.containsKey(item.getMaterial())) {
-                        image = images.get(item.getMaterial());
+                    if (images.containsKey(item.getType())) {
+                        image = images.get(item.getType());
                     } else {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
-                        images.put(item.getMaterial(), image);
+                        images.put(item.getType(), image);
                     }
                     if (item == dragging) {
                         screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
@@ -99,11 +99,11 @@ public class ViewInventory implements View {
             if (recipe.isFulfilled(inventory.getCrafting())) {
                 ItemStack item = recipe.getItem();
                 Bitmap image;
-                if (images.containsKey(item.getMaterial())) {
-                    image = images.get(item.getMaterial());
+                if (images.containsKey(item.getType())) {
+                    image = images.get(item.getType());
                 } else {
                     image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
-                    images.put(item.getMaterial(), image);
+                    images.put(item.getType(), image);
                 }
                 screen.draw(image, cOutX + 15, cOutY + 5);
                 break;
@@ -119,11 +119,11 @@ public class ViewInventory implements View {
                 ItemStack item = inventory.getItem(i);
                 if (item != null) {
                     Bitmap image;
-                    if (images.containsKey(item.getMaterial())) {
-                        image = images.get(item.getMaterial());
+                    if (images.containsKey(item.getType())) {
+                        image = images.get(item.getType());
                     } else {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
-                        images.put(item.getMaterial(), image);
+                        images.put(item.getType(), image);
                     }
                     if (item != dragging) {
                         screen.draw(image, posX + 15, posY + 5);
@@ -228,7 +228,7 @@ public class ViewInventory implements View {
                     dragging = null;
                     return;
                 }
-                if (itemStack.getMaterial() == dragging.getMaterial()) {
+                if (itemStack.getType() == dragging.getType()) {
                     if (draggingSlot >= inventory.getSize()) {
                         inventory.setCrafting(draggingSlot - inventory.getSize(), null);
                     } else {
@@ -242,7 +242,7 @@ public class ViewInventory implements View {
     }
 
     private int getSlot(float x, float y) {
-        Map.Entry<Integer, AABB> aabbs = positions.entrySet().stream().filter(en -> en.getValue().isAABB(x, y)).findFirst().orElse(null);
+        Map.Entry<Integer, AABB> aabbs = positions.entrySet().stream().filter(en -> en.getValue().isOverlap(x, y)).findFirst().orElse(null);
         if (aabbs == null) return -1;
         return aabbs.getKey();
     }

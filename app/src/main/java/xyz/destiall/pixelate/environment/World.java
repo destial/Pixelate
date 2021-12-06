@@ -50,7 +50,7 @@ public class World implements Updateable, Renderable {
     }
 
     public boolean isForegroundTile(AABB aabb) {
-        return tiles.stream().anyMatch(t -> aabb.isAABB(t) && t.getTileType() == Tile.TileType.FOREGROUND);
+        return tiles.stream().anyMatch(t -> aabb.isOverlap(t) && t.getTileType() == Tile.TileType.FOREGROUND);
     }
 
     public void generateWorld(int seed, boolean force) {
@@ -80,16 +80,20 @@ public class World implements Updateable, Renderable {
 
     public Tile findTile(Location location) {
         return tiles.stream()
-                .filter(t -> AABB.isAABB(location, t))
+                .filter(t -> AABB.isOverlap(location, t))
                 .findFirst().orElse(null);
     }
 
     public ItemStack breakTile(Location location) {
         Tile tile = findTile(location);
         if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return null;
-        Material prev = tile.getMaterial();
+        ItemStack item = ItemStack.of(tile);
         tile.setMaterial(Material.STONE);
-        return new ItemStack(prev);
+        return item;
+    }
+
+    public List<Tile> findTiles(AABB aabb) {
+        return tiles.stream().filter(aabb::isOverlap).collect(Collectors.toList());
     }
 
     @Override

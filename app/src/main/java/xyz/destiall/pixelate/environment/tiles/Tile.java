@@ -47,7 +47,7 @@ public class Tile extends Imageable implements Renderable {
     public void setMaterial(Material mat) {
         material = mat;
         image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
-        this.tileType = mat.getTileType();
+        tileType = mat.getTileType();
     }
 
     public enum TileType {

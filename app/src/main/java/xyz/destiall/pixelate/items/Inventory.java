@@ -1,5 +1,6 @@
 package xyz.destiall.pixelate.items;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -8,6 +9,24 @@ public class Inventory {
     private final int size;
     private final ItemStack[] items;
     private final ItemStack[] crafting;
+
+    private static Field inventoryFieldItemStack;
+
+    static {
+        try {
+            inventoryFieldItemStack = ItemStack.class.getDeclaredField("inventory");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void setItemStackInventory(ItemStack item, Inventory inventory) {
+        try {
+            inventoryFieldItemStack.setAccessible(true);
+            inventoryFieldItemStack.set(item, inventory);
+            inventoryFieldItemStack.setAccessible(false);
+        } catch (Exception ignored) {}
+    }
 
     public Inventory(InventoryHolder holder, int size) {
         this.holder = holder;
@@ -31,12 +50,16 @@ public class Inventory {
     public ItemStack setItem(int index, ItemStack itemStack) {
         ItemStack prev = items[index];
         items[index] = itemStack;
+        setItemStackInventory(itemStack, this);
+        setItemStackInventory(prev, null);
         return prev;
     }
 
     public ItemStack setCrafting(int index, ItemStack itemStack) {
         ItemStack prev = crafting[index];
         crafting[index] = itemStack;
+        setItemStackInventory(itemStack, this);
+        setItemStackInventory(prev, null);
         return prev;
     }
 
@@ -44,19 +67,48 @@ public class Inventory {
         if (isFull()) return false;
         for (int i = 0; i < size; i++) {
             if (items[i] != null) {
-                if (items[i].getMaterial() == itemStack.getMaterial()) {
+                if (items[i].getType() == itemStack.getType()) {
                     items[i].addAmount(1);
                     break;
                 }
                 continue;
             }
             items[i] = itemStack;
+            setItemStackInventory(itemStack, this);
             return true;
         }
         return false;
     }
 
+    public void removeItem(ItemStack item) {
+        if (item == null) return;
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] != null && items[i] == item) {
+                items[i] = null;
+                setItemStackInventory(item, null);
+                break;
+            }
+        }
+        for (int i = 0; i < crafting.length; i++) {
+            if (crafting[i] != null && crafting[i] == item) {
+                crafting[i] = null;
+                setItemStackInventory(item, null);
+                break;
+            }
+        }
+    }
+
+    public void clear() {
+        for (ItemStack i : items) {
+            setItemStackInventory(i, null);
+        }
+        Arrays.fill(items, null);
+    }
+
     public void clearCrafting() {
+        for (ItemStack c : crafting) {
+            setItemStackInventory(c, null);
+        }
         Arrays.fill(crafting, null);
     }
 

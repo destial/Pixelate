@@ -121,6 +121,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
 
                     // Revert position
                     location.subtract(0, velocity.getY());
+                    updateAABB();
                 }
             }
         }

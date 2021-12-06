@@ -27,7 +27,7 @@ public class Recipe {
         for (ItemStack stack : crafting) {
             if (stack != null) {
                 if (i >= recipe.length) return false;
-                if (stack.getMaterial() == recipe[i]) return true;
+                if (stack.getType() == recipe[i]) return true;
             }
             i++;
         }

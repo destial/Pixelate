@@ -79,7 +79,7 @@ public class GeneratorBasic implements Generator {
                         Location location = new Location(x,y,world);
                         location.add((Tile.SIZE - 10) / 2f, (Tile.SIZE - 10) / 2f);
                         Tile tile = tiles.stream()
-                                .filter(t -> AABB.isAABB(location, t))
+                                .filter(t -> AABB.isOverlap(location, t))
                                 .findFirst().orElse(null);
                         if(tile != null && tile.getMaterial() == oreCanvas)
                         {

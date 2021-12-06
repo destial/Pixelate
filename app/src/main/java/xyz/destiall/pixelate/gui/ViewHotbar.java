@@ -70,11 +70,11 @@ public class ViewHotbar implements View {
             screen.draw(image, x, y - a);
             if (item != null) {
                 Bitmap itemImage;
-                if (images.containsKey(item.getMaterial())) {
-                    itemImage = images.get(item.getMaterial());
+                if (images.containsKey(item.getType())) {
+                    itemImage = images.get(item.getType());
                 } else {
                     itemImage = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
-                    images.put(item.getMaterial(), itemImage);
+                    images.put(item.getType(), itemImage);
                 } screen.draw(itemImage, x + 15, y + 10);
                 if (item.getAmount() > 1) {
                     screen.text(
@@ -120,7 +120,7 @@ public class ViewHotbar implements View {
     }
 
     private int getSlot(float x, float y) {
-        Map.Entry<Integer, AABB> aabbs = positions.entrySet().stream().filter(en -> en.getValue().isAABB(x, y)).findFirst().orElse(null);
+        Map.Entry<Integer, AABB> aabbs = positions.entrySet().stream().filter(en -> en.getValue().isOverlap(x, y)).findFirst().orElse(null);
         if (aabbs == null) return -1;
         return aabbs.getKey();
     }
