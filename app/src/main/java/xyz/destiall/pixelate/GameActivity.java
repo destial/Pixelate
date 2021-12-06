@@ -23,12 +23,12 @@ public class GameActivity extends AppCompatActivity implements Listener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setContentView(new GameSurface(this));
-        Game.HANDLER.registerListener(this);
+        Pixelate.HANDLER.registerListener(this);
     }
 
     @EventHandler
     public void onTouch(EventGamePause e) {
-        Game.paused = true;
+        Pixelate.paused = true;
         Intent intent = new Intent();
         intent.setClass(this, PauseMenu.class);
         startActivity(intent);

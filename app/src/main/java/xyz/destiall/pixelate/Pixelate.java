@@ -16,7 +16,7 @@ import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.states.StatePauseMenu;
 import xyz.destiall.pixelate.timer.Timer;
 
-public class Game extends Thread {
+public class Pixelate extends Thread {
     public static final EventHandling HANDLER = new EventHandling();
     public static int HEIGHT;
     public static int WIDTH;
@@ -30,10 +30,10 @@ public class Game extends Thread {
     private final Timer timer;
     private boolean running;
 
-    public Game(GameSurface gameSurface, SurfaceHolder surfaceHolder)  {
+    public Pixelate(GameSurface gameSurface, SurfaceHolder surfaceHolder)  {
         super();
-        Game.gameSurface = gameSurface;
-        Game.surfaceHolder = surfaceHolder;
+        Pixelate.gameSurface = gameSurface;
+        Pixelate.surfaceHolder = surfaceHolder;
         tileMap = ResourceManager.getBitmap(R.drawable.tilemap);
         tileMap = Imageable.scaleImage(tileMap, 1.52f);
         HEIGHT = gameSurface.getHeight();

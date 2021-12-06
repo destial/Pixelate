@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.gui;
 import android.graphics.Color;
 
 import xyz.destiall.java.events.Listener;
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -21,7 +21,7 @@ public class HUD implements Updateable, Renderable, Listener {
         buttons = new ViewControls();
         hotbar = new ViewHotbar(null);
         inventory = null;
-        Game.HANDLER.registerListener(this);
+        Pixelate.HANDLER.registerListener(this);
     }
 
     public ViewHotbar getHotbar() {

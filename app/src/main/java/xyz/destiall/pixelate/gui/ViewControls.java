@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.gui;
 import android.graphics.Color;
 
 import xyz.destiall.java.events.EventHandler;
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
@@ -32,18 +32,18 @@ public class ViewControls implements View {
     private boolean place;
 
     public ViewControls() {
-        outerCircleCenter = new Vector2(275, Game.HEIGHT - 200);
-        innerCircleCenter = new Vector2(275, Game.HEIGHT - 200);
+        outerCircleCenter = new Vector2(275, Pixelate.HEIGHT - 200);
+        innerCircleCenter = new Vector2(275, Pixelate.HEIGHT - 200);
         outerCircleRadius = 100;
         innerCircleRadius = 50;
         actuator = new Vector2();
         actuator.setZero();
 
         // Button location initialisation
-        pauseButton = new Vector2(Game.WIDTH - (Game.WIDTH * 0.9), Game.HEIGHT - (Game.HEIGHT * 0.9));
-        invButton = new Vector2(Game.WIDTH - 150, Game.HEIGHT - 100);
-        mineButton = new Vector2(Game.WIDTH - 300, Game.HEIGHT - 150);
-        placeButton = new Vector2(Game.WIDTH - 200, Game.HEIGHT - 250);
+        pauseButton = new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.9), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9));
+        invButton = new Vector2(Pixelate.WIDTH - 150, Pixelate.HEIGHT - 100);
+        mineButton = new Vector2(Pixelate.WIDTH - 300, Pixelate.HEIGHT - 150);
+        placeButton = new Vector2(Pixelate.WIDTH - 200, Pixelate.HEIGHT - 250);
 
         // Button radius
         pauseButtonRadius = 25;
@@ -52,7 +52,7 @@ public class ViewControls implements View {
         mineButtonRadius = 50;
 
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
-        Game.HANDLER.registerListener(this);
+        Pixelate.HANDLER.registerListener(this);
     }
 
     @Override
@@ -123,13 +123,13 @@ public class ViewControls implements View {
     public void setMining(boolean mine) {
         this.mine = mine;
         if (mine)
-            Game.HANDLER.call(new EventMining());
+            Pixelate.HANDLER.call(new EventMining());
     }
 
     public void setPlacing(boolean place) {
         this.place = place;
         if (place)
-            Game.HANDLER.call(new EventPlace());
+            Pixelate.HANDLER.call(new EventPlace());
     }
 
     public void setActuator(float x, float y) {
@@ -147,12 +147,12 @@ public class ViewControls implements View {
             actuator.setX(deltaX / distance);
             actuator.setY(deltaY / distance);
         }
-        Game.HANDLER.call(eventJoystick.update(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN));
+        Pixelate.HANDLER.call(eventJoystick.update(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN));
     }
 
     @Override
     public void destroy() {
-        Game.HANDLER.unregisterListener(this);
+        Pixelate.HANDLER.unregisterListener(this);
     }
 
     @EventHandler
@@ -166,12 +166,12 @@ public class ViewControls implements View {
                 } else if (isOnMineButton(x, y)) {
                     setMining(true);
                 } else if (isOnInvButton(x, y)) {
-                    Game.HANDLER.call(new EventOpenInventory());
+                    Pixelate.HANDLER.call(new EventOpenInventory());
                 } else if (isOnPlaceButton(x, y)) {
                     setPlacing(true);
-                } else if (isOnPauseButton(x, y) && !Game.paused) {
+                } else if (isOnPauseButton(x, y) && !Pixelate.paused) {
 
-                    Game.setWorld("Cave");
+                    Pixelate.setWorld("Cave");
                     // Game.HANDLER.call(new EventGamePause());
                 }
                 break;
@@ -192,7 +192,7 @@ public class ViewControls implements View {
                 } else if (isJoystick()) {
                     setJoystick(false);
                     setActuator(0, 0);
-                    Game.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
+                    Pixelate.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
                 } else if (isOnPlaceButton(x, y)) {
                     setPlacing(false);
                 }

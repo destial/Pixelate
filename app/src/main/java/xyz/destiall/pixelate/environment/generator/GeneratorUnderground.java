@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
@@ -34,8 +34,8 @@ public class GeneratorUnderground implements Generator {
         PerlinNoise.reshufflePermutation(); //Reshuffle Permutation
 
         //Main terrain generation
-        for (int x = -Game.WIDTH; x <= Game.WIDTH; x+=Tile.SIZE) {
-            for (int y = -Game.HEIGHT; y <= Game.HEIGHT; y+=Tile.SIZE) {
+        for (int x = -Pixelate.WIDTH; x <= Pixelate.WIDTH; x+=Tile.SIZE) {
+            for (int y = -Pixelate.HEIGHT; y <= Pixelate.HEIGHT; y+=Tile.SIZE) {
                 Tile tile = null;
 
                 double noiseValue = PerlinNoise.noise(x*divisor*generationScale,y*divisor*generationScale);

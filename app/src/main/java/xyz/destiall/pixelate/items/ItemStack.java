@@ -1,6 +1,6 @@
 package xyz.destiall.pixelate.items;
 
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
@@ -15,7 +15,7 @@ public class ItemStack extends Imageable {
     }
 
     public ItemStack(Material material, int amount) {
-        super(Game.getTileMap(), Material.getRows(), Material.getColumns());
+        super(Pixelate.getTileMap(), Material.getRows(), Material.getColumns());
         this.material = material;
         this.amount = amount;
         if (!material.isBlock()) {

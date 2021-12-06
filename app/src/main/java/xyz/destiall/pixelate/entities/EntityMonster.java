@@ -1,6 +1,6 @@
 package xyz.destiall.pixelate.entities;
 
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.Inventory;
@@ -11,7 +11,7 @@ public class EntityMonster extends EntityLiving {
     private final Type type;
     public EntityMonster(Entity.Type type) {
         super(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
-        location = new Location((int) (Game.WIDTH * 0.5), (int) (Game.HEIGHT * 0.5));
+        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
         spriteSheet.addSprite("LOOK RIGHT", createAnimation(0));
         spriteSheet.addSprite("LOOK LEFT", createAnimation(1));
         switch (type) {

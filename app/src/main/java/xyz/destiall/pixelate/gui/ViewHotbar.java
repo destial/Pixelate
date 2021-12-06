@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import xyz.destiall.java.events.EventHandler;
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
@@ -34,7 +34,7 @@ public class ViewHotbar implements View {
         currentSlotImage = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.85), (int) (image.getHeight() * 0.85), false);
         this.image = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.8), (int) (image.getHeight() * 0.8), false);
         positions = new HashMap<>();
-        Game.HANDLER.registerListener(this);
+        Pixelate.HANDLER.registerListener(this);
         images = new HashMap<>();
     }
 
@@ -56,7 +56,7 @@ public class ViewHotbar implements View {
 
     @Override
     public void render(Screen screen) {
-        int starting = (int) (Game.WIDTH / 2 - image.getWidth() * 4.5);
+        int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
         for (int i = 0; i < 9; i++) {
             int a = 0;
             Bitmap image = this.image;
@@ -65,7 +65,7 @@ public class ViewHotbar implements View {
                 a = 5;
             }
             int x = starting + (i * this.image.getWidth());
-            int y = Game.HEIGHT - 200;
+            int y = Pixelate.HEIGHT - 200;
             ItemStack item = inventory.getItem(i);
             screen.draw(image, x, y - a);
             if (item != null) {
@@ -100,7 +100,7 @@ public class ViewHotbar implements View {
     public void destroy() {
         positions.clear();
         images.clear();
-        Game.HANDLER.unregisterListener(this);
+        Pixelate.HANDLER.unregisterListener(this);
     }
 
     @EventHandler

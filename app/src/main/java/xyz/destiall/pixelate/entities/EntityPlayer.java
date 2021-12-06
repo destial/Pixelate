@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventJoystick;
@@ -23,7 +23,7 @@ import xyz.destiall.pixelate.position.Vector2;
 public class EntityPlayer extends EntityLiving implements Listener {
     public EntityPlayer() {
         super(ResourceManager.getBitmap(R.drawable.player), 6, 3);
-        location = new Location((int) (Game.WIDTH * 0.5), (int) (Game.HEIGHT * 0.5));
+        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
         spriteSheet.addSprite("LOOK RIGHT", createAnimation(0));
         spriteSheet.addSprite("LOOK LEFT", createAnimation(1));
         spriteSheet.addSprite("WALK RIGHT", createAnimation(2));
@@ -34,7 +34,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
         inventory = new Inventory(this, 27);
         HUD.INSTANCE.setHotbar(inventory);
-        Game.HANDLER.registerListener(this);
+        Pixelate.HANDLER.registerListener(this);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @Override
     public void render(Screen screen) {
         super.render(screen);
-        Vector2 vector = screen.convert(location);
-        vector.add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE * 0.5, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE * 0.5);
+        Vector2 vector = Screen.convert(location);
+        vector.add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         screen.circle(vector.getX(), vector.getY(), 5, Color.RED);
     }
 
@@ -74,7 +74,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private void onMine(EventMining e) {
         if (location.getWorld() == null) return;
         updateAABB();
-        Location newLoc = location.clone().add(target.getVector().multiply(Tile.SIZE));
+        Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (tile != null && tile.getTileType() == Tile.TileType.FOREGROUND) {
             ItemStack stack = location.getWorld().breakTile(newLoc);

@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 import java.util.Objects;
 
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.graphics.Imageable;
@@ -13,7 +13,7 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class Tile extends Imageable implements Renderable {
-    public static final long SIZE = Game.getTileMap().getWidth() / Material.getColumns();
+    public static final long SIZE = Pixelate.getTileMap().getWidth() / Material.getColumns();
 
     protected Vector2 location;
     protected Material material;
@@ -21,7 +21,7 @@ public class Tile extends Imageable implements Renderable {
     protected TileType tileType;
 
     public Tile(int x, int y, Material material, World world, TileType type) {
-        super(Game.getTileMap(), Material.getRows(), Material.getColumns());
+        super(Pixelate.getTileMap(), Material.getRows(), Material.getColumns());
         this.material = material;
         this.world = world;
         location = new Vector2(x, y);
@@ -46,7 +46,7 @@ public class Tile extends Imageable implements Renderable {
 
     public void setMaterial(Material mat) {
         material = mat;
-        image = Bitmap.createBitmap(Game.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
+        image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
         this.tileType = mat.getTileType();
     }
 
@@ -59,7 +59,7 @@ public class Tile extends Imageable implements Renderable {
     @Override
     public void render(Screen screen) {
         Vector2 offset = screen.convert(location);
-        if (offset.getX() + Tile.SIZE < 0 || offset.getX() > Game.WIDTH || offset.getY() + Tile.SIZE < 0 || offset.getY() > Game.HEIGHT) return;
+        if (offset.getX() + Tile.SIZE < 0 || offset.getX() > Pixelate.WIDTH || offset.getY() + Tile.SIZE < 0 || offset.getY() > Pixelate.HEIGHT) return;
         screen.draw(image, offset.getX(), offset.getY());
     }
 

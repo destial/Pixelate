@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import xyz.destiall.java.events.EventHandler;
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
@@ -28,27 +28,28 @@ public class ViewInventory implements View {
     private final Bitmap image;
     private final Vector2 exitButton;
     private final int exitButtonRadius;
+    private final int scale;
+
     private ItemStack dragging;
     private int draggingSlot;
     private int draggingX;
     private int draggingY;
-    private int scale;
 
     public ViewInventory(Inventory inventory) {
         this.inventory = inventory;
-        exitButton = new Vector2(Game.WIDTH - 100, 100);
+        exitButton = new Vector2(Pixelate.WIDTH - 100, 100);
         exitButtonRadius = 40;
         image = ResourceManager.getBitmap(R.drawable.hotbar);
         scale = (int) (image.getWidth() * 0.8);
         positions = new HashMap<>();
         images = new HashMap<>();
-        Game.HANDLER.registerListener(this);
+        Pixelate.HANDLER.registerListener(this);
     }
 
     @Override
     public void render(Screen screen) {
         screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
-        int startingCrafting = Game.WIDTH / 3 - image.getWidth();
+        int startingCrafting = Pixelate.WIDTH / 3 - image.getWidth();
         int a = 0;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
@@ -108,7 +109,7 @@ public class ViewInventory implements View {
                 break;
             }
         }
-        int starting = (int) (Game.WIDTH / 2 - image.getWidth() * 4.5);
+        int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
         int i = 0;
         for (int y = 0; y < (inventory.getSize() / 9); y++) {
             for (int x = 0; x < 9; x++) {
@@ -265,6 +266,6 @@ public class ViewInventory implements View {
     @Override
     public void destroy() {
         positions.clear();
-        Game.HANDLER.unregisterListener(this);
+        Pixelate.HANDLER.unregisterListener(this);
     }
 }

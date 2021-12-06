@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 
 public class ResourceManager {
     private static final Map<Integer, Bitmap> RESOURCES = new HashMap<>();
@@ -20,6 +20,6 @@ public class ResourceManager {
     }
 
     public static Resources getResources() {
-        return Game.getResources();
+        return Pixelate.getResources();
     }
 }

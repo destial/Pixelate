@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.GameSurface;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
@@ -56,7 +56,7 @@ public class StateGame extends State implements Modular {
         worldManager.getCurrentWorld().getEntities().add(player);
 
         allObjects.add(HUD.INSTANCE);
-        screen = new Screen(null, player, Game.WIDTH, Game.HEIGHT);
+        screen = new Screen(null, player, Pixelate.WIDTH, Pixelate.HEIGHT);
 
         Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS));
         plankRecipe.setShape("W"); // { W  , null
@@ -110,7 +110,7 @@ public class StateGame extends State implements Modular {
 
     @Override
     public void render(Canvas canvas) {
-        screen.update(canvas, player, Game.WIDTH, Game.HEIGHT);
+        screen.update(canvas, player, Pixelate.WIDTH, Pixelate.HEIGHT);
         for (Object o : allObjects) {
             if (o instanceof Renderable) {
                 ((Renderable) o).render(screen);

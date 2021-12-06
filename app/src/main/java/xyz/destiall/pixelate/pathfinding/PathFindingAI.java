@@ -2,7 +2,6 @@ package xyz.destiall.pixelate.pathfinding;
 
 import java.util.LinkedList;
 
-import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.pathfinding.algorithms.Algorithm;
 import xyz.destiall.pixelate.position.Location;
 

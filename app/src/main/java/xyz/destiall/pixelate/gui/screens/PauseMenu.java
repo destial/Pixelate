@@ -8,8 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import xyz.destiall.pixelate.Game;
 import xyz.destiall.pixelate.GameActivity;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 
 
@@ -44,8 +44,8 @@ public class PauseMenu extends Activity implements View.OnClickListener {
         Intent intent = new Intent();
         if (v == btn_start) {
             intent.setClass(this, GameActivity.class);
-            Game.paused = false;
-            Game.getGSM().setState("Game");
+            Pixelate.paused = false;
+            Pixelate.getGSM().setState("Game");
         } else if (v == btn_quit) {
             intent.setClass(this, MainMenu.class);
         }

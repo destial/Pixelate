@@ -2,7 +2,7 @@ package xyz.destiall.pixelate.entities;
 
 import android.graphics.Bitmap;
 
-import xyz.destiall.pixelate.Game;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.InventoryHolder;
 
@@ -123,17 +123,17 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     }
 
     public void constraint() {
-        if (location.getX() < -Game.WIDTH) {
-            location.set(-Game.WIDTH, location.getY());
+        if (location.getX() < -Pixelate.WIDTH) {
+            location.set(-Pixelate.WIDTH, location.getY());
         }
-        if (location.getY() < -Game.HEIGHT) {
-            location.set(location.getX(), -Game.HEIGHT);
+        if (location.getY() < -Pixelate.HEIGHT) {
+            location.set(location.getX(), -Pixelate.HEIGHT);
         }
-        if (location.getX() > Game.WIDTH) {
-            location.set(Game.WIDTH, location.getY());
+        if (location.getX() > Pixelate.WIDTH) {
+            location.set(Pixelate.WIDTH, location.getY());
         }
-        if (location.getY() > Game.HEIGHT) {
-            location.set(location.getX(), Game.HEIGHT);
+        if (location.getY() > Pixelate.HEIGHT) {
+            location.set(location.getX(), Pixelate.HEIGHT);
         }
     }
 }
