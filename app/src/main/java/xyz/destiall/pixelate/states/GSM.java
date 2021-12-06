@@ -24,25 +24,20 @@ public class GSM implements Updateable {
         currentState = name;
     }
 
-    @Override
-    public void update() {
-        if (currentState != null) {
-            states.get(currentState).update();
-        }
+    public State getCurrentState() {
+        return states.get(currentState);
     }
 
     @Override
-    public void tick() {
+    public void update() {
         if (currentState != null) {
-            states.get(currentState).tick();
+            getCurrentState().update();
         }
     }
 
     public void render(Canvas canvas) {
         if (currentState != null) {
-            states.get(currentState).render(canvas);
+            getCurrentState().render(canvas);
         }
     }
-
-
 }

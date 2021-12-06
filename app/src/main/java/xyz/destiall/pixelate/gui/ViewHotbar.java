@@ -94,9 +94,6 @@ public class ViewHotbar implements View {
     public void update() {}
 
     @Override
-    public void tick() {}
-
-    @Override
     public void destroy() {
         positions.clear();
         images.clear();

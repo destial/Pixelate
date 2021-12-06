@@ -30,7 +30,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         spriteSheet.addSprite("WALK LEFT", createAnimation(3));
         spriteSheet.setCurrentSprite("LOOK RIGHT");
         scale = 0.5f;
-        health = 20f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
         inventory = new Inventory(this, 27);
         HUD.INSTANCE.setHotbar(inventory);
@@ -48,11 +47,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @Override
     public void update() {
         super.update();
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
     }
 
     @Override

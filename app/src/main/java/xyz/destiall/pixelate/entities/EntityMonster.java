@@ -42,5 +42,13 @@ public class EntityMonster extends EntityLiving {
     }
 
     @Override
-    public void tick() {}
+    public void update() {
+        super.update();
+        location.getWorld().getNearestEntities(location, Tile.SIZE).stream().filter(e -> e != this).forEach(e -> {
+            if (e instanceof EntityPlayer) {
+                EntityPlayer living = (EntityPlayer) e;
+                living.damage(0.5f);
+            }
+        });
+    }
 }

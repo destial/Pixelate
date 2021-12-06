@@ -83,13 +83,6 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         screen.draw(map, offset.getX(), offset.getY());
     }
 
-    @Override
-    public void tick() {
-        for (Module m : modules.values()) {
-            m.tick();
-        }
-    }
-
     public enum Type {
         ZOMBIE(R.drawable.zombie, 4, 3),
         SKELETON(R.drawable.skeleton, 2, 3),

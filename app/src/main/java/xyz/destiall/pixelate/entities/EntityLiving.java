@@ -5,14 +5,20 @@ import android.graphics.Bitmap;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.InventoryHolder;
+import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected float health;
     protected float speed;
     protected float armor;
+    protected float damageDelay;
     protected Inventory inventory;
     public EntityLiving(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
+        health = 20f;
+        speed = 1f;
+        armor = 0f;
+        damageDelay = 0f;
     }
 
     public float getHealth() {
@@ -33,6 +39,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     }
 
     public void damage(float damage) {
+        if (damageDelay != 0) return;
+        damageDelay = (float) Timer.getDeltaTime();
         if (health > 0) {
             health -= damage;
             if (health < 0) health = 0;
@@ -45,6 +53,12 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         updateDirection();
         updateSprite();
         collide();
+        if (damageDelay != 0f) {
+            damageDelay += Timer.getDeltaTime();
+            if (damageDelay >= 1.f) {
+                damageDelay = 0.f;
+            }
+        }
     }
 
     public void updateSprite() {

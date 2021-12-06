@@ -11,6 +11,7 @@ import xyz.destiall.pixelate.events.EventPlace;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.states.StateGame;
 
 public class ViewControls implements View {
     private final int outerCircleRadius;
@@ -63,6 +64,9 @@ public class ViewControls implements View {
         screen.circle(placeButton.getX(), placeButton.getY(), placeButtonRadius * (place ? 0.8f : 1), Color.YELLOW);
         screen.circle(invButton.getX(), invButton.getY(), invButtonRadius, Color.GREEN);
         screen.circle(pauseButton.getX(), pauseButton.getY(), pauseButtonRadius, Color.RED);
+
+        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.75, Pixelate.WIDTH * 0.2, 10, Color.RED, Color.GREEN,
+                ((StateGame) Pixelate.getGSM().getCurrentState()).getPlayer().getHealth() / 20f);
     }
 
     @Override
@@ -74,9 +78,6 @@ public class ViewControls implements View {
             innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
         }
     }
-
-    @Override
-    public void tick() {}
 
     private boolean isOnJoystick(float x, float y) {
         double distance = Math

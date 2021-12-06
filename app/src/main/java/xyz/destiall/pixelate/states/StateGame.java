@@ -12,7 +12,6 @@ import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
-import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -36,7 +35,7 @@ public class StateGame extends State implements Modular {
         allObjects = new ArrayList<>();
         modules = new HashMap<>();
 
-        World world = new World(new GeneratorBasic());
+        World world = new World();
         world.generateWorld(0, true);
 
         World cave = new World(new GeneratorUnderground());
@@ -93,18 +92,6 @@ public class StateGame extends State implements Modular {
         }
         for (Module m : modules.values()) {
             m.update();
-        }
-    }
-
-    @Override
-    public void tick() {
-        for (Object o : allObjects) {
-            if (o instanceof Updateable) {
-                ((Updateable) o).tick();
-            }
-        }
-        for (Module m : modules.values()) {
-            m.tick();
         }
     }
 

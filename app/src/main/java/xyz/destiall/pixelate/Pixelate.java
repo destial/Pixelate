@@ -47,9 +47,6 @@ public class Pixelate extends Thread {
 
     @Override
     public void run() {
-        long nsPerTick = 1000000000 / 60;
-        long lastTime = System.nanoTime();
-        long unprocessed = 0;
         while (running && !paused)  {
             try {
                 canvas = surfaceHolder.lockCanvas();
@@ -57,12 +54,6 @@ public class Pixelate extends Thread {
                 WIDTH = canvas.getWidth();
                 if (!paused) {
                     update();
-                    unprocessed += (Timer.getLastNanoTime() - lastTime) / nsPerTick;
-                    lastTime = Timer.getLastNanoTime();
-                    while (unprocessed >= 1) {
-                        tick();
-                        unprocessed -= 1;
-                    }
                 }
                 render(canvas);
             } catch (Exception e) {
@@ -91,13 +82,6 @@ public class Pixelate extends Thread {
         if (!paused) {
             canvas.drawRGB(0, 0, 0);
             stateManager.render(canvas);
-        }
-    }
-
-    private void tick() {
-        if (!paused) {
-            timer.tick();
-            stateManager.tick();
         }
     }
 

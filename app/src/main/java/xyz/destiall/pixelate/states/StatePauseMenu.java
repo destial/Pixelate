@@ -15,11 +15,6 @@ public class StatePauseMenu extends State {
     }
 
     @Override
-    public void tick() {
-
-    }
-
-    @Override
     public void render(Canvas canvas) {
 
     }

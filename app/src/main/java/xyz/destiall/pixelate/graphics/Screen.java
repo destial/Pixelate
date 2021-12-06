@@ -13,7 +13,7 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class Screen {
-    private static Canvas canvas;
+    public static Canvas CANVAS;
     private static Vector2 offset;
     private static final Vector2 displayCenter = new Vector2();
     private final Paint textPaint;
@@ -27,7 +27,7 @@ public class Screen {
     }
 
     public void update(Canvas canvas, Entity center, int width, int height) {
-        Screen.canvas = canvas;
+        Screen.CANVAS = canvas;
         Location gameCenter = center.getLocation();
         displayCenter.set(width / 2f, height / 2f);
         offset = displayCenter.subtract(center.getBounds().getWidth() / 2, center.getBounds().getHeight() / 2).subtract(gameCenter.getRawX(), gameCenter.getRawY());
@@ -43,26 +43,38 @@ public class Screen {
     }
 
     public void draw(Bitmap image, double x, double y) {
-        canvas.drawBitmap(image, (float) x, (float) y, null);
+        CANVAS.drawBitmap(image, (float) x, (float) y, null);
     }
 
     public void text(String text, double x, double y, double size, int color) {
         textPaint.setTextSize((float) size);
         textPaint.setColor(color);
-        canvas.drawText(text, (float) x, (float) y, textPaint);
+        CANVAS.drawText(text, (float) x, (float) y, textPaint);
     }
 
     public void circle(double x, double y, double radius, int color) {
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        canvas.drawCircle((float) x, (float) y, (float) radius, paint);
+        CANVAS.drawCircle((float) x, (float) y, (float) radius, paint);
     }
 
     public void ring(double x, double y, double radius, float thickness, int color) {
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(thickness);
-        canvas.drawCircle((float) x, (float) y, (float) radius, paint);
+        CANVAS.drawCircle((float) x, (float) y, (float) radius, paint);
+    }
+
+    public void rectangle(double x, double y, double width, double height, int color) {
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
+    }
+
+    public void bar(double x, double y, double width, double height, int color, int progressColor, float progress) {
+        float progressWidth = (float) (width * progress);
+        rectangle(x, y, width, height, color);
+        if (progress > 0.f) rectangle(x, y, progressWidth, height, progressColor);
     }
 
     private void constraint() {

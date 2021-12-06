@@ -151,9 +151,6 @@ public class ViewInventory implements View {
     @Override
     public void update() {}
 
-    @Override
-    public void tick() {}
-
     @EventHandler
     private void onTouch(EventTouch e) {
         float x = e.getX();

@@ -65,9 +65,4 @@ public class WorldManager implements Updateable, Renderable {
     public void update() {
         getCurrentWorld().update();
     }
-
-    @Override
-    public void tick() {
-        getCurrentWorld().tick();
-    }
 }

@@ -9,8 +9,6 @@ public class Timer implements Updateable {
     private static int fps;
     private static double oneSecond;
     private static boolean isSecond;
-    private static int ticksThisSecond;
-    private static int ticks;
     private static double elapsedTime;
 
     @Override
@@ -29,16 +27,9 @@ public class Timer implements Updateable {
             elapsedTime = 0;
             fps = fpsCount;
             fpsCount = 0;
-            ticksThisSecond = ticks;
-            ticks = 0;
             isSecond = true;
         }
         lastNanoTime = now;
-    }
-
-    @Override
-    public void tick() {
-        ticks++;
     }
 
     public static long getLastNanoTime() {
@@ -55,10 +46,6 @@ public class Timer implements Updateable {
 
     public static boolean isSecond() {
         return isSecond;
-    }
-
-    public static int getTicksThisSecond() {
-        return ticksThisSecond;
     }
 
     public static double getElapsedTime() {

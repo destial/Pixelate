@@ -55,8 +55,7 @@ public class HUD implements Updateable, Renderable, Listener {
             inventory.render(screen);
         }
         screen.text("FPS: " + Timer.getFPS(), 10, 50, 60, Color.WHITE);
-        screen.text("Ticks: " + Timer.getTicksThisSecond(), 10, 110, 60, Color.WHITE);
-        screen.text("Delta: " + Timer.getDeltaTime(), 10, 170, 60, Color.WHITE);
+        screen.text("Delta: " + Timer.getDeltaTime(), 10, 110, 60, Color.WHITE);
     }
 
     @Override
@@ -66,16 +65,6 @@ public class HUD implements Updateable, Renderable, Listener {
             hotbar.update();
         } else {
             inventory.update();
-        }
-    }
-
-    @Override
-    public void tick() {
-        if (inventory == null) {
-            buttons.tick();
-            hotbar.tick();
-        } else {
-            inventory.tick();
         }
     }
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityMonster;
@@ -58,6 +59,10 @@ public class World implements Updateable, Renderable {
         }
     }
 
+    public List<Entity> getNearestEntities(Location requestedLocation, double radius) {
+        return entities.stream().filter(e -> e.getLocation().distance(requestedLocation) <= radius).collect(Collectors.toList());
+    }
+
     public Location getNearestEmpty(Location requestedLocation) {
         //TODO a better location finding alogrithm based on recursive function that searches surrounding locations)
         while (requestedLocation.getTile().getTileType() != Tile.TileType.BACKGROUND) {
@@ -66,7 +71,7 @@ public class World implements Updateable, Renderable {
         return requestedLocation;
     }
 
-    public EntityMonster spawnEntity(Location location, Entity.Type type) {
+    public EntityMonster spawnMonster(Location location, Entity.Type type) {
         EntityMonster monster = new EntityMonster(type);
         monster.teleport(location);
         entities.add(monster);
@@ -91,13 +96,6 @@ public class World implements Updateable, Renderable {
     public void update() {
         for (Entity entity : entities) {
             entity.update();
-        }
-    }
-
-    @Override
-    public void tick() {
-        for (Entity entity : entities) {
-            entity.tick();
         }
     }
 
