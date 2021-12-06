@@ -1,5 +1,7 @@
 package xyz.destiall.pixelate.entities;
 
+import android.graphics.Color;
+
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Game;
@@ -10,11 +12,13 @@ import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
 import xyz.destiall.pixelate.graphics.ResourceManager;
+import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
+import xyz.destiall.pixelate.position.Vector2;
 
 public class EntityPlayer extends EntityLiving implements Listener {
     public EntityPlayer() {
@@ -51,6 +55,14 @@ public class EntityPlayer extends EntityLiving implements Listener {
         super.tick();
     }
 
+    @Override
+    public void render(Screen screen) {
+        super.render(screen);
+        Vector2 vector = screen.convert(location);
+        vector.add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE * 0.5, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE * 0.5);
+        screen.circle(vector.getX(), vector.getY(), 5, Color.RED);
+    }
+
     @EventHandler
     private void onJoystickEvent(EventJoystick e) {
         velocity.setX(e.getOffsetX());
@@ -62,7 +74,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private void onMine(EventMining e) {
         if (location.getWorld() == null) return;
         updateAABB();
-        Location newLoc = location.clone().add(facing.getVector().multiply(Tile.SIZE));
+        Location newLoc = location.clone().add(target.getVector().multiply(Tile.SIZE));
         Tile tile = newLoc.getTile();
         if (tile != null && tile.getTileType() == Tile.TileType.FOREGROUND) {
             ItemStack stack = location.getWorld().breakTile(newLoc);

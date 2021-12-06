@@ -56,15 +56,14 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     public void updateDirection() {
         // Set direction of entity based on velocity
         if (!velocity.isZero()) {
-            if (velocity.getX() > 0) {
-                facing = Direction.RIGHT;
+            if (velocity.getY() > 0 && Math.abs(velocity.getY()) > Math.abs(velocity.getX())) {
+                facing = target = Direction.DOWN;
+            } else if (velocity.getY() < 0 && Math.abs(velocity.getY()) > Math.abs(velocity.getX())) {
+                facing = target = Direction.UP;
+            } else if (velocity.getX() > 0) {
+                facing = target = Direction.RIGHT;
             } else if (velocity.getX() < 0) {
-                facing = Direction.LEFT;
-            }
-            if (velocity.getY() > 0 && velocity.getY() > velocity.getX()) {
-                facing = Direction.UP;
-            } else if (velocity.getY() < 0 && velocity.getY() < velocity.getX()) {
-                facing = Direction.DOWN;
+                facing = target = Direction.LEFT;
             }
         }
     }
@@ -96,7 +95,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
                 if (location.getWorld().isForegroundTile(collision)) {
 
                     // Revert position
-                    location.subtract(velocity.getX(), 0);
+                    location.subtract(velocity.getX(), 0 );
                 }
 
                 // Check y direction

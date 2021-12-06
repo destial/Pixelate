@@ -116,6 +116,11 @@ public class StateGame extends State implements Modular {
                 ((Renderable) o).render(screen);
             }
         }
+        for (Module m : modules.values()) {
+            if (m instanceof Renderable) {
+                ((Renderable) m).render(screen);
+            }
+        }
     }
 
     public <N> N getObject(Class<N> clazz) {

@@ -259,8 +259,7 @@ public class ViewInventory implements View {
     }
 
     private boolean isOnExit(float x, float y) {
-        double distance = Math.sqrt(Math.pow(exitButton.getX() - x, 2) + Math.pow(exitButton.getY() - y, 2));
-        return distance < exitButtonRadius;
+        return exitButton.distance(x, y) < exitButtonRadius;
     }
 
     @Override

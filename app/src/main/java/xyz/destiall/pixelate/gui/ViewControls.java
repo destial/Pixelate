@@ -101,11 +101,7 @@ public class ViewControls implements View {
     }
 
     private boolean isOnButton(Vector2 vect, float x, float y, int radius) {
-        return getDistance(vect, x, y) < radius;
-    }
-
-    private double getDistance(Vector2 vect, float x, float y) {
-        return Math.sqrt(Math.pow(vect.getX() - x, 2) + Math.pow(vect.getY() - y, 2));
+        return vect.distance(x, y) < radius;
     }
 
     public boolean isJoystick() {

@@ -50,8 +50,21 @@ public class Location implements Cloneable {
         return this;
     }
 
-    public void setWorld(@Nullable World world) {
+    public double distance(Location location) {
+        return distance(location.toVector());
+    }
+
+    public double distance(Vector2 vector) {
+        return toVector().distance(vector);
+    }
+
+    public double distance(double x, double y) {
+        return toVector().distance(x, y);
+    }
+
+    public Location setWorld(@Nullable World world) {
         this.world = world;
+        return this;
     }
 
     @Nullable
@@ -90,12 +103,12 @@ public class Location implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location location = (Location) o;
-        return Double.compare(location.x, x) == 0 && Double.compare(location.y, y) == 0 && Objects.equals(world, location.world);
+        return location.x == x && location.y == y && location.world == world;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, world, vector);
+        return Objects.hash(x, y, world);
     }
 
     @NonNull
@@ -108,7 +121,7 @@ public class Location implements Cloneable {
         return "Location{" +
                 "x=" + x +
                 ", y=" + y +
-                ", world=" + world +
+                ", world=" + (world != null ? world.getEnvironment().name() : null) +
                 '}';
     }
 }

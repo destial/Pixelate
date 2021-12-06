@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
+import xyz.destiall.pixelate.errors.DivideByZeroException;
+
 public class Vector2 implements Cloneable {
     private double x;
     private double y;
@@ -23,22 +25,26 @@ public class Vector2 implements Cloneable {
         return y;
     }
 
-    public void setX(double x) {
+    public Vector2 setX(double x) {
         this.x = x;
+        return this;
     }
 
-    public void setY(double y) {
+    public Vector2 setY(double y) {
         this.y = y;
+        return this;
     }
 
-    public void set(double x, double y) {
+    public Vector2 set(double x, double y) {
         this.x = x;
         this.y = y;
+        return this;
     }
 
-    public void set(Vector2 other) {
-        this.x = other.x;
-        this.y = other.y;
+    public Vector2 set(Vector2 other) {
+        x = other.x;
+        y = other.y;
+        return this;
     }
 
     public double dot(Vector2 other) {
@@ -53,8 +59,8 @@ public class Vector2 implements Cloneable {
     }
 
     public Vector2 add(Vector2 other) {
-        this.x += other.x;
-        this.y += other.y;
+        x += other.x;
+        y += other.y;
         return this;
     }
 
@@ -65,13 +71,13 @@ public class Vector2 implements Cloneable {
     }
 
     public Vector2 subtract(Vector2 other) {
-        this.x -= other.x;
-        this.y -= other.y;
+        x -= other.x;
+        y -= other.y;
         return this;
     }
 
-    public Vector2 divide(double n) {
-        if (n == 0d) return this;
+    public Vector2 divide(double n) throws DivideByZeroException {
+        if (n == 0d) throw new DivideByZeroException();
         x /= n;
         y /= n;
         return this;
@@ -89,23 +95,39 @@ public class Vector2 implements Cloneable {
         return this;
     }
 
+    public double distance(Vector2 other) {
+        return distance(other.x, other.y);
+    }
+
+    public double distance(double x, double y) {
+        return lengthOf(this.x - x, this.y - y);
+    }
+
+    public double distanceSquared(Vector2 other) {
+        return distanceSquared(other.getX(), other.getY());
+    }
+
+    public double distanceSquared(double x, double y) {
+        return Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2);
+    }
+
     public boolean isZero() {
         return x == 0d && y == 0d;
     }
 
     public double length() {
         if (isZero()) return 0d;
-        return Math.sqrt((x * x) + (y * y));
+        return lengthOf(x, y);
     }
 
-    public Vector2 normalized() {
-        if (isZero()) return this;
+    public Vector2 normalize() throws DivideByZeroException {
+        if (isZero()) throw new DivideByZeroException();
         this.x = x / length();
         this.y = y / length();
         return this;
     }
 
-    public Vector2 normalize() {
+    public Vector2 getNormal() {
         if (isZero()) return new Vector2(0, 0);
         return new Vector2(x / length(), y / length());
     }
@@ -119,8 +141,8 @@ public class Vector2 implements Cloneable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vector2 vector2 = (Vector2) o;
-        return Double.compare(vector2.x, x) == 0 && Double.compare(vector2.y, y) == 0;
+        Vector2 vector = (Vector2) o;
+        return vector.x == x && vector.y == y;
     }
 
     @Override

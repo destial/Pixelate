@@ -32,9 +32,5 @@ public class GameActivity extends AppCompatActivity implements Listener {
         Intent intent = new Intent();
         intent.setClass(this, PauseMenu.class);
         startActivity(intent);
-
     }
-
-
-
 }
