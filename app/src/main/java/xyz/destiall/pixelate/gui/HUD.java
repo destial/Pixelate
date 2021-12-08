@@ -41,8 +41,9 @@ public class HUD implements Updateable, Renderable, Listener {
             return;
         }
         buttons.setJoystick(false);
-        buttons.setMining(false);
+        buttons.setSwinging(false);
         buttons.setActuator(0, 0);
+        setHotbar(inventory);
         this.inventory = new ViewInventory(inventory);
     }
 

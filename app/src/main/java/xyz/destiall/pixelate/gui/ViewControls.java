@@ -4,11 +4,12 @@ import android.graphics.Color;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.events.EventJoystick;
-import xyz.destiall.pixelate.events.EventMining;
+import xyz.destiall.pixelate.events.EventSwing;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
-import xyz.destiall.pixelate.events.EventPlayerMineAnimation;
+import xyz.destiall.pixelate.events.EventPlayerSwingAnimation;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
@@ -30,7 +31,7 @@ public class ViewControls implements View {
     private final int pauseButtonRadius;
     private final EventJoystick eventJoystick;
     private boolean joystick;
-    private boolean mine;
+    private boolean swing;
     private boolean place;
 
     public ViewControls() {
@@ -61,13 +62,13 @@ public class ViewControls implements View {
     public void render(Screen screen) {
         screen.ring(outerCircleCenter.getX(), outerCircleCenter.getY(), outerCircleRadius, 20, Color.RED);
         screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.BLUE);
-        screen.circle(mineButton.getX(), mineButton.getY(), mineButtonRadius * (mine ? 0.8f : 1), Color.YELLOW);
+        screen.circle(mineButton.getX(), mineButton.getY(), mineButtonRadius * (swing ? 0.8f : 1), Color.YELLOW);
         screen.circle(placeButton.getX(), placeButton.getY(), placeButtonRadius * (place ? 0.8f : 1), Color.YELLOW);
         screen.circle(invButton.getX(), invButton.getY(), invButtonRadius, Color.GREEN);
         screen.circle(pauseButton.getX(), pauseButton.getY(), pauseButtonRadius, Color.RED);
 
-        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.75, Pixelate.WIDTH * 0.2, 10, Color.RED, Color.GREEN,
-                ((StateGame) Pixelate.getGSM().getCurrentState()).getPlayer().getHealth() / 20f);
+        EntityPlayer player = ((StateGame) Pixelate.getGSM().getCurrentState()).getPlayer();
+        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.75, Pixelate.WIDTH * 0.2, 10, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
     }
 
     @Override
@@ -78,8 +79,8 @@ public class ViewControls implements View {
             innerCircleCenter.setX(outerCircleCenter.getX() + actuator.getX() * outerCircleRadius);
             innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
         }
-        if(isMining())
-            Pixelate.HANDLER.call(new EventPlayerMineAnimation());
+        if (isSwinging())
+            Pixelate.HANDLER.call(new EventPlayerSwingAnimation());
     }
 
     private boolean isOnJoystick(float x, float y) {
@@ -112,8 +113,8 @@ public class ViewControls implements View {
         return joystick;
     }
 
-    public boolean isMining() {
-        return mine;
+    public boolean isSwinging() {
+        return swing;
     }
 
     public boolean isPlacing() {
@@ -124,10 +125,10 @@ public class ViewControls implements View {
         this.joystick = joystick;
     }
 
-    public void setMining(boolean mine) {
-        this.mine = mine;
-        if (mine)
-            Pixelate.HANDLER.call(new EventMining());
+    public void setSwinging(boolean swing) {
+        this.swing = swing;
+        if (swing)
+            Pixelate.HANDLER.call(new EventSwing());
     }
 
     public void setPlacing(boolean place) {
@@ -168,7 +169,7 @@ public class ViewControls implements View {
                 if (isOnJoystick(x, y)) {
                     setJoystick(true);
                 } else if (isOnMineButton(x, y)) {
-                    setMining(true);
+                    setSwinging(true);
                 } else if (isOnInvButton(x, y)) {
                     Pixelate.HANDLER.call(new EventOpenInventory());
                 } else if (isOnPlaceButton(x, y)) {
@@ -182,9 +183,9 @@ public class ViewControls implements View {
             case MOVE:
                 if (isJoystick()) {
                     setActuator(x, y);
-                } else if (isMining()) {
+                } else if (isSwinging()) {
                     if (!isOnMineButton(x, y))
-                        setMining(false);
+                        setSwinging(false);
                 } else if (isPlacing()) {
                     if (!isOnPlaceButton(x, y))
                         setPlacing(false);
@@ -192,7 +193,7 @@ public class ViewControls implements View {
                 break;
             case UP:
                 if (isOnMineButton(x, y)) {
-                    setMining(false);
+                    setSwinging(false);
                 } else if (isJoystick()) {
                     setJoystick(false);
                     setActuator(0, 0);

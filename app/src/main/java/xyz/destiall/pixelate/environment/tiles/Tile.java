@@ -51,6 +51,7 @@ public class Tile extends Imageable implements Renderable {
         material = mat;
         image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
         tileType = mat.getTileType();
+        brokenProgression = 0;
     }
 
     public enum TileType {
@@ -59,30 +60,27 @@ public class Tile extends Imageable implements Renderable {
         UNKNOWN
     }
 
-    public float getBlockBreakProgress()
-    {
+    public float getBlockBreakProgress() {
         return this.brokenProgression;
     }
 
-    public void addBlockBreakProgression(float progression)
-    {
-        this.brokenProgression += progression;
-        if(this.brokenProgression < 0) this.brokenProgression = 0;
-        if(this.brokenProgression > 100) this.brokenProgression = 100;
+    public void addBlockBreakProgression(float progression) {
+        brokenProgression += progression;
+        if (brokenProgression < 0) brokenProgression = 0;
+        if (brokenProgression > 100) brokenProgression = 100;
     }
 
-    public boolean readyToBreak()
-    {
-        return (this.brokenProgression >= 100);
+    public boolean readyToBreak() {
+        return brokenProgression >= 100;
     }
 
     @Override
     public void render(Screen screen) {
-        Vector2 offset = screen.convert(location);
+        Vector2 offset = Screen.convert(location);
         if (offset.getX() + Tile.SIZE < 0 || offset.getX() > Pixelate.WIDTH || offset.getY() + Tile.SIZE < 0 || offset.getY() > Pixelate.HEIGHT) return;
         screen.draw(image, offset.getX(), offset.getY());
-        if(this.brokenProgression < 100 && this.brokenProgression > 0)
-            screen.draw(TileBreakProgression.getInstance().getTileBreakProgression((int)Math.floor(this.brokenProgression * 0.1)), offset.getX(), offset.getY());
+        if (brokenProgression < 100 && brokenProgression > 0)
+            screen.draw(TileBreakProgression.getInstance().getTileBreakProgression((int) Math.floor(brokenProgression * 0.1)), offset.getX(), offset.getY());
     }
 
     @Override
@@ -90,7 +88,7 @@ public class Tile extends Imageable implements Renderable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tile tile = (Tile) o;
-        return Objects.equals(location, tile.location) && material == tile.material && Objects.equals(world, tile.world) && tileType == tile.tileType;
+        return location.equals(tile.getLocation()) && material == tile.material && Objects.equals(world, tile.world) && tileType == tile.tileType;
     }
 
     @Override
