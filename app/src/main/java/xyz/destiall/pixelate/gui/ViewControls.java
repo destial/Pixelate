@@ -8,6 +8,7 @@ import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
+import xyz.destiall.pixelate.events.EventPlayerMineAnimation;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
@@ -77,6 +78,8 @@ public class ViewControls implements View {
             innerCircleCenter.setX(outerCircleCenter.getX() + actuator.getX() * outerCircleRadius);
             innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
         }
+        if(isMining())
+            Pixelate.HANDLER.call(new EventPlayerMineAnimation());
     }
 
     private boolean isOnJoystick(float x, float y) {

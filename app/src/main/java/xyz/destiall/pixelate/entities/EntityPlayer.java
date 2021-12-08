@@ -8,11 +8,13 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
+import xyz.destiall.pixelate.events.EventPlayerMineAnimation;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
@@ -21,6 +23,7 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.timer.Timer;
 
 public class EntityPlayer extends EntityLiving implements Listener {
     public EntityPlayer() {
@@ -68,12 +71,28 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onMine(EventMining e) {
+
+    }
+
+    @EventHandler
+    private void onAnimationMine(EventPlayerMineAnimation e)
+    {
         if (location.getWorld() == null) return;
         List<Tile> currentTiles = location.getWorld().findTiles(collision);
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
+        if (tile == null) return;
         if (currentTiles.contains(tile)) return;
-        if (tile != null && tile.getTileType() == Tile.TileType.FOREGROUND) {
+        if(tile.getTileType() != Tile.TileType.FOREGROUND) return;
+
+        float bbProgress = tile.getBlockBreakProgress(); //Out of 100.0
+        float bbDuration = tile.getMaterial().getRequiredMineDuration(getItemInHand().getType());
+        float timeRelative = bbProgress / 100.0f * bbDuration;
+        timeRelative += Timer.getDeltaTime();
+        float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
+        tile.addBlockBreakProgression(bbProgressDiff);
+
+        if (tile.getBlockBreakProgress() >= 100) {
             ItemStack stack = location.getWorld().breakTile(newLoc);
             inventory.addItem(stack);
         }
@@ -88,6 +107,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
             ItemStack current = inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
             if (current != null) {
                 tile.setMaterial(current.getType());
+                tile.addBlockBreakProgression(-100.f); //reset to 0
                 current.setAmount(current.getAmount() - 1);
             }
         }
@@ -97,4 +117,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private void onOpenInventory(EventOpenInventory e) {
         HUD.INSTANCE.setInventory(inventory);
     }
+
+    public ItemStack getItemInHand()
+    {
+        return inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
+    }
+
 }

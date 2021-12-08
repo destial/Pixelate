@@ -20,6 +20,8 @@ public class Tile extends Imageable implements Renderable {
     protected World world;
     protected TileType tileType;
 
+    protected float brokenProgression;
+
     public Tile(int x, int y, Material material, World world, TileType type) {
         super(Pixelate.getTileMap(), Material.getRows(), Material.getColumns());
         this.material = material;
@@ -30,6 +32,7 @@ public class Tile extends Imageable implements Renderable {
             this.material = Material.STONE;
         }
         image = createSubImageAt(this.material.getRow(), this.material.getColumn());
+        brokenProgression = 0.f;
     }
 
     public Vector2 getLocation() {
@@ -56,11 +59,30 @@ public class Tile extends Imageable implements Renderable {
         UNKNOWN
     }
 
+    public float getBlockBreakProgress()
+    {
+        return this.brokenProgression;
+    }
+
+    public void addBlockBreakProgression(float progression)
+    {
+        this.brokenProgression += progression;
+        if(this.brokenProgression < 0) this.brokenProgression = 0;
+        if(this.brokenProgression > 100) this.brokenProgression = 100;
+    }
+
+    public boolean readyToBreak()
+    {
+        return (this.brokenProgression >= 100);
+    }
+
     @Override
     public void render(Screen screen) {
         Vector2 offset = screen.convert(location);
         if (offset.getX() + Tile.SIZE < 0 || offset.getX() > Pixelate.WIDTH || offset.getY() + Tile.SIZE < 0 || offset.getY() > Pixelate.HEIGHT) return;
         screen.draw(image, offset.getX(), offset.getY());
+        if(this.brokenProgression < 100 && this.brokenProgression > 0)
+            screen.draw(TileBreakProgression.getInstance().getTileBreakProgression((int)Math.floor(this.brokenProgression * 0.1)), offset.getX(), offset.getY());
     }
 
     @Override
