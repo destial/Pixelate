@@ -9,16 +9,25 @@ import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected float health;
+    protected float maxHealth;
     protected float speed;
     protected float armor;
     protected float damageDelay;
     protected PlayerInventory playerInventory;
     public EntityLiving(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
-        health = 20f;
+        health = maxHealth = 20f;
         speed = 1f;
         armor = 0f;
         damageDelay = 0f;
+    }
+
+    public void setMaxHealth(float maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public float getMaxHealth() {
+        return maxHealth;
     }
 
     public float getHealth() {
@@ -43,8 +52,17 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         damageDelay = (float) Timer.getDeltaTime();
         if (health > 0) {
             health -= damage;
-            if (health < 0) health = 0;
+            if (health < 0) {
+                health = 0;
+            }
+            if (health <= 0) {
+                remove();
+            }
         }
+    }
+
+    public void remove() {
+        location.getWorld().removeEntity(this);
     }
 
     @Override

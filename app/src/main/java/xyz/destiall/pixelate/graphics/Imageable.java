@@ -28,6 +28,20 @@ public abstract class Imageable {
         return animation;
     }
 
+    public static Bitmap createSubImageAt(Bitmap image, int rows, int cols, int row, int col) {
+        int height = image.getHeight() / rows;
+        int width = image.getWidth() / cols;
+        return Bitmap.createBitmap(image, col * width, row * height, width, height);
+    }
+
+    public static Bitmap[] createAnimation(Bitmap source, int rows, int cols, int row) {
+        Bitmap[] animation = new Bitmap[cols];
+        for (int i = 0; i < cols; i++) {
+            animation[i] = createSubImageAt(source, rows, cols, row, i);
+        }
+        return animation;
+    }
+
     public Bitmap getImage() {
         return image;
     }

@@ -79,7 +79,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         if (scale != 1 && scale > 0) {
             map = Imageable.scaleImage(map, scale);
         }
-        Vector2 offset = screen.convert(location.toVector());
+        Vector2 offset = Screen.convert(location.toVector());
         screen.draw(map, offset.getX(), offset.getY());
     }
 

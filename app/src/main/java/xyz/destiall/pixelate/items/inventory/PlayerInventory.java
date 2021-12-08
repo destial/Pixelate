@@ -17,7 +17,7 @@ public class PlayerInventory extends Inventory {
 
     static {
         try {
-            inventoryFieldItemStack = ItemStack.class.getDeclaredField("playerInventory");
+            inventoryFieldItemStack = ItemStack.class.getDeclaredField("inventory");
         } catch (Exception e) {
             e.printStackTrace();
         }

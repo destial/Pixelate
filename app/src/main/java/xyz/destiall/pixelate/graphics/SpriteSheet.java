@@ -40,6 +40,10 @@ public class SpriteSheet {
         return sprites.values().stream().findFirst().orElse(null);
     }
 
+    public int getAnimationFrame() {
+        return animationFrame;
+    }
+
     public Bitmap getCurrentAnimation() {
         return getCurrentSprites()[animationFrame];
     }

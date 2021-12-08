@@ -9,7 +9,7 @@ public abstract class Algorithm {
 
     public Algorithm()
     {
-        path = new LinkedList<Location>();
+        path = new LinkedList<>();
     }
 
     public LinkedList<Location> findNewPath(Location start, Location end)

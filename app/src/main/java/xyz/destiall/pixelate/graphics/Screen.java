@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
@@ -84,11 +85,11 @@ public class Screen {
         if (offset.getY() > Pixelate.HEIGHT) {
             offset.setY(Pixelate.HEIGHT);
         }
-        if (offset.getX() < -Pixelate.WIDTH / 2f) {
-            offset.setX(-Pixelate.WIDTH / 2f);
+        if (offset.getX() < -Tile.SIZE) {
+            offset.setX(-Tile.SIZE);
         }
-        if (offset.getY() < -Pixelate.HEIGHT / 2f) {
-            offset.setY(-Pixelate.HEIGHT / 2f);
+        if (offset.getY() < -Tile.SIZE * 0.25) {
+            offset.setY(-Tile.SIZE * 0.25);
         }
     }
 }

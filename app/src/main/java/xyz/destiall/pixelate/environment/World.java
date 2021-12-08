@@ -87,12 +87,15 @@ public class World implements Updateable, Renderable {
     public void breakTile(Location location) {
         Tile tile = findTile(location);
         if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return;
-
         tile.setMaterial(Material.STONE);
     }
 
     public List<Tile> findTiles(AABB aabb) {
         return tiles.stream().filter(aabb::isOverlap).collect(Collectors.toList());
+    }
+
+    public void removeEntity(Entity entity) {
+        entities.remove(entity);
     }
 
     @Override

@@ -15,8 +15,8 @@ public class HUD implements Updateable, Renderable, Listener {
 
     private final ViewHotbar hotbar;
     private final ViewControls buttons;
-    //private ViewInventory playerInventory;
-    private ViewFurnace inventory;
+    private ViewInventory inventory;
+    //private ViewFurnace inventory;
     private ViewFurnace furnaceUI;
 
     private HUD() {
@@ -43,10 +43,10 @@ public class HUD implements Updateable, Renderable, Listener {
             return;
         }
         buttons.setJoystick(false);
-        buttons.setMining(false);
+        buttons.setSwinging(false);
         buttons.setActuator(0, 0);
-        //this.playerInventory = new ViewInventory(playerInventory);
-        this.inventory = new ViewFurnace(playerInventory);
+        setHotbar(playerInventory);
+        this.inventory = new ViewInventory(playerInventory);
     }
 
     @Override
