@@ -7,7 +7,7 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
-import xyz.destiall.pixelate.items.Inventory;
+import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class HUD implements Updateable, Renderable, Listener {
@@ -15,7 +15,9 @@ public class HUD implements Updateable, Renderable, Listener {
 
     private final ViewHotbar hotbar;
     private final ViewControls buttons;
-    private ViewInventory inventory;
+    //private ViewInventory playerInventory;
+    private ViewFurnace inventory;
+    private ViewFurnace furnaceUI;
 
     private HUD() {
         buttons = new ViewControls();
@@ -28,12 +30,12 @@ public class HUD implements Updateable, Renderable, Listener {
         return hotbar;
     }
 
-    public void setHotbar(Inventory inventory) {
-        hotbar.setInventory(inventory);
+    public void setHotbar(PlayerInventory playerInventory) {
+        hotbar.setInventory(playerInventory);
     }
 
-    public void setInventory(Inventory inventory) {
-        if (inventory == null) {
+    public void setInventory(PlayerInventory playerInventory) {
+        if (playerInventory == null) {
             if (this.inventory != null) {
                 this.inventory.destroy();
             }
@@ -43,7 +45,8 @@ public class HUD implements Updateable, Renderable, Listener {
         buttons.setJoystick(false);
         buttons.setMining(false);
         buttons.setActuator(0, 0);
-        this.inventory = new ViewInventory(inventory);
+        //this.playerInventory = new ViewInventory(playerInventory);
+        this.inventory = new ViewFurnace(playerInventory);
     }
 
     @Override

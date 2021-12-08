@@ -10,9 +10,10 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.Vector2;
 
-public class Tile extends Imageable implements Renderable {
+public class Tile extends Imageable implements Updateable,Renderable {
     public static final long SIZE = Pixelate.getTileMap().getWidth() / Material.getColumns();
 
     protected Vector2 location;
@@ -51,6 +52,11 @@ public class Tile extends Imageable implements Renderable {
         material = mat;
         image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
         tileType = mat.getTileType();
+    }
+
+    @Override
+    public void update() {
+
     }
 
     public enum TileType {

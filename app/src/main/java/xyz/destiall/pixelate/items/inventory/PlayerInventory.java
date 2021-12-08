@@ -1,34 +1,37 @@
-package xyz.destiall.pixelate.items;
+package xyz.destiall.pixelate.items.inventory;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Inventory {
+import xyz.destiall.pixelate.items.InventoryHolder;
+import xyz.destiall.pixelate.items.ItemStack;
+
+public class PlayerInventory extends Inventory {
     private final InventoryHolder holder;
     private final int size;
-    private final ItemStack[] items;
-    private final ItemStack[] crafting;
+
+    private ItemStack[] crafting;
 
     private static Field inventoryFieldItemStack;
 
     static {
         try {
-            inventoryFieldItemStack = ItemStack.class.getDeclaredField("inventory");
+            inventoryFieldItemStack = ItemStack.class.getDeclaredField("playerInventory");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void setItemStackInventory(ItemStack item, Inventory inventory) {
+    private static void setItemStackInventory(ItemStack item, PlayerInventory playerInventory) {
         try {
             inventoryFieldItemStack.setAccessible(true);
-            inventoryFieldItemStack.set(item, inventory);
+            inventoryFieldItemStack.set(item, playerInventory);
             inventoryFieldItemStack.setAccessible(false);
         } catch (Exception ignored) {}
     }
 
-    public Inventory(InventoryHolder holder, int size) {
+    public PlayerInventory(InventoryHolder holder, int size) {
         this.holder = holder;
         this.size = size;
         items = new ItemStack[size];

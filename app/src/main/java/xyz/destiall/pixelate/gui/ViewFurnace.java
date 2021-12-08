@@ -21,7 +21,7 @@ import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
-public class ViewInventory implements View {
+public class ViewFurnace implements View {
     private final Map<Integer, AABB> positions;
     private final HashMap<Material, Bitmap> images;
     private final PlayerInventory playerInventory;
@@ -35,7 +35,7 @@ public class ViewInventory implements View {
     private int draggingX;
     private int draggingY;
 
-    public ViewInventory(PlayerInventory playerInventory) {
+    public ViewFurnace(PlayerInventory playerInventory) {
         this.playerInventory = playerInventory;
         exitButton = new Vector2(Pixelate.WIDTH - 100, 100);
         exitButtonRadius = 40;
@@ -49,12 +49,12 @@ public class ViewInventory implements View {
     @Override
     public void render(Screen screen) {
         screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
-        int startingCrafting = Pixelate.WIDTH / 3 - image.getWidth();
+        int startingCrafting = Pixelate.WIDTH / 2 - image.getWidth();
         int a = 0;
-        for (int x = 0; x < 2; x++) {
+        for (int x = 0; x < 1; x++) {
             for (int y = 0; y < 2; y++) {
                 int posX = startingCrafting + (x * image.getWidth());
-                int posY = 100 + (y * image.getWidth());
+                int posY = 100 + (int)(y * image.getWidth() * 1.5) ;
                 screen.draw(image, posX, posY);
                 ItemStack item = playerInventory.getCraftingItem(a);
                 if (item != null) {
@@ -89,8 +89,8 @@ public class ViewInventory implements View {
                 a++;
             }
         }
-        int cOutX = startingCrafting + (6 * image.getWidth());
-        int cOutY = 100 + (image.getWidth() / 2);
+        int cOutX = startingCrafting + (3 * image.getWidth());
+        int cOutY = 100 + (image.getWidth());
         if (!positions.containsKey(100)) {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
@@ -114,7 +114,7 @@ public class ViewInventory implements View {
         for (int y = 0; y < (playerInventory.getSize() / 9); y++) {
             for (int x = 0; x < 9; x++) {
                 int posX = starting + (x * image.getWidth());
-                int posY = 400 + (y * image.getHeight());
+                int posY = 550 + (y * image.getHeight());
                 screen.draw(image, posX, posY);
                 ItemStack item = playerInventory.getItem(i);
                 if (item != null) {

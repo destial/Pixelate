@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.items.Inventory;
+import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.timer.Timer;
 
@@ -12,7 +12,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected float speed;
     protected float armor;
     protected float damageDelay;
-    protected Inventory inventory;
+    protected PlayerInventory playerInventory;
     public EntityLiving(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
         health = 20f;
@@ -34,8 +34,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     }
 
     @Override
-    public Inventory getInventory() {
-        return inventory;
+    public PlayerInventory getInventory() {
+        return playerInventory;
     }
 
     public void damage(float damage) {

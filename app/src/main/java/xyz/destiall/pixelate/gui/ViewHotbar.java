@@ -16,7 +16,7 @@ import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.items.Inventory;
+import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 
@@ -25,11 +25,11 @@ public class ViewHotbar implements View {
     private final HashMap<Material, Bitmap> images;
     private final Bitmap image;
     private final Bitmap currentSlotImage;
-    private Inventory inventory;
+    private PlayerInventory playerInventory;
     private int currentSlot;
 
-    public ViewHotbar(Inventory inventory) {
-        this.inventory = inventory;
+    public ViewHotbar(PlayerInventory playerInventory) {
+        this.playerInventory = playerInventory;
         Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
         currentSlotImage = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.85), (int) (image.getHeight() * 0.85), false);
         this.image = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.8), (int) (image.getHeight() * 0.8), false);
@@ -38,12 +38,12 @@ public class ViewHotbar implements View {
         images = new HashMap<>();
     }
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
+    public void setInventory(PlayerInventory playerInventory) {
+        this.playerInventory = playerInventory;
     }
 
-    public Inventory getInventory() {
-        return inventory;
+    public PlayerInventory getInventory() {
+        return playerInventory;
     }
 
     public void setCurrentSlot(int currentSlot) {
@@ -66,7 +66,7 @@ public class ViewHotbar implements View {
             }
             int x = starting + (i * this.image.getWidth());
             int y = Pixelate.HEIGHT - 200;
-            ItemStack item = inventory.getItem(i);
+            ItemStack item = playerInventory.getItem(i);
             screen.draw(image, x, y - a);
             if (item != null) {
                 Bitmap itemImage;

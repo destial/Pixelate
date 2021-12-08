@@ -8,7 +8,6 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventMining;
@@ -18,7 +17,7 @@ import xyz.destiall.pixelate.events.EventPlayerMineAnimation;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
-import xyz.destiall.pixelate.items.Inventory;
+import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.position.AABB;
@@ -37,8 +36,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
         spriteSheet.setCurrentSprite("LOOK RIGHT");
         scale = 0.5f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
-        inventory = new Inventory(this, 27);
-        HUD.INSTANCE.setHotbar(inventory);
+        playerInventory = new PlayerInventory(this, 27);
+        HUD.INSTANCE.setHotbar(playerInventory);
         Pixelate.HANDLER.registerListener(this);
     }
 
@@ -96,7 +95,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (tile.getBlockBreakProgress() >= 100) {
             List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), 0);
             for(ItemStack item : drops)
-                inventory.addItem(item);
+                playerInventory.addItem(item);
             location.getWorld().breakTile(newLoc);
         }
     }
@@ -107,7 +106,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (tile != null && tile.getTileType() != Tile.TileType.FOREGROUND) {
-            ItemStack current = inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
+            ItemStack current = playerInventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
             if (current != null) {
                 tile.setMaterial(current.getType());
                 tile.addBlockBreakProgression(-100.f); //reset to 0
@@ -118,12 +117,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onOpenInventory(EventOpenInventory e) {
-        HUD.INSTANCE.setInventory(inventory);
+        HUD.INSTANCE.setInventory(playerInventory);
     }
 
     public ItemStack getItemInHand()
     {
-        return inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
+        return playerInventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
     }
 
 }

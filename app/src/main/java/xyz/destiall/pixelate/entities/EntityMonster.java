@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.entities;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.ResourceManager;
-import xyz.destiall.pixelate.items.Inventory;
+import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
@@ -33,7 +33,7 @@ public class EntityMonster extends EntityLiving {
         health = 20f;
         this.type = type;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
-        inventory = new Inventory(this, 9);
+        playerInventory = new PlayerInventory(this, 9);
         updateAABB();
     }
 
