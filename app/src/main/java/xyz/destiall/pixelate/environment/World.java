@@ -84,12 +84,11 @@ public class World implements Updateable, Renderable {
                 .findFirst().orElse(null);
     }
 
-    public ItemStack breakTile(Location location) {
+    public void breakTile(Location location) {
         Tile tile = findTile(location);
-        if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return null;
-        ItemStack item = ItemStack.of(tile);
+        if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return;
+
         tile.setMaterial(Material.STONE);
-        return item;
     }
 
     public List<Tile> findTiles(AABB aabb) {

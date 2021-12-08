@@ -20,6 +20,7 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.Inventory;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
@@ -93,8 +94,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
         tile.addBlockBreakProgression(bbProgressDiff);
 
         if (tile.getBlockBreakProgress() >= 100) {
-            ItemStack stack = location.getWorld().breakTile(newLoc);
-            inventory.addItem(stack);
+            List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), 0);
+            for(ItemStack item : drops)
+                inventory.addItem(item);
+            location.getWorld().breakTile(newLoc);
         }
     }
 

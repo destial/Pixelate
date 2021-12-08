@@ -31,7 +31,12 @@ public enum Material {
     GOLD_PICKAXE(R.drawable.gold_pickaxe, GenericModifierType.PICKAXE_EFFICIENT, EfficiencyType.GOLD_TIER),
     IRON_PICKAXE(R.drawable.iron_pickaxe, GenericModifierType.PICKAXE_EFFICIENT, EfficiencyType.IRON_TIER),
     STONE_PICKAXE(R.drawable.stone_pickaxe, GenericModifierType.PICKAXE_EFFICIENT, EfficiencyType.STONE_TIER),
-    WOODEN_PICKAXE(R.drawable.wood_pickaxe, GenericModifierType.PICKAXE_EFFICIENT, EfficiencyType.WOOD_TIER);
+    WOODEN_PICKAXE(R.drawable.wood_pickaxe, GenericModifierType.PICKAXE_EFFICIENT, EfficiencyType.WOOD_TIER),
+
+    //Other items
+    COAL(R.drawable.coal, GenericModifierType.NONE, EfficiencyType.NONE),
+
+        ;
 
     private final Tile.TileType tileType;
     private final int row;
