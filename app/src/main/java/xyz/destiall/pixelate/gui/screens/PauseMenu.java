@@ -12,8 +12,6 @@ import xyz.destiall.pixelate.GameActivity;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 
-
-
 public class PauseMenu extends Activity implements View.OnClickListener {
     private Button btn_start, btn_quit;
 

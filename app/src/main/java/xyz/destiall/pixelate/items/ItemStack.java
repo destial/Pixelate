@@ -6,7 +6,6 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.inventory.Inventory;
-import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 
 @SuppressWarnings("all")
 public class ItemStack extends Imageable {

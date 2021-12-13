@@ -14,7 +14,7 @@ public enum Material {
     COAL_ORE(0,3, Tile.TileType.FOREGROUND, 10, GenericModifierType.PICKAXE_EFFICIENT),
     PLANKS(0,4, Tile.TileType.FOREGROUND, 4, GenericModifierType.AXE_EFFICIENT),
 
-    FURNACE(0, 5, Tile.TileType.FOREGROUND, 7.5f, GenericModifierType.PICKAXE_EFFICIENT),
+    FURNACE(0, 5, Tile.TileType.FOREGROUND, 7.5f, GenericModifierType.PICKAXE_EFFICIENT, true),
 
     PURPLE_WOOL(1,0, Tile.TileType.FOREGROUND, 2.7f, GenericModifierType.SHEAR_EFFICIENT),
     CYAN_WOOL(1,1, Tile.TileType.FOREGROUND, 2.7f, GenericModifierType.SHEAR_EFFICIENT),
@@ -73,10 +73,11 @@ public enum Material {
     private final int column;
     private final int drawable;
     private final boolean block;
+    private final boolean container;
 
-    private float defaultBreakDuration;
-    private GenericModifierType genericModifierType;
-    private EfficiencyType efficiencyType;
+    private final float defaultBreakDuration;
+    private final GenericModifierType genericModifierType;
+    private final EfficiencyType efficiencyType;
 
     private static int columns;
     private static int rows;
@@ -96,15 +97,15 @@ public enum Material {
 
     //Items
     Material(int drawable, GenericModifierType genericModifierType, EfficiencyType efficiencyType) {
-        this(0, 0, false, drawable, Tile.TileType.UNKNOWN, -1, genericModifierType, efficiencyType);
+        this(0, 0, false, drawable, Tile.TileType.UNKNOWN, -1, genericModifierType, efficiencyType, false);
     }
 
     //For materials
     Material(int row, int column, Tile.TileType type, float defaultBreakDuration, GenericModifierType genericModifierType) {
-        this(row, column, true, -1, type, defaultBreakDuration, genericModifierType, EfficiencyType.NONE);
+        this(row, column, true, -1, type, defaultBreakDuration, genericModifierType, EfficiencyType.NONE, false);
     }
 
-    Material(int row, int column, boolean block, int drawable, Tile.TileType type, float defaultBreakDuration, GenericModifierType genericModifierType, EfficiencyType efficiencyType) {
+    Material(int row, int column, boolean block, int drawable, Tile.TileType type, float defaultBreakDuration, GenericModifierType genericModifierType, EfficiencyType efficiencyType, boolean container) {
         this.row = row;
         this.column = column;
         this.block = block;
@@ -113,6 +114,11 @@ public enum Material {
         this.defaultBreakDuration = defaultBreakDuration;
         this.genericModifierType = genericModifierType;
         this.efficiencyType = efficiencyType;
+        this.container = container;
+    }
+
+    Material(int row, int column, Tile.TileType type, float defaultBreakDuration, GenericModifierType genericModifierType, boolean container) {
+        this(row, column, true, -1, type, defaultBreakDuration, genericModifierType, EfficiencyType.NONE, container);
     }
 
     public static int getColumns() {
@@ -166,5 +172,9 @@ public enum Material {
 
     public Tile.TileType getTileType() {
         return tileType;
+    }
+
+    public boolean isContainer() {
+        return container;
     }
 }

@@ -11,8 +11,6 @@ import android.widget.Button;
 import xyz.destiall.pixelate.GameActivity;
 import xyz.destiall.pixelate.R;
 
-
-
 public class MainMenu extends Activity implements View.OnClickListener {
     private Button btn_start, btn_back;
 

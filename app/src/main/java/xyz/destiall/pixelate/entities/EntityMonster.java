@@ -11,7 +11,6 @@ import xyz.destiall.pixelate.pathfinding.PathFindingAI;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
-import xyz.destiall.pixelate.states.StateGame;
 
 public class EntityMonster extends EntityLiving {
     private final Type type;
