@@ -15,7 +15,6 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
-import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 

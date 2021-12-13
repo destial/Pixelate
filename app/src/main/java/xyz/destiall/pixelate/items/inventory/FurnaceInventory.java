@@ -1,9 +1,5 @@
 package xyz.destiall.pixelate.items.inventory;
 
-import java.util.HashMap;
-
-import xyz.destiall.pixelate.environment.Material;
-import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class FurnaceInventory extends Inventory {

@@ -16,8 +16,8 @@ import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 
 public class ViewHotbar implements View {

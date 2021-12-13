@@ -37,7 +37,7 @@ public class SpriteSheet {
         if (current != null) {
             return sprites.get(current);
         }
-        return sprites.values().stream().findFirst().orElse(null);
+        return sprites.values().stream().findFirst().orElse(new Bitmap[4]);
     }
 
     public int getAnimationFrame() {

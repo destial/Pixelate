@@ -10,6 +10,7 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventTouch;
@@ -25,10 +26,6 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class ViewPaused implements View {
-    private final Map<Integer, AABB> positions;
-    private final HashMap<Material, Bitmap> images;
-    private final Bitmap image;
-
     private final Vector2 resumeButton;
     private final int resumeButtonRadius;
 
@@ -45,16 +42,13 @@ public class ViewPaused implements View {
         exitButton = new Vector2(Pixelate.WIDTH * 0.4, Pixelate.HEIGHT * 0.6);
         exitButtonRadius = 40;
 
-        if(bg == null)
-        {
+        if (bg == null) {
             bg = ResourceManager.getBitmap(R.drawable.background);
-            bg = Imageable.scaleImage(bg, 0.37f);
+            bg = Imageable.scaleImage(bg, (float) Pixelate.HEIGHT / bg.getHeight());
         }
 
-        image = ResourceManager.getBitmap(R.drawable.hotbar);
+        Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
         scale = (int) (image.getWidth() * 0.8);
-        positions = new HashMap<>();
-        images = new HashMap<>();
         Pixelate.HANDLER.registerListener(this);
     }
 
@@ -74,22 +68,16 @@ public class ViewPaused implements View {
     private void onTouch(EventTouch e) {
         float x = e.getX();
         float y = e.getY();
-
         if (e.getAction() == ControlEvent.Action.DOWN) {
             if (isOnResume(x, y)) {
                 HUD.INSTANCE.returnToGame();
-            }
-            else if (isOnExit(x,y))
-            {
+            } else if (isOnExit(x,y)) {
                 //RETURN MAIN MENU;
                 Pixelate.HANDLER.call(new EventGamePause());
                 HUD.INSTANCE.returnToGame();
             }
         }
-
     }
-
-
 
     private boolean isOnResume(float x, float y) {
         return resumeButton.distance(x, y) < resumeButtonRadius;
@@ -99,11 +87,8 @@ public class ViewPaused implements View {
         return exitButton.distance(x, y) < exitButtonRadius;
     }
 
-
-
     @Override
     public void destroy() {
-        positions.clear();
         Pixelate.HANDLER.unregisterListener(this);
     }
 }

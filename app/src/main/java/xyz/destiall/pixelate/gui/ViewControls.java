@@ -1,16 +1,18 @@
 package xyz.destiall.pixelate.gui;
 
 import android.graphics.Color;
+import android.view.KeyEvent;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.events.EventGamePause;
+import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventJoystick;
-import xyz.destiall.pixelate.events.EventSwing;
+import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
 import xyz.destiall.pixelate.events.EventPlayerSwingAnimation;
+import xyz.destiall.pixelate.events.EventSwing;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
@@ -85,9 +87,7 @@ public class ViewControls implements View {
     }
 
     private boolean isOnJoystick(float x, float y) {
-        double distance = Math
-                .sqrt(Math.pow(outerCircleCenter.getX() - x, 2) + Math.pow(outerCircleCenter.getY() - y, 2));
-        return distance < outerCircleRadius;
+        return isOnButton(outerCircleCenter, x, y, outerCircleRadius);
     }
 
     private boolean isOnPauseButton(float x, float y) {
@@ -153,7 +153,7 @@ public class ViewControls implements View {
             actuator.setX(deltaX / distance);
             actuator.setY(deltaY / distance);
         }
-        Pixelate.HANDLER.call(eventJoystick.update(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN));
+        Pixelate.HANDLER.call(eventJoystick.update(actuator.getX(), actuator.getY(), ControlEvent.Action.DOWN));
     }
 
     @Override
@@ -163,8 +163,7 @@ public class ViewControls implements View {
 
     @EventHandler
     public void onTouch(EventTouch e) {
-        if(!Pixelate.PAUSED)
-        {
+        if(!Pixelate.PAUSED) {
             float x = e.getX();
             float y = e.getY();
             switch (e.getAction()) {
@@ -205,11 +204,27 @@ public class ViewControls implements View {
                     } else if (isOnPlaceButton(x, y)) {
                         setPlacing(false);
                     }
-                    break;
-                default:
-                    break;
             }
         }
+    }
 
+    // TODO: Add keyboard support
+    // @EventHandler
+    public void onKeyboard(EventKeyboard e) {
+        float x = 0; float y = 0;
+        if (e.getAction() == ControlEvent.Action.DOWN) {
+            if (e.getKeyCode() == KeyEvent.KEYCODE_W) {
+                y = -1;
+            } else if (e.getKeyCode() == KeyEvent.KEYCODE_S) {
+                y = 1;
+            }
+
+            if (e.getKeyCode() == KeyEvent.KEYCODE_A) {
+                x = -1;
+            } else if (e.getKeyCode() == KeyEvent.KEYCODE_D) {
+                x = 1;
+            }
+        }
+        setActuator(x, y);
     }
 }
