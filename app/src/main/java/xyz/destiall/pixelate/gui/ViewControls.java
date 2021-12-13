@@ -162,48 +162,51 @@ public class ViewControls implements View {
 
     @EventHandler
     public void onTouch(EventTouch e) {
-        float x = e.getX();
-        float y = e.getY();
-        switch (e.getAction()) {
-            case DOWN:
-                if (isOnJoystick(x, y)) {
-                    setJoystick(true);
-                } else if (isOnMineButton(x, y)) {
-                    setSwinging(true);
-                } else if (isOnInvButton(x, y)) {
-                    Pixelate.HANDLER.call(new EventOpenInventory());
-                } else if (isOnPlaceButton(x, y)) {
-                    setPlacing(true);
-                } else if (isOnPauseButton(x, y) && !Pixelate.paused) {
-
-                    Pixelate.setWorld("Cave");
-                    // Game.HANDLER.call(new EventGamePause());
-                }
-                break;
-            case MOVE:
-                if (isJoystick()) {
-                    setActuator(x, y);
-                } else if (isSwinging()) {
-                    if (!isOnMineButton(x, y))
+        if(!Pixelate.paused)
+        {
+            float x = e.getX();
+            float y = e.getY();
+            switch (e.getAction()) {
+                case DOWN:
+                    if (isOnJoystick(x, y)) {
+                        setJoystick(true);
+                    } else if (isOnMineButton(x, y)) {
+                        setSwinging(true);
+                    } else if (isOnInvButton(x, y)) {
+                        Pixelate.HANDLER.call(new EventOpenInventory());
+                    } else if (isOnPlaceButton(x, y)) {
+                        setPlacing(true);
+                    } else if (isOnPauseButton(x, y)) {
+                        HUD.INSTANCE.setPauseMenu();
+                        Pixelate.paused = true;
+                    }
+                    break;
+                case MOVE:
+                    if (isJoystick()) {
+                        setActuator(x, y);
+                    } else if (isSwinging()) {
+                        if (!isOnMineButton(x, y))
+                            setSwinging(false);
+                    } else if (isPlacing()) {
+                        if (!isOnPlaceButton(x, y))
+                            setPlacing(false);
+                    }
+                    break;
+                case UP:
+                    if (isOnMineButton(x, y)) {
                         setSwinging(false);
-                } else if (isPlacing()) {
-                    if (!isOnPlaceButton(x, y))
+                    } else if (isJoystick()) {
+                        setJoystick(false);
+                        setActuator(0, 0);
+                        Pixelate.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
+                    } else if (isOnPlaceButton(x, y)) {
                         setPlacing(false);
-                }
-                break;
-            case UP:
-                if (isOnMineButton(x, y)) {
-                    setSwinging(false);
-                } else if (isJoystick()) {
-                    setJoystick(false);
-                    setActuator(0, 0);
-                    Pixelate.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
-                } else if (isOnPlaceButton(x, y)) {
-                    setPlacing(false);
-                }
-                break;
-            default:
-                break;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 }

@@ -55,9 +55,11 @@ public class StateGame extends State implements Modular {
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
         ItemStack d_axe = new ItemStack(Material.DIAMOND_AXE, 1);
         ItemStack d_pickaxe = new ItemStack(Material.DIAMOND_PICKAXE, 1);
+        ItemStack furnace = new ItemStack(Material.FURNACE, 1);
         player.getInventory().addItem(sword);
         player.getInventory().addItem(d_axe);
         player.getInventory().addItem(d_pickaxe);
+        player.getInventory().addItem(furnace);
 
         player.teleport(worldManager.getCurrentWorld().getNearestEmpty(location));
         worldManager.getCurrentWorld().getEntities().add(player);

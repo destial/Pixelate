@@ -9,7 +9,9 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
@@ -20,6 +22,7 @@ import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.gui.HUD;
+import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
@@ -150,17 +153,60 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler
     private void onPlace(EventPlace e) {
         if (location.getWorld() == null) return;
+
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
+
         Tile tile = newLoc.getTile();
-        if (tile != null && tile.getTileType() != Tile.TileType.FOREGROUND) {
-            if (location.getWorld().findTiles(collision).contains(tile)) return;
-            ItemStack current = getItemInHand();
-            if (current != null && current.getType().isBlock()) {
-                tile.setMaterial(current.getType());
-                tile.addBlockBreakProgression(-100.f); //reset to 0
-                current.setAmount(current.getAmount() - 1);
+
+        Vector2 tileLoc = tile.getLocation();
+        ItemStack current = getItemInHand();
+        System.out.println("reached-1");
+        if(current != null && current.getType().isBlock())
+
+        {
+            System.out.println("reached0");
+            Material placed = current.getType();
+            current.setAmount(current.getAmount() - 1);
+            switch(tile.getMaterial())
+            {
+                case FURNACE: //To remove furnace inventory details, deleting Old FurnaceTile object, creating a new Tile object
+                    // case XXX any other special tile type:
+                    location.getWorld().replaceTile(tile, new Tile((int)tileLoc.getX(), (int)tileLoc.getY(), placed, location.getWorld(), Tile.TileType.FOREGROUND));
+                    break;
+                default:
+                {
+                    //No need for special replacement
+                    switch(placed)
+                    {
+                        case FURNACE:
+                            location.getWorld().replaceTile(tile, new FurnanceTile((int)tileLoc.getX(), (int)tileLoc.getY(), location.getWorld(), Tile.TileType.FOREGROUND));
+                            break;
+                        default:
+                        {
+                            if (tile != null && tile.getTileType() != Tile.TileType.FOREGROUND) {
+                                if (location.getWorld().findTiles(collision).contains(tile)) return;
+
+                                if (current != null && current.getType().isBlock()) {
+                                    tile.setMaterial(current.getType());
+                                    tile.addBlockBreakProgression(-100.f); //reset to 0
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }else
+        {
+            System.out.println("reached2");
+            if(tile.getMaterial() == Material.FURNACE)
+            {
+
+                HUD.INSTANCE.setFurnaceDisplay(playerInventory, ((FurnanceTile) tile).getInventory());
             }
         }
+
     }
 
     @EventHandler

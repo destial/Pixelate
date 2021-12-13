@@ -90,6 +90,13 @@ public class World implements Updateable, Renderable {
         tile.setMaterial(Material.STONE);
     }
 
+    public boolean replaceTile(Tile oldTile, Tile newTile)
+    {
+        tiles.remove(oldTile);
+        tiles.add(newTile);
+        return true;
+    }
+
     public List<Tile> findTiles(AABB aabb) {
         return tiles.stream().filter(aabb::isOverlap).collect(Collectors.toList());
     }
@@ -102,6 +109,10 @@ public class World implements Updateable, Renderable {
     public void update() {
         for (Entity entity : entities) {
             entity.update();
+        }
+        for(Tile tile : tiles)
+        {
+            tile.update();
         }
     }
 

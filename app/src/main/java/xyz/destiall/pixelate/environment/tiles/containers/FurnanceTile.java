@@ -41,8 +41,8 @@ public class FurnanceTile extends ContainerTile {
 
     //TODO: Add the ViewFurnance making sure things are of smeltable and burnable, and also make this update called when tiles update loop is ran.
 
-    public FurnanceTile(int x, int y, Material material, World world, TileType type) {
-        super(x, y, material, world, type, new FurnaceInventory());
+    public FurnanceTile(int x, int y, World world, TileType type) {
+        super(x, y, Material.FURNACE, world, type, new FurnaceInventory());
     }
 
     public FurnaceInventory getInventory()
@@ -60,11 +60,14 @@ public class FurnanceTile extends ContainerTile {
         if(burnerRemainingTime < 0) burnerRemainingTime = 0;
 
         ItemStack burner = inventory.getBurnerSlot();
-        if(burnerRemainingTime <= 0)
+        if(burner != null)
         {
-            burner.setAmount(burner.getAmount() - 1);
-            burnerRemainingTime += burnRate.get(burner.getType());
-            if(burner.getAmount() == 0) inventory.setBurnerSlot(null);
+            if(burnerRemainingTime <= 0)
+            {
+                burner.setAmount(burner.getAmount() - 1);
+                burnerRemainingTime += burnRate.get(burner.getType());
+                if(burner.getAmount() == 0) inventory.setBurnerSlot(null);
+            }
         }
 
         if(burnerRemainingTime > 0)

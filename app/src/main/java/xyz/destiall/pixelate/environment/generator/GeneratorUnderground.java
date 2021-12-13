@@ -3,6 +3,7 @@ package xyz.destiall.pixelate.environment.generator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.SplittableRandom;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
@@ -15,10 +16,13 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
 public class GeneratorUnderground implements Generator {
+
+
     @Override
     public void generate(World world, Collection<Tile> tiles) {
         generate(0, world, tiles);
     }
+    public static SplittableRandom ran = new SplittableRandom();
 
     private float generationScale = 0.05f;
     private float oreGenerationScale = 0.3f;
@@ -51,10 +55,10 @@ public class GeneratorUnderground implements Generator {
                             orePopulationZones.add(new Location(x, y, world));
                         }
                     }
-                    tile = TileFactory.createTile(Material.COAL_ORE, x, y, world);
+                    tile = TileFactory.createTile(Material.COBBLESTONE, x, y, world);
 
                 } else if (noiseValue < 0.35) {
-                    tile = TileFactory.createTile(Material.WOOD, x,y,world);
+                    tile = TileFactory.createTile(Material.MOSSY_COBBLESTONE, x,y,world);
                 }
 
                 if(tile == null)
@@ -66,18 +70,37 @@ public class GeneratorUnderground implements Generator {
         }
 
         //Populative ore generation
-        Material oreCanvas = Material.WOOD;
+        Material oreCanvas = Material.COBBLESTONE;
         for(Location loc : orePopulationZones)
         {
+            Material oreLoot = Material.COAL_ORE;
+            switch(ran.nextInt(0,5))
+            {
+                case 0:
+                    oreLoot = Material.IRON_ORE;
+                    break;
+                case 1:
+                    oreLoot = Material.GOLD_ORE;
+                    break;
+                case 2:
+                    oreLoot = Material.LAPIS_ORE;
+                    break;
+                case 3:
+                    oreLoot = Material.DIAMOND_ORE;
+                    break;
+                case 4:
+                    oreLoot = Material.EMERALD_ORE;
+                    break;
+            }
             //Max Radius 3x3
             for(int x = loc.getX()-(int)Tile.SIZE*2; x<loc.getX()+(int)Tile.SIZE; x+=Tile.SIZE)
             {
                 for(int y = loc.getY()-(int)Tile.SIZE*2; y<loc.getY()+(int)Tile.SIZE; y+=Tile.SIZE)
                 {
                     double noiseValue = PerlinNoise.noise(x*divisor*oreGenerationScale,y*divisor*oreGenerationScale);
-                    if(noiseValue > 0.45 && noiseValue < 0.6)
+                    System.out.println("Noise value here: " + noiseValue);
+                    if(noiseValue > 0.4 && noiseValue < 0.6)
                     {
-
                         Location location = new Location(x,y,world);
                         location.add((Tile.SIZE - 10) / 2f, (Tile.SIZE - 10) / 2f);
                         Tile tile = tiles.stream()
@@ -85,7 +108,7 @@ public class GeneratorUnderground implements Generator {
                                 .findFirst().orElse(null);
                         if(tile != null && tile.getMaterial() == oreCanvas)
                         {
-                            tile.setMaterial(Material.GRASS);
+                            tile.setMaterial(oreLoot);
                         }
 
                     }

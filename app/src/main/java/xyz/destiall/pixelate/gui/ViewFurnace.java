@@ -14,6 +14,7 @@ import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
@@ -25,6 +26,7 @@ public class ViewFurnace implements View {
     private final Map<Integer, AABB> positions;
     private final HashMap<Material, Bitmap> images;
     private final PlayerInventory playerInventory;
+    private FurnaceInventory furnaceInventory;
     private final Bitmap image;
     private final Vector2 exitButton;
     private final int exitButtonRadius;
@@ -35,8 +37,9 @@ public class ViewFurnace implements View {
     private int draggingX;
     private int draggingY;
 
-    public ViewFurnace(PlayerInventory playerInventory) {
+    public ViewFurnace(PlayerInventory playerInventory, FurnaceInventory furnaceInventory) {
         this.playerInventory = playerInventory;
+        this.furnaceInventory = furnaceInventory;
         exitButton = new Vector2(Pixelate.WIDTH - 100, 100);
         exitButtonRadius = 40;
         image = ResourceManager.getBitmap(R.drawable.hotbar);
@@ -51,10 +54,88 @@ public class ViewFurnace implements View {
         screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
         int startingCrafting = Pixelate.WIDTH / 2 - image.getWidth();
         int a = 0;
-        for (int x = 0; x < 1; x++) {
+
+        int posX, posY;
+        ItemStack item;
+
+        //ToSmelt
+        posX = startingCrafting + (0 * image.getWidth());
+        posY = 100 + (int)(0 * image.getWidth() * 1.5);
+        if (!positions.containsKey(98)) {
+            positions.put(98, new AABB(posX, posY, posX+ image.getWidth(), posY + image.getHeight()));
+        }
+        screen.draw(image, posX, posY);
+        item = furnaceInventory.getToSmeltSlot();
+        if(item != null)
+        {
+            Bitmap image;
+            if (images.containsKey(item.getType())) {
+                image = images.get(item.getType());
+            } else {
+                image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
+                images.put(item.getType(), image);
+            }
+
+            if (item == dragging) {
+                screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                if (item.getAmount() > 1) {
+                    screen.text("" + (item.getAmount() - 1),
+                            posX + this.image.getWidth(),
+                            posY + this.image.getHeight(),
+                            40, Color.WHITE);
+                } else {
+                    screen.draw(image, posX + 15, posY + 5);
+                    if (item.getAmount() > 1) {
+                        screen.text("" + item.getAmount(),
+                                posX + this.image.getWidth() / 2f,
+                                posY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                }
+            }
+        }
+
+        //Burner slot
+        posX = startingCrafting + (0 * image.getWidth());
+        posY = 100 + (int)(1 * image.getWidth() * 1.5);
+        if (!positions.containsKey(99)) {
+            positions.put(99, new AABB(posX, posY, posX+ image.getWidth(), posY + image.getHeight()));
+        }
+        screen.draw(image, posX, posY);
+        item = furnaceInventory.getBurnerSlot();
+        if(item != null)
+        {
+            Bitmap image;
+            if (images.containsKey(item.getType())) {
+                image = images.get(item.getType());
+            } else {
+                image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
+                images.put(item.getType(), image);
+            }
+
+            if (item == dragging) {
+                screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                if (item.getAmount() > 1) {
+                    screen.text("" + (item.getAmount() - 1),
+                            posX + this.image.getWidth(),
+                            posY + this.image.getHeight(),
+                            40, Color.WHITE);
+                } else {
+                    screen.draw(image, posX + 15, posY + 5);
+                    if (item.getAmount() > 1) {
+                        screen.text("" + item.getAmount(),
+                                posX + this.image.getWidth() / 2f,
+                                posY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                }
+            }
+        }
+
+        /*for (int x = 0; x < 1; x++) {
             for (int y = 0; y < 2; y++) {
-                int posX = startingCrafting + (x * image.getWidth());
-                int posY = 100 + (int)(y * image.getWidth() * 1.5) ;
+               // int posX = startingCrafting + (x * image.getWidth());
+                //int posY = 100 + (int)(y * image.getWidth() * 1.5) ;
                 screen.draw(image, posX, posY);
                 ItemStack item = playerInventory.getCraftingItem(a);
                 if (item != null) {
@@ -83,40 +164,62 @@ public class ViewFurnace implements View {
                         }
                     }
                 }
+
+                //wha dis
                 if (!positions.containsKey(playerInventory.getSize() + a)) {
                     positions.put(playerInventory.getSize() + a, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
                 }
                 a++;
             }
-        }
+        }*/
         int cOutX = startingCrafting + (3 * image.getWidth());
         int cOutY = 100 + (image.getWidth());
         if (!positions.containsKey(100)) {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
-        screen.draw(image, cOutX, cOutY);
-        for (Recipe recipe : RecipeManager.getRecipes()) {
-            if (recipe.isFulfilled(playerInventory.getCrafting())) {
-                ItemStack item = recipe.getItem();
-                Bitmap image;
-                if (images.containsKey(item.getType())) {
-                    image = images.get(item.getType());
+
+        posX = cOutX;
+        posY = cOutY;
+        screen.draw(image, posX, posY);
+        item = furnaceInventory.getProcessedSlot();
+        if(item != null)
+        {
+            Bitmap image;
+            if (images.containsKey(item.getType())) {
+                image = images.get(item.getType());
+            } else {
+                image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
+                images.put(item.getType(), image);
+            }
+
+            if (item == dragging) {
+                screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                if (item.getAmount() > 1) {
+                    screen.text("" + (item.getAmount() - 1),
+                            posX + this.image.getWidth(),
+                            posY + this.image.getHeight(),
+                            40, Color.WHITE);
                 } else {
-                    image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
-                    images.put(item.getType(), image);
+                    screen.draw(image, posX + 15, posY + 5);
+                    if (item.getAmount() > 1) {
+                        screen.text("" + item.getAmount(),
+                                posX + this.image.getWidth() / 2f,
+                                posY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
                 }
-                screen.draw(image, cOutX + 15, cOutY + 5);
-                break;
             }
         }
+
+
         int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
         int i = 0;
         for (int y = 0; y < (playerInventory.getSize() / 9); y++) {
             for (int x = 0; x < 9; x++) {
-                int posX = starting + (x * image.getWidth());
-                int posY = 550 + (y * image.getHeight());
+                posX = starting + (x * image.getWidth());
+                posY = 550 + (y * image.getHeight());
                 screen.draw(image, posX, posY);
-                ItemStack item = playerInventory.getItem(i);
+                item = playerInventory.getItem(i);
                 if (item != null) {
                     Bitmap image;
                     if (images.containsKey(item.getType())) {
@@ -155,9 +258,21 @@ public class ViewFurnace implements View {
     private void onTouch(EventTouch e) {
         float x = e.getX();
         float y = e.getY();
+
+
+
+
         if (e.getAction() == ControlEvent.Action.DOWN) {
             int slot = getSlot(x, y);
             if (slot == 100) {
+
+                ItemStack processed = furnaceInventory.getProcessedSlot();
+                if(processed != null)
+                {
+                    playerInventory.addItem(processed);
+                    furnaceInventory.setProcessedSlot(null);
+                }
+
                 for (Recipe recipe : RecipeManager.getRecipes()) {
                     if (recipe.isFulfilled(playerInventory.getCrafting())) {
                         playerInventory.setItem(draggingSlot, null);
@@ -171,12 +286,8 @@ public class ViewFurnace implements View {
                 return;
             }
             if (isOnExit(x, y)) {
-                for (ItemStack crafting : playerInventory.getCrafting()) {
-                    if (crafting == null) continue;
-                    playerInventory.addItem(crafting);
-                }
-                playerInventory.clearCrafting();
-                HUD.INSTANCE.setInventory(null);
+
+                HUD.INSTANCE.setFurnaceDisplay(null, null);
             }
         }
         if (e.getAction() == ControlEvent.Action.MOVE) {
@@ -250,8 +361,16 @@ public class ViewFurnace implements View {
     private ItemStack getItem(float x, float y) {
         int slot = getSlot(x, y);
         if (slot == -1) return null;
-        if (slot >= playerInventory.getSize() && slot != 100) {
-            return playerInventory.getCraftingItem(slot - playerInventory.getSize());
+        if (slot >= playerInventory.getSize()) {
+            switch(slot)
+            {
+                case 98:
+                    return furnaceInventory.getToSmeltSlot();
+                case 99:
+                    return furnaceInventory.getBurnerSlot();
+                case 100:
+                    return furnaceInventory.getProcessedSlot();
+            }
         }
         return playerInventory.getItem(slot);
     }
