@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -79,9 +80,9 @@ public class HUD implements Updateable, Renderable, Listener {
         this.inventory = new ViewInventory(playerInventory);
     }
 
-    public void setFurnaceDisplay(PlayerInventory playerInventory, FurnaceInventory furnaceInventory) {
+    public void setFurnaceDisplay(PlayerInventory playerInventory, FurnanceTile tile) {
         displayType = HUD_DISPLAYTYPE.Inventory_Furnace;
-        if (playerInventory == null || furnaceInventory == null) {
+        if (playerInventory == null || tile == null) {
             if (this.furnaceUI != null) furnaceUI.destroy();
             this.furnaceUI = null;
             this.displayType = HUD_DISPLAYTYPE.Hotbar;
@@ -91,7 +92,7 @@ public class HUD implements Updateable, Renderable, Listener {
         buttons.setSwinging(false);
         buttons.setActuator(0, 0);
         setHotbar(playerInventory);
-        this.furnaceUI = new ViewFurnace(playerInventory, furnaceInventory);
+        this.furnaceUI = new ViewFurnace(playerInventory, tile);
     }
 
     public void setChestDisplay(PlayerInventory playerInventory, ChestInventory chestInventory) {

@@ -1,6 +1,7 @@
 package xyz.destiall.pixelate.environment.tiles.containers;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
@@ -9,25 +10,22 @@ import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class FurnanceTile extends ContainerTile {
+    private float smeltProgress = 0.f;
+    private float burnerRemainingTime = 0.f;
+    private float timeToSmelt = 4.f;
 
-    float smeltProgress = 0.f;
-    float burnerRemainingTime = 0.f;
-
-    float timeToSmelt = 4.f;
-
-    static HashMap<Material, Material> smeltable = new HashMap<>();
+    static HashSet<Material> smeltable = new HashSet<>();
     static HashMap<Material, Float> burnRate = new HashMap<>();
     static {
         //Smeltable List
-        smeltable.put(Material.COAL_ORE, Material.COAL);
+        smeltable.add(Material.COAL_ORE);
 
         //Burn Rate
         burnRate.put(Material.COAL, 8.f);
     }
 
-    public static boolean isASmeltable(ItemStack item)
-    {
-        return smeltable.containsKey(item.getType());
+    public static boolean isASmeltable(ItemStack item)  {
+        return smeltable.contains(item.getType());
     }
 
     public static boolean isABurner(ItemStack item)
@@ -49,46 +47,42 @@ public class FurnanceTile extends ContainerTile {
         return (FurnaceInventory) this.tileInventory;
     }
 
-    public float getTimeToSmelt() { return timeToSmelt; }
-    public void setTimeToSmelt(float newTime) { timeToSmelt = newTime; if(newTime < 4.0) newTime = 4.0f; }
+    public float getTimeToSmelt() {
+        return timeToSmelt;
+    }
+    public void setTimeToSmelt(float newTime) {
+        timeToSmelt = newTime;
+        if (newTime < 4.0) timeToSmelt = 4.0f;
+    }
+
+    public float getSmeltProgress() {
+        return smeltProgress;
+    }
 
     @Override
     public void update() {
         FurnaceInventory inventory = getInventory();
         burnerRemainingTime -= Timer.getDeltaTime();
-        if(burnerRemainingTime < 0) burnerRemainingTime = 0;
+        if (burnerRemainingTime < 0) burnerRemainingTime = 0;
 
         ItemStack burner = inventory.getBurnerSlot();
-        if(burner != null)
-        {
-            if(burnerRemainingTime <= 0)
-            {
+        if (burner != null && isABurner(burner)) {
+            if (burnerRemainingTime <= 0) {
                 burner.setAmount(burner.getAmount() - 1);
                 burnerRemainingTime += burnRate.get(burner.getType());
-                if(burner.getAmount() == 0) inventory.setBurnerSlot(null);
+                if (burner.getAmount() == 0) inventory.setBurnerSlot(null);
             }
         }
 
-        if(burnerRemainingTime > 0)
-        {
+        if (burnerRemainingTime > 0) {
             ItemStack toSmelt = inventory.getToSmeltSlot();
-            if(toSmelt != null)
-            {
+            if (toSmelt != null && isASmeltable(toSmelt)) {
                 ItemStack processed = inventory.getProcessedSlot();
-                if(processed != null && processed.getType() == smeltable.get(toSmelt.getType()))
-                {
+                if (processed != null) {
                     smeltProgress -= Timer.getDeltaTime();
-                    if(smeltProgress <= 0) {
+                    if (smeltProgress <= 0) {
                         smeltProgress = timeToSmelt;
-
-                        if(processed != null)
-                        {
-                            processed.setAmount(processed.getAmount() + 1); //Add to processed slot
-                        }
-                        else
-                        {
-                            inventory.setProcessedSlot(new ItemStack(smeltable.get(toSmelt.getType()))); //Set first item on processed slot
-                        }
+                        processed.setAmount(processed.getAmount() + 1); //Add to processed slot
                         toSmelt.setAmount(toSmelt.getAmount() - 1);
                     }
                 }

@@ -49,7 +49,10 @@ public class ViewChest implements View {
 
     @Override
     public void render(Screen screen) {
+        // Exit button
         screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
+
+        // Chest inventory (top)
         int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
         int i = 0;
         for (int y = 0; y < (inventory.getSize() / 9); y++) {
@@ -84,7 +87,8 @@ public class ViewChest implements View {
                 i++;
             }
         }
-        starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
+
+        // Player inventory (bottom)
         i = inventory.getSize();
         for (int y = 0; y < (playerInventory.getSize() / 9); y++) {
             for (int x = 0; x < 9; x++) {

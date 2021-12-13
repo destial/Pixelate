@@ -16,6 +16,7 @@ import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
+import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
@@ -185,7 +186,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 ContainerTile container = (ContainerTile) tile;
                 if (tile.getMaterial() == Material.FURNACE) {
                     FurnaceInventory furnaceInventory = (FurnaceInventory) container.getInventory();
-                    HUD.INSTANCE.setFurnaceDisplay(playerInventory, furnaceInventory);
+                    HUD.INSTANCE.setFurnaceDisplay(playerInventory, (FurnanceTile) container);
                     furnaceInventory.setToSmeltSlot(new ItemStack(Material.COAL_ORE, 1));
                     furnaceInventory.setBurnerSlot(new ItemStack(Material.COAL, 1));
                 } else if (tile.getMaterial() == Material.CHEST) {
