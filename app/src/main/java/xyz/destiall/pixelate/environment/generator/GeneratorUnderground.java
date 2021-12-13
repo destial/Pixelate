@@ -98,7 +98,6 @@ public class GeneratorUnderground implements Generator {
                 for(int y = loc.getY()-(int)Tile.SIZE*2; y<loc.getY()+(int)Tile.SIZE; y+=Tile.SIZE)
                 {
                     double noiseValue = PerlinNoise.noise(x*divisor*oreGenerationScale,y*divisor*oreGenerationScale);
-                    System.out.println("Noise value here: " + noiseValue);
                     if(noiseValue > 0.4 && noiseValue < 0.6)
                     {
                         Location location = new Location(x,y,world);

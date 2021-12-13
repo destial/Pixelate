@@ -160,11 +160,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
         Vector2 tileLoc = tile.getLocation();
         ItemStack current = getItemInHand();
-        System.out.println("reached-1");
         if(current != null && current.getType().isBlock())
 
         {
-            System.out.println("reached0");
             Material placed = current.getType();
             current.setAmount(current.getAmount() - 1);
             switch(tile.getMaterial())
@@ -199,7 +197,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
         }else
         {
-            System.out.println("reached2");
             if(tile.getMaterial() == Material.FURNACE)
             {
 
