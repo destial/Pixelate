@@ -14,7 +14,7 @@ public class ResourceManager {
 
     public static Bitmap getBitmap(int id) {
         if (RESOURCES.containsKey(id)) return RESOURCES.get(id);
-        Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), id));
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
         RESOURCES.put(id, bitmap);
         return bitmap;
     }

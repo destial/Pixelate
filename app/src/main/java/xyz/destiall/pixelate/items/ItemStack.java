@@ -38,7 +38,6 @@ public class ItemStack extends Imageable {
     public void removeAmount(int amount) {
         if (amount == 0) return;
         this.amount -= amount;
-        System.out.println("amount: " + this.amount);
         if (this.amount <= 0) removeFromInventory();
     }
 
@@ -52,7 +51,7 @@ public class ItemStack extends Imageable {
     private void removeFromInventory() {
         this.amount = 0;
         if (inventory != null) {
-            System.out.println("removing from inventory");
+            System.out.println("Inventory: " + inventory.toString());
             inventory.removeItem(this);
         }
     }

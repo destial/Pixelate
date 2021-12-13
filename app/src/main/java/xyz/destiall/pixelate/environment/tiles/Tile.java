@@ -54,7 +54,7 @@ public class Tile extends Imageable implements Updateable,Renderable {
             return;
         }
         material = mat;
-        image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
+        image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * (int) width, material.getRow() * (int) height, (int) Tile.SIZE, (int) Tile.SIZE);
         tileType = mat.getTileType();
         brokenProgression = 0;
     }

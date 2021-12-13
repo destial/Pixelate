@@ -62,7 +62,7 @@ public class World implements Updateable, Renderable {
     }
 
     public Location getNearestEmpty(Location requestedLocation) {
-        //TODO a better location finding alogrithm based on recursive function that searches surrounding locations)
+        // TODO: a better location finding alogrithm based on recursive function that searches surrounding locations)
         while (requestedLocation.getTile().getTileType() != Tile.TileType.BACKGROUND) {
             requestedLocation.add(Tile.SIZE, Tile.SIZE);
         }
@@ -90,10 +90,11 @@ public class World implements Updateable, Renderable {
                 .findFirst().orElse(null);
     }
 
-    public void breakTile(Location location) {
+    public Tile breakTile(Location location) {
         Tile tile = findTile(location);
-        if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return;
+        if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return null;
         tile.setMaterial(Material.STONE);
+        return tile;
     }
 
     public void replaceTile(Tile oldTile, Tile newTile) {

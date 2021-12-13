@@ -1,6 +1,5 @@
 package xyz.destiall.pixelate.items.inventory;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -11,26 +10,6 @@ public class PlayerInventory extends Inventory {
     private final InventoryHolder holder;
     private final ItemStack[] crafting;
     private final int size;
-
-    private static Field inventoryFieldItemStack;
-
-    static {
-        try {
-            inventoryFieldItemStack = ItemStack.class.getDeclaredField("inventory");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void setItemStackInventory(ItemStack item, PlayerInventory playerInventory) {
-        try {
-            inventoryFieldItemStack.setAccessible(true);
-            inventoryFieldItemStack.set(item, playerInventory);
-            inventoryFieldItemStack.setAccessible(false);
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
-    }
 
     public PlayerInventory(InventoryHolder holder, int size) {
         this.holder = holder;
@@ -45,10 +24,6 @@ public class PlayerInventory extends Inventory {
 
     public int getSize() {
         return size;
-    }
-
-    public ItemStack[] getItems() {
-        return items;
     }
 
     public ItemStack setItem(int index, ItemStack itemStack) {
@@ -76,13 +51,11 @@ public class PlayerInventory extends Inventory {
         for (int i = 0; i < size; i++) {
             if (items[i] != null) {
                 if (items[i].similar(itemStack)) {
-                    System.out.println("adding similar item");
                     items[i].addAmount(1);
                     return true;
                 }
                 continue;
             }
-            System.out.println("adding new item");
             items[i] = itemStack;
             setItemStackInventory(itemStack, this);
             return true;
@@ -101,9 +74,7 @@ public class PlayerInventory extends Inventory {
             }
         }
         for (int i = 0; i < crafting.length; i++) {
-            System.out.println("looping crafting removal " + i);
             if (crafting[i] != null && crafting[i] == item) {
-                System.out.println("removing item");
                 setItemStackInventory(crafting[i], null);
                 crafting[i] = null;
                 setItemStackInventory(item, null);

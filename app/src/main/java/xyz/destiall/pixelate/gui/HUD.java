@@ -7,6 +7,7 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.timer.Timer;
@@ -19,14 +20,15 @@ public class HUD implements Updateable, Renderable, Listener {
     private ViewInventory inventory;
     //private ViewFurnace inventory;
     private ViewFurnace furnaceUI;
+    private ViewChest chestUI;
     private ViewPaused pauseMenu;
     private HUD_DISPLAYTYPE displayType;
 
-    public enum HUD_DISPLAYTYPE
-    {
+    public enum HUD_DISPLAYTYPE {
         Hotbar,
         Inventory_Crafting,
         Inventory_Furnace,
+        Inventory_Chest,
         Gamepause
     }
 
@@ -46,10 +48,8 @@ public class HUD implements Updateable, Renderable, Listener {
         hotbar.setInventory(playerInventory);
     }
 
-    public void returnToGame()
-    {
-        if(displayType == HUD_DISPLAYTYPE.Gamepause)
-        {
+    public void returnToGame() {
+        if(displayType == HUD_DISPLAYTYPE.Gamepause) {
             Pixelate.PAUSED = false;
             displayType = HUD_DISPLAYTYPE.Hotbar;
             pauseMenu.destroy();
@@ -57,8 +57,7 @@ public class HUD implements Updateable, Renderable, Listener {
         }
     }
 
-    public void setPauseMenu()
-    {
+    public void setPauseMenu() {
         displayType = HUD_DISPLAYTYPE.Gamepause;
         this.pauseMenu = new ViewPaused();
     }
@@ -80,12 +79,10 @@ public class HUD implements Updateable, Renderable, Listener {
         this.inventory = new ViewInventory(playerInventory);
     }
 
-    public void setFurnaceDisplay(PlayerInventory playerInventory, FurnaceInventory furnaceInventory)
-    {
+    public void setFurnaceDisplay(PlayerInventory playerInventory, FurnaceInventory furnaceInventory) {
         displayType = HUD_DISPLAYTYPE.Inventory_Furnace;
         if (playerInventory == null || furnaceInventory == null) {
-            if(this.furnaceUI != null)
-                furnaceUI.destroy();
+            if (this.furnaceUI != null) furnaceUI.destroy();
             this.furnaceUI = null;
             this.displayType = HUD_DISPLAYTYPE.Hotbar;
             return;
@@ -97,20 +94,38 @@ public class HUD implements Updateable, Renderable, Listener {
         this.furnaceUI = new ViewFurnace(playerInventory, furnaceInventory);
     }
 
+    public void setChestDisplay(PlayerInventory playerInventory, ChestInventory chestInventory) {
+        displayType = HUD_DISPLAYTYPE.Inventory_Chest;
+        if (playerInventory == null || chestInventory == null) {
+            if (this.chestUI != null) chestUI.destroy();
+            this.chestUI = null;
+            this.displayType = HUD_DISPLAYTYPE.Hotbar;
+            return;
+        }
+        buttons.setJoystick(false);
+        buttons.setSwinging(false);
+        buttons.setActuator(0, 0);
+        setHotbar(playerInventory);
+        this.chestUI = new ViewChest(playerInventory, chestInventory);
+    }
+
     @Override
     public void render(Screen screen) {
-        switch(displayType)
-        {
+        switch(displayType) {
             case Inventory_Crafting:
-                if(inventory != null)
+                if (inventory != null)
                     inventory.render(screen);
                 break;
             case Inventory_Furnace:
-                if(furnaceUI != null)
+                if (furnaceUI != null)
                     furnaceUI.render(screen);
                 break;
+            case Inventory_Chest:
+                if (chestUI != null)
+                    chestUI.render(screen);
+                break;
             case Gamepause:
-                if(pauseMenu != null)
+                if (pauseMenu != null)
                     pauseMenu.render(screen);
                 break;
             default: //Hotbar

@@ -13,7 +13,7 @@ public class LootTable {
     SplittableRandom ran = new SplittableRandom();
 
     public static LootTable getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new LootTable();
         return instance;
     }

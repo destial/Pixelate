@@ -28,7 +28,7 @@ public class GeneratorBasic implements Generator {
         double divisor = 1.0/Tile.SIZE;
 
         double min = 1, max = 0;
-        List<Location> orePopulationZones = new ArrayList<Location>();
+        List<Location> orePopulationZones = new ArrayList<>();
 
         //Main terrain generation
         for (int x = -Pixelate.WIDTH; x <= Pixelate.WIDTH; x+=Tile.SIZE) {

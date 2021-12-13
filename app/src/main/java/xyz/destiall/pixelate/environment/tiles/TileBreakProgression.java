@@ -24,7 +24,7 @@ public class TileBreakProgression extends Imageable {
         animationTiles = new Bitmap[columns];
         for(int i = 0; i < columns; ++i)
         {
-            animationTiles[i] = Bitmap.createBitmap(image, i*width, 0*height, width, height);
+            animationTiles[i] = Bitmap.createBitmap(image, i * (int) width, 0, (int)width, (int)height);
         }
     }
 

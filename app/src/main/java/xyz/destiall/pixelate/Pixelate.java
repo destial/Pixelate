@@ -10,7 +10,6 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
-import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;

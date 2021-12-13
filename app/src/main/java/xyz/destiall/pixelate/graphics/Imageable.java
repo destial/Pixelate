@@ -4,20 +4,20 @@ import android.graphics.Bitmap;
 
 public abstract class Imageable {
     protected Bitmap image;
-    protected int height;
-    protected int width;
+    protected float height;
+    protected float width;
     protected int rows;
     protected int columns;
     public Imageable(Bitmap image, int rows, int columns) {
         this.image = image;
         this.rows = rows;
         this.columns = columns;
-        height = image.getHeight() / rows;
-        width = image.getWidth() / columns;
+        height = image.getHeight() / (float) rows;
+        width = image.getWidth() / (float) columns;
     }
 
     public Bitmap createSubImageAt(int row, int col) {
-        return Bitmap.createBitmap(image, col * width, row * height, width, height);
+        return Bitmap.createBitmap(image, col * (int) width, row * (int) height, (int) width, (int) height);
     }
 
     public Bitmap[] createAnimation(int row) {
@@ -51,7 +51,7 @@ public abstract class Imageable {
     }
 
     public int getHeight() {
-        return height;
+        return (int) height;
     }
 
     public int getRows() {
@@ -59,7 +59,7 @@ public abstract class Imageable {
     }
 
     public int getWidth() {
-        return width;
+        return (int) width;
     }
 
     public static Bitmap scaleImage(Bitmap image, float scale) {

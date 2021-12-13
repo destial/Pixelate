@@ -3,7 +3,10 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
@@ -12,7 +15,7 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
-import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
+import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventPlace;
@@ -24,6 +27,8 @@ import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
+import xyz.destiall.pixelate.items.inventory.ChestInventory;
+import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
@@ -146,19 +151,21 @@ public class EntityPlayer extends EntityLiving implements Listener {
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (tile == null || currentTiles.contains(tile) || tile.getTileType() != Tile.TileType.FOREGROUND) return;
-
         float bbProgress = tile.getBlockBreakProgress(); //Out of 100.0
         float bbDuration = tile.getMaterial().getRequiredMineDuration(getItemInHand().getType());
         float timeRelative = bbProgress / 100.0f * bbDuration;
         timeRelative += Timer.getDeltaTime();
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
         tile.addBlockBreakProgression(bbProgressDiff);
-
         if (tile.getBlockBreakProgress() >= 100) {
             List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), 0);
-            for(ItemStack item : drops)
+            Tile brokenTile = location.getWorld().breakTile(newLoc);
+            if (brokenTile instanceof ContainerTile) {
+                ContainerTile containerTile = (ContainerTile) brokenTile;
+                drops.addAll(Arrays.stream(containerTile.getInventory().getItems()).filter(Objects::nonNull).collect(Collectors.toList()));
+            }
+            for (ItemStack item : drops)
                 playerInventory.addItem(item);
-            location.getWorld().breakTile(newLoc);
         }
     }
 
@@ -173,13 +180,18 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 tile.setMaterial(current.getType());
                 current.setAmount(current.getAmount() - 1);
             }
-
-        }else {
-            if (tile.getMaterial() == Material.FURNACE) {
-                FurnanceTile furnace = ((FurnanceTile) tile);
-                HUD.INSTANCE.setFurnaceDisplay(playerInventory, furnace.getInventory());
-                furnace.getInventory().setToSmeltSlot(new ItemStack(Material.COAL_ORE, 1));
-                furnace.getInventory().setBurnerSlot(new ItemStack(Material.COAL, 1));
+        } else {
+            if (tile.getMaterial().isContainer()) {
+                ContainerTile container = (ContainerTile) tile;
+                if (tile.getMaterial() == Material.FURNACE) {
+                    FurnaceInventory furnaceInventory = (FurnaceInventory) container.getInventory();
+                    HUD.INSTANCE.setFurnaceDisplay(playerInventory, furnaceInventory);
+                    furnaceInventory.setToSmeltSlot(new ItemStack(Material.COAL_ORE, 1));
+                    furnaceInventory.setBurnerSlot(new ItemStack(Material.COAL, 1));
+                } else if (tile.getMaterial() == Material.CHEST) {
+                    ChestInventory chestInventory = (ChestInventory) container.getInventory();
+                    HUD.INSTANCE.setChestDisplay(playerInventory, chestInventory);
+                }
             }
         }
     }
