@@ -67,12 +67,6 @@ public class ViewInventory implements View {
                     }
                     if (item == dragging) {
                         screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
-                        if (item.getAmount() > 1) {
-                            screen.text("" + (item.getAmount() - 1),
-                                    posX + this.image.getWidth(),
-                                    posY + this.image.getHeight(),
-                                    40, Color.WHITE);
-                        }
                     } else {
                         screen.draw(image, posX + 15, posY + 5);
                         if (item.getAmount() > 1) {
@@ -135,9 +129,6 @@ public class ViewInventory implements View {
                         }
                     } else {
                         screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
-                        if (item.getAmount() > 1) {
-                            screen.text(""+(item.getAmount() - 1), posX + this.image.getWidth(), posY + this.image.getHeight(), 40, Color.WHITE);
-                        }
                     }
                 }
                 if (!positions.containsKey(i)) {
@@ -160,10 +151,15 @@ public class ViewInventory implements View {
             if (slot == 100) {
                 for (Recipe recipe : RecipeManager.getRecipes()) {
                     if (recipe.isFulfilled(playerInventory.getCrafting())) {
-                        playerInventory.setItem(draggingSlot, null);
+                        //playerInventory.setItem(draggingSlot, null);
                         if (playerInventory.addItem(recipe.getItem())) {
                             playerInventory.clearCrafting();
-                            dragging = null;
+                            //for (int i = 0; i < 4; i++) {
+                            //    ItemStack item = playerInventory.getCraftingItem(i);
+                            //    if (item == null) continue;
+                            //    System.out.println("Removing");
+                            //    item.removeAmount(1);
+                            //}
                         }
                         break;
                     }
@@ -263,6 +259,7 @@ public class ViewInventory implements View {
     @Override
     public void destroy() {
         positions.clear();
+        images.clear();
         Pixelate.HANDLER.unregisterListener(this);
     }
 }

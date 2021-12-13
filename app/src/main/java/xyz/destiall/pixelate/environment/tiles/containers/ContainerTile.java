@@ -1,7 +1,8 @@
-package xyz.destiall.pixelate.environment.tiles;
+package xyz.destiall.pixelate.environment.tiles.containers;
 
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 
 public abstract class ContainerTile extends Tile {
@@ -13,5 +14,5 @@ public abstract class ContainerTile extends Tile {
         this.tileInventory = inventory;
     }
 
-
+    public abstract Inventory getInventory();
 }

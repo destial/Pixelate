@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
-import xyz.destiall.pixelate.environment.tiles.ContainerTile;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.timer.Timer;
@@ -16,10 +15,9 @@ public class FurnanceTile extends ContainerTile {
 
     float timeToSmelt = 4.f;
 
-    static HashMap<Material, Material> smeltable = new HashMap<Material, Material>();
-    static HashMap<Material, Float> burnRate = new HashMap<Material, Float>();
-    static
-    {
+    static HashMap<Material, Material> smeltable = new HashMap<>();
+    static HashMap<Material, Float> burnRate = new HashMap<>();
+    static {
         //Smeltable List
         smeltable.put(Material.COAL_ORE, Material.COAL);
 
@@ -45,6 +43,7 @@ public class FurnanceTile extends ContainerTile {
         super(x, y, Material.FURNACE, world, type, new FurnaceInventory());
     }
 
+    @Override
     public FurnaceInventory getInventory()
     {
         return (FurnaceInventory) this.tileInventory;
@@ -96,10 +95,4 @@ public class FurnanceTile extends ContainerTile {
             }
         }
     }
-
-
-
-
-
-
 }

@@ -59,7 +59,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @Override
     public void remove() {
-        teleport(location.getWorld().getNearestEmpty(new Location(0, 0, location.getWorld())));
+        teleport(location.getWorld().getNearestEmpty(0, 0));
         health = 20.f;
     }
 

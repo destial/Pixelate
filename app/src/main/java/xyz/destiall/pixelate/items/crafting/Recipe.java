@@ -48,6 +48,6 @@ public class Recipe {
     }
 
     public ItemStack getItem() {
-        return item;
+        return item.clone();
     }
 }

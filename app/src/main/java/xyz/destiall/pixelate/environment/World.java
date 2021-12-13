@@ -69,6 +69,14 @@ public class World implements Updateable, Renderable {
         return requestedLocation;
     }
 
+    public Location getNearestEmpty(double x, double y) {
+        Location loc = new Location(x, y, this);
+        while (loc.getTile().getTileType() != Tile.TileType.BACKGROUND) {
+            loc.add(Tile.SIZE, Tile.SIZE);
+        }
+        return loc;
+    }
+
     public EntityMonster spawnMonster(Location location, Entity.Type type) {
         EntityMonster monster = new EntityMonster(type);
         monster.teleport(location);

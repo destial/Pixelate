@@ -13,7 +13,6 @@ import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
-import xyz.destiall.pixelate.states.StatePauseMenu;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class Pixelate extends Thread {
@@ -44,7 +43,6 @@ public class Pixelate extends Thread {
         timer = new Timer();
         stateManager = new GSM();
         stateManager.addState("Game", new StateGame(gameSurface));
-        stateManager.addState("PauseMenu", new StatePauseMenu(gameSurface));
         stateManager.setState("Game");
     }
 
@@ -95,9 +93,8 @@ public class Pixelate extends Thread {
 
             // Teleport player to new world
             World next = wm.getCurrentWorld();
-            System.out.println("Current world: " + wm.getCurrentWorldName());
             next.getEntities().add(gameState.getPlayer());
-            gameState.getPlayer().teleport(wm.getCurrentWorld().getNearestEmpty(new Location(0,0, wm.getCurrentWorld())));
+            gameState.getPlayer().teleport(next.getNearestEmpty(0,0));
             return true;
         }
         return false;

@@ -9,9 +9,8 @@ import xyz.destiall.pixelate.items.ItemStack;
 
 public class PlayerInventory extends Inventory {
     private final InventoryHolder holder;
+    private final ItemStack[] crafting;
     private final int size;
-
-    private ItemStack[] crafting;
 
     private static Field inventoryFieldItemStack;
 
@@ -28,7 +27,9 @@ public class PlayerInventory extends Inventory {
             inventoryFieldItemStack.setAccessible(true);
             inventoryFieldItemStack.set(item, playerInventory);
             inventoryFieldItemStack.setAccessible(false);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            // e.printStackTrace();
+        }
     }
 
     public PlayerInventory(InventoryHolder holder, int size) {
@@ -53,7 +54,9 @@ public class PlayerInventory extends Inventory {
     public ItemStack setItem(int index, ItemStack itemStack) {
         ItemStack prev = items[index];
         items[index] = itemStack;
-        setItemStackInventory(itemStack, this);
+        if (itemStack != null) {
+            setItemStackInventory(itemStack, this);
+        }
         setItemStackInventory(prev, null);
         return prev;
     }
@@ -61,7 +64,9 @@ public class PlayerInventory extends Inventory {
     public ItemStack setCrafting(int index, ItemStack itemStack) {
         ItemStack prev = crafting[index];
         crafting[index] = itemStack;
-        setItemStackInventory(itemStack, this);
+        if (itemStack != null) {
+            setItemStackInventory(itemStack, this);
+        }
         setItemStackInventory(prev, null);
         return prev;
     }
@@ -70,12 +75,14 @@ public class PlayerInventory extends Inventory {
         if (isFull()) return false;
         for (int i = 0; i < size; i++) {
             if (items[i] != null) {
-                if (items[i].getType() == itemStack.getType()) {
+                if (items[i].similar(itemStack)) {
+                    System.out.println("adding similar item");
                     items[i].addAmount(1);
-                    break;
+                    return true;
                 }
                 continue;
             }
+            System.out.println("adding new item");
             items[i] = itemStack;
             setItemStackInventory(itemStack, this);
             return true;
@@ -87,13 +94,17 @@ public class PlayerInventory extends Inventory {
         if (item == null) return;
         for (int i = 0; i < items.length; i++) {
             if (items[i] != null && items[i] == item) {
+                setItemStackInventory(items[i], null);
                 items[i] = null;
                 setItemStackInventory(item, null);
                 break;
             }
         }
         for (int i = 0; i < crafting.length; i++) {
+            System.out.println("looping crafting removal " + i);
             if (crafting[i] != null && crafting[i] == item) {
+                System.out.println("removing item");
+                setItemStackInventory(crafting[i], null);
                 crafting[i] = null;
                 setItemStackInventory(item, null);
                 break;

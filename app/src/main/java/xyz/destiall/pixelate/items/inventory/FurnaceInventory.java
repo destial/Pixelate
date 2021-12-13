@@ -3,12 +3,9 @@ package xyz.destiall.pixelate.items.inventory;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class FurnaceInventory extends Inventory {
-
     ItemStack toSmelt, burner, processed;
 
-    public FurnaceInventory()
-    {
-    }
+    public FurnaceInventory() {}
 
     @Override
     public void removeItem(ItemStack item) {
