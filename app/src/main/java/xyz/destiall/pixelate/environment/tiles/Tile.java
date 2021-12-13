@@ -49,6 +49,10 @@ public class Tile extends Imageable implements Updateable,Renderable {
     }
 
     public void setMaterial(Material mat) {
+        if (mat != material && mat.isContainer()) {
+            world.replaceTile(this, TileFactory.createTile(mat, (int) location.getX(), (int) location.getY(), world));
+            return;
+        }
         material = mat;
         image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * width, material.getRow() * height, width, height);
         tileType = mat.getTileType();

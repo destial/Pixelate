@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.noise.PerlinNoise;

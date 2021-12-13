@@ -3,26 +3,15 @@ package xyz.destiall.pixelate.gui;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
-import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.items.crafting.Recipe;
-import xyz.destiall.pixelate.items.crafting.RecipeManager;
-import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
-import xyz.destiall.pixelate.items.inventory.PlayerInventory;
-import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class ViewPaused implements View {

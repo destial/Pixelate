@@ -1,9 +1,7 @@
 package xyz.destiall.pixelate.environment;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import xyz.destiall.pixelate.entities.Entity;
@@ -21,7 +19,7 @@ import xyz.destiall.pixelate.position.Location;
 public class World implements Updateable, Renderable {
     private final List<Entity> entities;
     // TODO: Maybe split tiles into chunks?
-    private final Set<Tile> tiles;
+    private final List<Tile> tiles;
     private final Generator generator;
     private Environment worldType;
 
@@ -31,7 +29,7 @@ public class World implements Updateable, Renderable {
 
     public World(Generator generator) {
         entities = new LinkedList<>();
-        tiles = new HashSet<>();
+        tiles = new LinkedList<>();
         this.generator = generator;
         if (generator instanceof GeneratorBasic) {
             worldType = Environment.OVERWORLD;
@@ -89,11 +87,9 @@ public class World implements Updateable, Renderable {
         tile.setMaterial(Material.STONE);
     }
 
-    public boolean replaceTile(Tile oldTile, Tile newTile)
-    {
-        tiles.remove(oldTile);
-        tiles.add(newTile);
-        return true;
+    public void replaceTile(Tile oldTile, Tile newTile) {
+        int index = tiles.indexOf(oldTile);
+        tiles.set(index, newTile);
     }
 
     public List<Tile> findTiles(AABB aabb) {
@@ -106,22 +102,21 @@ public class World implements Updateable, Renderable {
 
     @Override
     public void update() {
-        for (Entity entity : entities) {
-            entity.update();
+        for (int i = 0; i < entities.size(); i++) {
+            entities.get(i).update();
         }
-        for(Tile tile : tiles)
-        {
-            tile.update();
+        for (int i = 0; i < tiles.size(); i++) {
+            tiles.get(i).update();
         }
     }
 
     @Override
     public void render(Screen canvas) {
-        for (Tile tile : tiles) {
-            tile.render(canvas);
+        for (int i = 0; i < tiles.size(); i++) {
+            tiles.get(i).render(canvas);
         }
-        for (Entity entity : entities) {
-            entity.render(canvas);
+        for (int i = 0; i < entities.size(); i++) {
+            entities.get(i).render(canvas);
         }
     }
 }

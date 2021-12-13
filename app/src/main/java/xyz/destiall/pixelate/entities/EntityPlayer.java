@@ -167,36 +167,17 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (location.getWorld() == null) return;
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
-        Vector2 tileLoc = tile.getLocation();
         ItemStack current = getItemInHand();
         if (current != null && current.getType().isBlock()) {
-            Material placed = current.getType();
-            current.setAmount(current.getAmount() - 1);
-            if (tile.getMaterial() == Material.FURNACE) { //To remove furnace inventory details, deleting Old FurnaceTile object, creating a new Tile object
-                // case XXX any other special tile type:
-                location.getWorld().replaceTile(tile, new Tile((int) tileLoc.getX(), (int) tileLoc.getY(), placed, location.getWorld(), Tile.TileType.FOREGROUND));
-            } else {//No need for special replacement
-                if (placed == Material.FURNACE) {
-                    location.getWorld().replaceTile(tile, new FurnanceTile((int) tileLoc.getX(), (int) tileLoc.getY(), location.getWorld(), Tile.TileType.FOREGROUND));
-                } else {
-                    if (tile.getTileType() != Tile.TileType.FOREGROUND) {
-                        if (location.getWorld().findTiles(collision).contains(tile)) return;
-
-                        if (current.getType().isBlock()) {
-                            tile.setMaterial(current.getType());
-                            tile.addBlockBreakProgression(-100.f); //reset to 0
-
-                        }
-                    }
-                }
+            if (tile.getTileType() != Tile.TileType.FOREGROUND && !location.getWorld().findTiles(collision).contains(tile)) {
+                tile.setMaterial(current.getType());
+                current.setAmount(current.getAmount() - 1);
             }
-
         } else {
             if (tile.getMaterial() == Material.FURNACE) {
                 HUD.INSTANCE.setFurnaceDisplay(playerInventory, ((FurnanceTile) tile).getInventory());
             }
         }
-
     }
 
     @EventHandler
