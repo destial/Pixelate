@@ -83,15 +83,16 @@ public class ViewFurnace implements View {
                             posX + this.image.getWidth(),
                             posY + this.image.getHeight(),
                             40, Color.WHITE);
-                } else {
-                    screen.draw(image, posX + 15, posY + 5);
-                    if (item.getAmount() > 1) {
-                        screen.text("" + item.getAmount(),
-                                posX + this.image.getWidth() / 2f,
-                                posY + this.image.getHeight() / 2f,
-                                40, Color.WHITE);
-                    }
                 }
+            } else {
+                screen.draw(image, posX + 15, posY + 5);
+                if (item.getAmount() > 1) {
+                    screen.text("" + item.getAmount(),
+                            posX + this.image.getWidth() / 2f,
+                            posY + this.image.getHeight() / 2f,
+                            40, Color.WHITE);
+                }
+
             }
         }
 
@@ -120,15 +121,16 @@ public class ViewFurnace implements View {
                             posX + this.image.getWidth(),
                             posY + this.image.getHeight(),
                             40, Color.WHITE);
-                } else {
-                    screen.draw(image, posX + 15, posY + 5);
-                    if (item.getAmount() > 1) {
-                        screen.text("" + item.getAmount(),
-                                posX + this.image.getWidth() / 2f,
-                                posY + this.image.getHeight() / 2f,
-                                40, Color.WHITE);
-                    }
                 }
+            }else {
+                screen.draw(image, posX + 15, posY + 5);
+                if (item.getAmount() > 1) {
+                    screen.text("" + item.getAmount(),
+                            posX + this.image.getWidth() / 2f,
+                            posY + this.image.getHeight() / 2f,
+                            40, Color.WHITE);
+                }
+
             }
         }
 
@@ -199,15 +201,16 @@ public class ViewFurnace implements View {
                             posX + this.image.getWidth(),
                             posY + this.image.getHeight(),
                             40, Color.WHITE);
-                } else {
-                    screen.draw(image, posX + 15, posY + 5);
-                    if (item.getAmount() > 1) {
-                        screen.text("" + item.getAmount(),
-                                posX + this.image.getWidth() / 2f,
-                                posY + this.image.getHeight() / 2f,
-                                40, Color.WHITE);
-                    }
                 }
+            }else {
+                screen.draw(image, posX + 15, posY + 5);
+                if (item.getAmount() > 1) {
+                    screen.text("" + item.getAmount(),
+                            posX + this.image.getWidth() / 2f,
+                            posY + this.image.getHeight() / 2f,
+                            40, Color.WHITE);
+                }
+
             }
         }
 

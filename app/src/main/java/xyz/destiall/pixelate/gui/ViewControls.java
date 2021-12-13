@@ -5,6 +5,8 @@ import android.graphics.Color;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
+import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventSwing;
@@ -26,10 +28,12 @@ public class ViewControls implements View {
     private final Vector2 placeButton;
     private final Vector2 invButton;
     private final Vector2 pauseButton;
+    private final Vector2 switchWorldButton;
     private final int invButtonRadius;
     private final int mineButtonRadius;
     private final int placeButtonRadius;
     private final int pauseButtonRadius;
+    private final int switchWorldButtonRadius;
     private final EventJoystick eventJoystick;
     private boolean joystick;
     private boolean swing;
@@ -48,12 +52,14 @@ public class ViewControls implements View {
         invButton = new Vector2(Pixelate.WIDTH - 150, Pixelate.HEIGHT - 100);
         mineButton = new Vector2(Pixelate.WIDTH - 300, Pixelate.HEIGHT - 150);
         placeButton = new Vector2(Pixelate.WIDTH - 200, Pixelate.HEIGHT - 250);
+        switchWorldButton = new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.1), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9));
 
         // Button radius
         pauseButtonRadius = 25;
         invButtonRadius = 50;
         placeButtonRadius = 50;
         mineButtonRadius = 50;
+        switchWorldButtonRadius = 25;
 
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
         Pixelate.HANDLER.registerListener(this);
@@ -67,6 +73,7 @@ public class ViewControls implements View {
         screen.circle(placeButton.getX(), placeButton.getY(), placeButtonRadius * (place ? 0.8f : 1), Color.YELLOW);
         screen.circle(invButton.getX(), invButton.getY(), invButtonRadius, Color.GREEN);
         screen.circle(pauseButton.getX(), pauseButton.getY(), pauseButtonRadius, Color.RED);
+        screen.circle(switchWorldButton.getX(), switchWorldButton.getY(), switchWorldButtonRadius, Color.BLUE);
 
         EntityPlayer player = ((StateGame) Pixelate.getGSM().getCurrentState()).getPlayer();
         screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.75, Pixelate.WIDTH * 0.2, 10, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
@@ -88,6 +95,11 @@ public class ViewControls implements View {
         double distance = Math
                 .sqrt(Math.pow(outerCircleCenter.getX() - x, 2) + Math.pow(outerCircleCenter.getY() - y, 2));
         return distance < outerCircleRadius;
+    }
+
+    private boolean isOnSwitchWorldButton(float x, float y)
+    {
+        return isOnButton(switchWorldButton, x, y, switchWorldButtonRadius);
     }
 
     private boolean isOnPauseButton(float x, float y) {
@@ -182,6 +194,17 @@ public class ViewControls implements View {
                         Pixelate.PAUSED = true;
 
                         //Pixelate.HANDLER.call(new EventGamePause());
+                    }else if (isOnSwitchWorldButton(x,y))
+                    {
+                        StateGame gameState = ((StateGame) Pixelate.getGSM().getState("Game"));
+                        WorldManager wm = gameState.getObject(WorldManager.class);
+                        String currentworld = wm.getCurrentWorldName();
+                        if(currentworld == "Cave")
+                            Pixelate.setWorld("Overworld");
+                        else
+                            Pixelate.setWorld("Cave");
+
+
                     }
                     break;
                 case MOVE:

@@ -199,8 +199,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
         {
             if(tile.getMaterial() == Material.FURNACE)
             {
-
-                HUD.INSTANCE.setFurnaceDisplay(playerInventory, ((FurnanceTile) tile).getInventory());
+                FurnanceTile furnace = ((FurnanceTile) tile);
+                HUD.INSTANCE.setFurnaceDisplay(playerInventory, furnace.getInventory());
+                furnace.getInventory().setToSmeltSlot(new ItemStack(Material.COAL_ORE,1));
+                furnace.getInventory().setBurnerSlot(new ItemStack(Material.COAL, 1));
             }
         }
 

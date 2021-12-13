@@ -26,6 +26,7 @@ public class World implements Updateable, Renderable {
     private final Generator generator;
     private Environment worldType;
 
+
     public World() {
         this(new GeneratorBasic());
     }
