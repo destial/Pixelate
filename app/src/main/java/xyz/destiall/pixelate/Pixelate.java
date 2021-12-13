@@ -27,7 +27,7 @@ public class Pixelate extends Thread {
     private static Bitmap tileMap;
     private static Bitmap blockBreakAnimationMap;
     private static GSM stateManager;
-    public static boolean paused = false;
+    public static boolean PAUSED = false;
     private final Timer timer;
     private boolean running;
 
@@ -50,14 +50,12 @@ public class Pixelate extends Thread {
 
     @Override
     public void run() {
-        while (running && !paused)  {
+        while (running)  {
             try {
                 canvas = surfaceHolder.lockCanvas();
                 HEIGHT = canvas.getHeight();
                 WIDTH = canvas.getWidth();
-                if (!paused) {
-                    update();
-                }
+                update();
                 render(canvas);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -75,17 +73,15 @@ public class Pixelate extends Thread {
     }
 
     private void update() {
-        if (!paused) {
+        if (!PAUSED) {
             timer.update();
             stateManager.update();
         }
     }
 
     private void render(Canvas canvas) {
-        if (!paused) {
-            canvas.drawRGB(0, 0, 0);
-            stateManager.render(canvas);
-        }
+        canvas.drawRGB(0, 0, 0);
+        stateManager.render(canvas);
     }
 
     public static boolean setWorld(String world) {

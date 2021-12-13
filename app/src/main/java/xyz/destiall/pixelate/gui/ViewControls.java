@@ -5,6 +5,7 @@ import android.graphics.Color;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
+import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventSwing;
 import xyz.destiall.pixelate.events.EventOpenInventory;
@@ -174,10 +175,9 @@ public class ViewControls implements View {
                     Pixelate.HANDLER.call(new EventOpenInventory());
                 } else if (isOnPlaceButton(x, y)) {
                     setPlacing(true);
-                } else if (isOnPauseButton(x, y) && !Pixelate.paused) {
-
-                    Pixelate.setWorld("Cave");
-                    // Game.HANDLER.call(new EventGamePause());
+                } else if (isOnPauseButton(x, y) && !Pixelate.PAUSED) {
+                    //Pixelate.setWorld("Cave");
+                    Pixelate.HANDLER.call(new EventGamePause());
                 }
                 break;
             case MOVE:

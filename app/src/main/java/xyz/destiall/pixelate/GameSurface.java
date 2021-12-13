@@ -7,11 +7,13 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.java.events.Listener;
+import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
 
-public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
-
+public class GameSurface extends SurfaceView implements SurfaceHolder.Callback, Listener {
     private Pixelate gameThread;
 
     public GameSurface(Context context)  {
@@ -28,6 +30,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         gameThread = new Pixelate(this, holder);
+        Pixelate.HANDLER.registerListener(this);
         gameThread.setRunning(true);
         gameThread.start();
     }
@@ -44,11 +47,13 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 gameThread.setRunning(false);
                 gameThread.join();
+                retry = false;
             } catch(InterruptedException e)  {
                 e.printStackTrace();
+                retry = true;
             }
-            retry = true;
         }
+        Pixelate.HANDLER.unregisterListener(this);
     }
 
     @Override
@@ -72,5 +77,10 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         Pixelate.HANDLER.call(new EventKeyboard(keyCode, event));
         return true;
+    }
+
+    @EventHandler
+    public void onExit(EventGamePause e) {
+        gameThread.setRunning(false);
     }
 }
