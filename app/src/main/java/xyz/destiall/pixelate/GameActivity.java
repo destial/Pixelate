@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,8 +13,6 @@ import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.gui.screens.PauseMenu;
 
 public class GameActivity extends AppCompatActivity implements Listener {
-    private Button pause_resume, pause_quit;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +25,7 @@ public class GameActivity extends AppCompatActivity implements Listener {
 
     @EventHandler
     public void onTouch(EventGamePause e) {
-        Pixelate.paused = true;
+        Pixelate.PAUSED = true;
         Intent intent = new Intent();
         intent.setClass(this, PauseMenu.class);
         startActivity(intent);

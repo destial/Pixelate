@@ -11,6 +11,7 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
+import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
@@ -81,6 +82,8 @@ public class ViewPaused implements View {
             else if (isOnExit(x,y))
             {
                 //RETURN MAIN MENU;
+                Pixelate.HANDLER.call(new EventGamePause());
+                HUD.INSTANCE.returnToGame();
             }
         }
 

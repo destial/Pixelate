@@ -5,6 +5,7 @@ import android.graphics.Color;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
+import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventSwing;
 import xyz.destiall.pixelate.events.EventOpenInventory;
@@ -162,7 +163,7 @@ public class ViewControls implements View {
 
     @EventHandler
     public void onTouch(EventTouch e) {
-        if(!Pixelate.paused)
+        if(!Pixelate.PAUSED)
         {
             float x = e.getX();
             float y = e.getY();
@@ -178,7 +179,9 @@ public class ViewControls implements View {
                         setPlacing(true);
                     } else if (isOnPauseButton(x, y)) {
                         HUD.INSTANCE.setPauseMenu();
-                        Pixelate.paused = true;
+                        Pixelate.PAUSED = true;
+
+                        //Pixelate.HANDLER.call(new EventGamePause());
                     }
                     break;
                 case MOVE:

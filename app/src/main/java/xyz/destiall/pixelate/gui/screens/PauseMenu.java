@@ -44,7 +44,7 @@ public class PauseMenu extends Activity implements View.OnClickListener {
         Intent intent = new Intent();
         if (v == btn_start) {
             intent.setClass(this, GameActivity.class);
-            Pixelate.paused = false;
+            Pixelate.PAUSED = false;
             Pixelate.getGSM().setState("Game");
         } else if (v == btn_quit) {
             intent.setClass(this, MainMenu.class);

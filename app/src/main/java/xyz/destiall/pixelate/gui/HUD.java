@@ -51,7 +51,7 @@ public class HUD implements Updateable, Renderable, Listener {
     {
         if(displayType == HUD_DISPLAYTYPE.Gamepause)
         {
-            Pixelate.paused = false;
+            Pixelate.PAUSED = false;
             displayType = HUD_DISPLAYTYPE.Hotbar;
             pauseMenu.destroy();
             pauseMenu = null;
