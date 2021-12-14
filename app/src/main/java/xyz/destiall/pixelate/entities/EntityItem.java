@@ -7,11 +7,11 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.timer.Timer;
 
-public class ItemDrop extends Entity {
+public class EntityItem extends Entity {
     private final ItemStack drop;
     private float upAndDownTimer;
     private boolean down;
-    public ItemDrop(ItemStack itemStack) {
+    public EntityItem(ItemStack itemStack) {
         super(itemStack.getImage(), 1, 1);
         scale = 0.5f;
         this.drop = itemStack;

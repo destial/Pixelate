@@ -35,10 +35,12 @@ import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class EntityPlayer extends EntityLiving implements Listener {
     private final SpriteSheet slash;
+    private final Bitmap crosshair;
     private boolean playSwingAnimation;
     private double swingAnimationTimer;
 
@@ -62,6 +64,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addSprite("UP", createAnimation(slashSheet, 4, 4, 1));
         slash.addSprite("LEFT", createAnimation(slashSheet, 4, 4, 2));
         slash.addSprite("DOWN", createAnimation(slashSheet, 4, 4, 3));
+        crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
     }
 
     @Override
@@ -90,8 +93,20 @@ public class EntityPlayer extends EntityLiving implements Listener {
     public void render(Screen screen) {
         super.render(screen);
         Vector2 vector = Screen.convert(location);
-        vector.add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
-        screen.circle(vector.getX(), vector.getY(), 5, Color.RED);
+        Vector2 dir = target.getVector().multiply(Tile.SIZE);
+        dir.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25);
+        vector.add(dir);
+
+        if (Settings.ENABLE_BLOCK_TRACE) {
+            Tile t = location.clone().add(dir).getTile();
+            if (t != null) {
+                Vector2 tile = Screen.convert(t.getLocation());
+                screen.quad(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, Color.argb(100, 0, 0, 255));
+            }
+        }
+        if (Settings.ENABLE_CROSSHAIR)
+            screen.draw(crosshair, vector.getX(), vector.getY());
+
         if (playSwingAnimation) {
             playSwingAnimation = false;
             slash.setCurrentSprite(target.name());

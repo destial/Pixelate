@@ -45,6 +45,8 @@ public enum Material {
     MOSSY_COBBLESTONE(5,0, Tile.TileType.FOREGROUND, 10, GenericModifierType.PICKAXE_EFFICIENT),
     COBBLESTONE(5,8, Tile.TileType.FOREGROUND, 10, GenericModifierType.PICKAXE_EFFICIENT),
 
+    TNT(3, 4, Tile.TileType.FOREGROUND, 0.5f, GenericModifierType.NONE),
+
     DIAMOND_SWORD(R.drawable.diamond_sword, GenericModifierType.NONE, EfficiencyType.DIAMOND_TIER),
     GOLD_SWORD(R.drawable.gold_sword, GenericModifierType.NONE, EfficiencyType.GOLD_TIER),
     IRON_SWORD(R.drawable.iron_sword, GenericModifierType.NONE, EfficiencyType.IRON_TIER),

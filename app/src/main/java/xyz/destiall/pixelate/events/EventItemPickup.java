@@ -2,16 +2,16 @@ package xyz.destiall.pixelate.events;
 
 import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Event;
-import xyz.destiall.pixelate.entities.ItemDrop;
+import xyz.destiall.pixelate.entities.EntityItem;
 
 public class EventItemPickup extends Event implements Cancellable {
-    private final ItemDrop item;
+    private final EntityItem item;
     private boolean cancelled = false;
-    public EventItemPickup(ItemDrop item) {
+    public EventItemPickup(EntityItem item) {
         this.item = item;
     }
 
-    public ItemDrop getItem() {
+    public EntityItem getItem() {
         return item;
     }
 

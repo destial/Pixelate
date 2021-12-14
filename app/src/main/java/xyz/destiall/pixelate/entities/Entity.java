@@ -24,6 +24,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     protected float scale;
     protected Vector2 velocity;
     protected float currentAnimation;
+    protected float animationSpeed;
     protected AABB collision;
     protected Direction facing;
     protected Direction target;
@@ -39,6 +40,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         target = facing;
         modules = new HashMap<>();
         removed = false;
+        animationSpeed = 60;
     }
 
     public Location getLocation() {
@@ -81,7 +83,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     public void updateSpriteAnimation() {
         // Update sprite animation
-        currentAnimation += Timer.getDeltaTime() * Timer.getFPS();
+        currentAnimation += Timer.getDeltaTime() * animationSpeed;
         if (currentAnimation >= columns)  {
             currentAnimation = 0;
         }

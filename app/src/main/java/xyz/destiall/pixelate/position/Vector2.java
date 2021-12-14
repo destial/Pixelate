@@ -2,8 +2,6 @@ package xyz.destiall.pixelate.position;
 
 import androidx.annotation.NonNull;
 
-import java.util.Objects;
-
 import xyz.destiall.pixelate.errors.DivideByZeroException;
 
 public class Vector2 implements Cloneable {
@@ -143,11 +141,6 @@ public class Vector2 implements Cloneable {
         if (o == null || getClass() != o.getClass()) return false;
         Vector2 vector = (Vector2) o;
         return vector.x == x && vector.y == y;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
     }
 
     @NonNull

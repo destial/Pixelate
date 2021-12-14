@@ -3,8 +3,6 @@ package xyz.destiall.pixelate.position;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.Objects;
-
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 
@@ -104,11 +102,6 @@ public class Location implements Cloneable {
         if (o == null || getClass() != o.getClass()) return false;
         Location location = (Location) o;
         return location.x == x && location.y == y && location.world == world;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y, world);
     }
 
     @NonNull

@@ -6,7 +6,8 @@ import java.util.stream.Collectors;
 
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityMonster;
-import xyz.destiall.pixelate.entities.ItemDrop;
+import xyz.destiall.pixelate.entities.EntityItem;
+import xyz.destiall.pixelate.entities.EntityPrimedTnt;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
@@ -87,21 +88,30 @@ public class World implements Updateable, Renderable {
         return monster;
     }
 
+    public <E> E spawnEntity(Class<? extends Entity> clazz, Location location) {
+        if (clazz == EntityPrimedTnt.class) {
+            Entity e = new EntityPrimedTnt(location.getX(), location.getY(), this);
+            entities.add(e);
+            return (E) e;
+        }
+        return null;
+    }
+
     public Tile findTile(Location location) {
         return tiles.stream()
                 .filter(t -> AABB.isOverlap(location, t))
                 .findFirst().orElse(null);
     }
 
-    public ItemDrop dropItem(ItemStack item, Location location) {
-        ItemDrop drop = new ItemDrop(item);
+    public EntityItem dropItem(ItemStack item, Location location) {
+        EntityItem drop = new EntityItem(item);
         drop.teleport(location);
         entities.add(drop);
         return drop;
     }
 
-    public ItemDrop dropItem(ItemStack item, Vector2 location) {
-        ItemDrop drop = new ItemDrop(item);
+    public EntityItem dropItem(ItemStack item, Vector2 location) {
+        EntityItem drop = new EntityItem(item);
         drop.teleport(new Location(location.getX(), location.getY(), this));
         entities.add(drop);
         return drop;
