@@ -9,10 +9,6 @@ public class EventTouch extends ControlEvent {
         motionEvent = e;
     }
 
-    public MotionEvent getMotionEvent() {
-        return motionEvent;
-    }
-
     public float getX() {
         return motionEvent.getX();
     }

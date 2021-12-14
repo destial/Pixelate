@@ -17,6 +17,11 @@ public class FurnaceInventory extends Inventory {
         return false;
     }
 
+    @Override
+    public void clear() {
+
+    }
+
     public ItemStack getBurnerSlot() { return burner; }
     public ItemStack getToSmeltSlot() { return toSmelt; }
     public ItemStack getProcessedSlot() { return processed; }

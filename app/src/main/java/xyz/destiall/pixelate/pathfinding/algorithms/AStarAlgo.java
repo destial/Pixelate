@@ -9,10 +9,7 @@ public class AStarAlgo extends Algorithm {
     public AStarAlgo() { }
 
     @Override
-    public LinkedList<Location> findNewPath(Location start, Location end)
-    {
-
+    public LinkedList<Location> findNewPath(Location start, Location end) {
         return path;
     }
-
 }

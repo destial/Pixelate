@@ -50,6 +50,4 @@ public class PauseMenu extends Activity implements View.OnClickListener {
 
         startActivity(intent);
     }
-
-
 }

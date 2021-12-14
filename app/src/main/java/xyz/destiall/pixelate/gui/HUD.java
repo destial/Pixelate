@@ -9,7 +9,6 @@ import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
-import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.timer.Timer;
 

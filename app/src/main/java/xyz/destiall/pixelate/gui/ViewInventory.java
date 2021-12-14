@@ -153,13 +153,12 @@ public class ViewInventory implements View {
                     if (recipe.isFulfilled(playerInventory.getCrafting())) {
                         //playerInventory.setItem(draggingSlot, null);
                         if (playerInventory.addItem(recipe.getItem())) {
-                            playerInventory.clearCrafting();
-                            //for (int i = 0; i < 4; i++) {
-                            //    ItemStack item = playerInventory.getCraftingItem(i);
-                            //    if (item == null) continue;
-                            //    System.out.println("Removing");
-                            //    item.removeAmount(1);
-                            //}
+                            for (int i = 0; i < 4; i++) {
+                                ItemStack item = playerInventory.getCraftingItem(i);
+                                if (item == null) continue;
+                                System.out.println("Removing: " + item.getType().name());
+                                item.removeAmount(1);
+                            }
                         }
                         break;
                     }
@@ -200,39 +199,29 @@ public class ViewInventory implements View {
                     return;
                 }
                 ItemStack itemStack = getItem(x, y);
-                if (itemStack == dragging) {
-                    dragging = null;
-                    return;
-                }
                 if (slot >= playerInventory.getSize()) {
+                    if (draggingSlot >= playerInventory.getSize()) {
+                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
+                    } else {
+                        playerInventory.setItem(draggingSlot, null);
+                    }
                     playerInventory.setCrafting(slot - playerInventory.getSize(), dragging);
+                } else if (itemStack == null) {
                     if (draggingSlot >= playerInventory.getSize()) {
                         playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
                     } else {
                         playerInventory.setItem(draggingSlot, null);
                     }
-                    dragging = null;
-                    return;
-                }
-                if (itemStack == null) {
                     playerInventory.setItem(slot, dragging);
-                    if (draggingSlot >= playerInventory.getSize()) {
-                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
-                    } else {
-                        playerInventory.setItem(draggingSlot, null);
-                    }
-                    dragging = null;
-                    return;
-                }
-                if (itemStack.getType() == dragging.getType()) {
+                } else if (itemStack.similar(dragging)) {
                     if (draggingSlot >= playerInventory.getSize()) {
                         playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
                     } else {
                         playerInventory.setItem(draggingSlot, null);
                     }
                     itemStack.addAmount(dragging.getAmount());
-                    dragging = null;
                 }
+                dragging = null;
             }
         }
     }

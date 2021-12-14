@@ -13,6 +13,7 @@ import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -63,32 +64,15 @@ public class StateGame extends State implements Modular {
         player.getInventory().addItem(furnace);
         player.getInventory().addItem(chest);
 
-        player.teleport(worldManager.getCurrentWorld().getNearestEmpty(location));
+        Location loc = worldManager.getCurrentWorld().getNearestEmpty(location);
+        world.dropItem(chest, loc.add(Tile.SIZE, Tile.SIZE));
+        player.teleport(loc.subtract(Tile.SIZE, Tile.SIZE));
         worldManager.getCurrentWorld().getEntities().add(player);
 
         allObjects.add(HUD.INSTANCE);
         screen = new Screen(null, player, Pixelate.WIDTH, Pixelate.HEIGHT);
 
-        Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS));
-        plankRecipe.setShape("W"); // { W  , null
-                                    // null, null }
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
-
-        plankRecipe = new Recipe("plank2", new ItemStack(Material.PLANKS));
-        plankRecipe.setShape(null, "W");
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
-
-        plankRecipe = new Recipe("plank3", new ItemStack(Material.PLANKS));
-        plankRecipe.setShape(null, null, "W");
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
-
-        plankRecipe = new Recipe("plank4", new ItemStack(Material.PLANKS));
-        plankRecipe.setShape(null, null, null, "W");
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
+        setupRecipes();
     }
 
     public EntityPlayer getPlayer() {
@@ -149,5 +133,40 @@ public class StateGame extends State implements Modular {
             modules.remove(clazz);
         }
         return module;
+    }
+
+    private void setupRecipes() {
+
+        Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape("W");
+        // { W  , null
+        // null, null }
+        plankRecipe.setIngredient("W", Material.WOOD);
+        RecipeManager.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank2", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape(null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        RecipeManager.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank3", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape(null, null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        RecipeManager.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank4", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape(null, null, null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        RecipeManager.addRecipe(plankRecipe);
+
+        Recipe stickRecipe = new Recipe("stick1", new ItemStack(Material.STICK, 4));
+        stickRecipe.setShape("P", null, "P");
+        stickRecipe.setIngredient("P", Material.PLANKS);
+        RecipeManager.addRecipe(stickRecipe);
+
+        stickRecipe = new Recipe("stick2", new ItemStack(Material.STICK, 4));
+        stickRecipe.setShape(null, "P", null, "P");
+        stickRecipe.setIngredient("P", Material.PLANKS);
+        RecipeManager.addRecipe(stickRecipe);
     }
 }

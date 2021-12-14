@@ -35,7 +35,7 @@ public class Recipe {
     }
 
     public void setShape(String... args) {
-        recipe = new Material[9];
+        recipe = new Material[4];
         format = new HashMap<>(args.length);
         int i = 0;
         for (String s : args) {

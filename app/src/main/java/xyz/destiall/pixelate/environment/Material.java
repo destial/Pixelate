@@ -65,8 +65,9 @@ public enum Material {
 
     //Other items
     COAL(R.drawable.coal, GenericModifierType.NONE, EfficiencyType.NONE),
+    STICK(R.drawable.stick, GenericModifierType.NONE, EfficiencyType.NONE),
 
-        ;
+    ;
 
     private final Tile.TileType tileType;
     private final int row;

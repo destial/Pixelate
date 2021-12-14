@@ -1,6 +1,8 @@
 package xyz.destiall.pixelate.items.inventory;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Objects;
 
 import xyz.destiall.pixelate.items.ItemStack;
 
@@ -18,6 +20,11 @@ public abstract class Inventory {
 
     public abstract void removeItem(ItemStack item);
     public abstract boolean addItem(ItemStack item);
+    public abstract void clear();
+
+    public boolean isFull() {
+        return Arrays.stream(items).allMatch(Objects::nonNull);
+    }
 
     public ItemStack[] getItems() {
         return items;
@@ -25,6 +32,7 @@ public abstract class Inventory {
 
     protected static void setItemStackInventory(ItemStack item, Inventory inventory) {
         try {
+            if (item == null) return;
             inventoryFieldItemStack.setAccessible(true);
             inventoryFieldItemStack.set(item, inventory);
             inventoryFieldItemStack.setAccessible(false);

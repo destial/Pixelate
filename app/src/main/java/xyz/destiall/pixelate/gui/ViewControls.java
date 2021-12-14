@@ -10,10 +10,10 @@ import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventKeyboard;
+import xyz.destiall.pixelate.events.EventLeftHoldButton;
+import xyz.destiall.pixelate.events.EventLeftTapButton;
 import xyz.destiall.pixelate.events.EventOpenInventory;
-import xyz.destiall.pixelate.events.EventPlace;
-import xyz.destiall.pixelate.events.EventPlayerSwingAnimation;
-import xyz.destiall.pixelate.events.EventSwing;
+import xyz.destiall.pixelate.events.EventRightTapButton;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
@@ -89,7 +89,7 @@ public class ViewControls implements View {
             innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
         }
         if (isSwinging())
-            Pixelate.HANDLER.call(new EventPlayerSwingAnimation());
+            Pixelate.HANDLER.call(new EventLeftHoldButton());
     }
 
     private boolean isOnJoystick(float x, float y) {
@@ -140,13 +140,13 @@ public class ViewControls implements View {
     public void setSwinging(boolean swing) {
         this.swing = swing;
         if (swing)
-            Pixelate.HANDLER.call(new EventSwing());
+            Pixelate.HANDLER.call(new EventLeftTapButton());
     }
 
     public void setPlacing(boolean place) {
         this.place = place;
         if (place)
-            Pixelate.HANDLER.call(new EventPlace());
+            Pixelate.HANDLER.call(new EventRightTapButton());
     }
 
     public void setActuator(float x, float y) {
@@ -174,7 +174,7 @@ public class ViewControls implements View {
 
     @EventHandler
     public void onTouch(EventTouch e) {
-        if(!Pixelate.PAUSED) {
+        if (!Pixelate.PAUSED) {
             float x = e.getX();
             float y = e.getY();
             switch (e.getAction()) {
@@ -192,12 +192,11 @@ public class ViewControls implements View {
                         Pixelate.PAUSED = true;
 
                         //Pixelate.HANDLER.call(new EventGamePause());
-                    }else if (isOnSwitchWorldButton(x,y))
-                    {
+                    } else if (isOnSwitchWorldButton(x,y)) {
                         StateGame gameState = ((StateGame) Pixelate.getGSM().getState("Game"));
                         WorldManager wm = gameState.getObject(WorldManager.class);
                         String currentworld = wm.getCurrentWorldName();
-                        if(currentworld == "Cave")
+                        if (currentworld.equals("Cave"))
                             Pixelate.setWorld("Overworld");
                         else
                             Pixelate.setWorld("Cave");
@@ -231,22 +230,26 @@ public class ViewControls implements View {
     }
 
     // TODO: Add keyboard support
-    // @EventHandler
+    @EventHandler
     public void onKeyboard(EventKeyboard e) {
         float x = 0; float y = 0;
         if (e.getAction() == ControlEvent.Action.DOWN) {
             if (e.getKeyCode() == KeyEvent.KEYCODE_W) {
-                y = -1;
+                y = -5;
             } else if (e.getKeyCode() == KeyEvent.KEYCODE_S) {
-                y = 1;
+                y = 5;
             }
 
             if (e.getKeyCode() == KeyEvent.KEYCODE_A) {
-                x = -1;
+                x = -5;
             } else if (e.getKeyCode() == KeyEvent.KEYCODE_D) {
-                x = 1;
+                x = 5;
             }
         }
-        setActuator(x, y);
+        if (x == 0 && y == 0) {
+            setActuator(0, 0);
+            return;
+        }
+        setActuator((float) outerCircleCenter.getX() + x, (float) outerCircleCenter.getY() + y);
     }
 }

@@ -30,8 +30,8 @@ public class Screen {
     public void update(Canvas canvas, Entity center, int width, int height) {
         Screen.CANVAS = canvas;
         Location gameCenter = center.getLocation();
-        displayCenter.set(width / 2f, height / 2f);
-        offset = displayCenter.subtract(center.getBounds().getWidth() / 2, center.getBounds().getHeight() / 2).subtract(gameCenter.getRawX(), gameCenter.getRawY());
+        displayCenter.set(width * 0.5, height * 0.5);
+        offset = displayCenter.subtract(center.getBounds().getWidth() * 0.5, center.getBounds().getHeight() * 0.5).subtract(gameCenter.getRawX(), gameCenter.getRawY());
         constraint();
     }
 
@@ -66,16 +66,19 @@ public class Screen {
         CANVAS.drawCircle((float) x, (float) y, (float) radius, paint);
     }
 
-    public void rectangle(double x, double y, double width, double height, int color) {
+    public void quad(double x, double y, double width, double height, int color) {
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
     }
 
+    // Progress is between 0 and 1
     public void bar(double x, double y, double width, double height, int color, int progressColor, float progress) {
-        float progressWidth = (float) (width * progress);
-        rectangle(x, y, width, height, color);
-        if (progress > 0.f) rectangle(x, y, progressWidth, height, progressColor);
+        quad(x, y, width, height, color);
+        if (progress > 0.f) {
+            float progressWidth = (float) (width * progress);
+            quad(x, y, progressWidth, height, progressColor);
+        }
     }
 
     private void constraint() {

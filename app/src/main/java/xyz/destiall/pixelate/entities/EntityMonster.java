@@ -39,7 +39,7 @@ public class EntityMonster extends EntityLiving {
         health = 20f;
         this.type = type;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
-        playerInventory = new PlayerInventory(this, 9);
+        inventory = new PlayerInventory(this, 9);
         updateAABB();
     }
 
@@ -59,7 +59,8 @@ public class EntityMonster extends EntityLiving {
     public void update() {
         super.update();
         velocity.setZero();
-        location.getWorld().getNearestEntities(location, Tile.SIZE * 3).stream().filter(e -> e != this).forEach(e -> {
+        if (location.getWorld() == null) return;
+        location.getWorld().getNearestEntities(location, Tile.SIZE * 3).stream().anyMatch(e -> {
             if (e instanceof EntityPlayer) {
                 EntityPlayer living = (EntityPlayer) e;
                 velocity.set(living.location.getX() - location.getX(), living.location.getY() - location.getY());
@@ -69,7 +70,9 @@ public class EntityMonster extends EntityLiving {
                 try {
                     velocity.normalize().multiply(2);
                 } catch (Exception ignored) {}
+                return true;
             }
+            return false;
         });
     }
 

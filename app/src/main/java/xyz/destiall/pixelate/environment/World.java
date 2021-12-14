@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityMonster;
+import xyz.destiall.pixelate.entities.ItemDrop;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
@@ -13,8 +14,10 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
+import xyz.destiall.pixelate.position.Vector2;
 
 public class World implements Updateable, Renderable {
     private final List<Entity> entities;
@@ -88,6 +91,20 @@ public class World implements Updateable, Renderable {
         return tiles.stream()
                 .filter(t -> AABB.isOverlap(location, t))
                 .findFirst().orElse(null);
+    }
+
+    public ItemDrop dropItem(ItemStack item, Location location) {
+        ItemDrop drop = new ItemDrop(item);
+        drop.teleport(location);
+        entities.add(drop);
+        return drop;
+    }
+
+    public ItemDrop dropItem(ItemStack item, Vector2 location) {
+        ItemDrop drop = new ItemDrop(item);
+        drop.teleport(new Location(location.getX(), location.getY(), this));
+        entities.add(drop);
+        return drop;
     }
 
     public Tile breakTile(Location location) {

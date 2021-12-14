@@ -176,18 +176,15 @@ public class ViewChest implements View {
                     } else {
                         inventory.setItem(draggingSlot, null);
                     }
-                    dragging = null;
-                    return;
-                }
-                if (itemStack.getType() == dragging.getType()) {
+                } else if (itemStack.similar(dragging)) {
                     if (draggingSlot >= inventory.getSize()) {
                         playerInventory.setItem(draggingSlot - inventory.getSize(), null);
                     } else {
                         inventory.setItem(draggingSlot, null);
                     }
                     itemStack.addAmount(dragging.getAmount());
-                    dragging = null;
                 }
+                dragging = null;
             }
         }
     }

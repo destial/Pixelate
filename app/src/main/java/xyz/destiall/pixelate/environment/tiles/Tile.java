@@ -37,7 +37,7 @@ public class Tile extends Imageable implements Updateable,Renderable {
     }
 
     public Vector2 getLocation() {
-        return location;
+        return location.clone();
     }
 
     public TileType getTileType() {

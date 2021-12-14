@@ -1,7 +1,7 @@
 package xyz.destiall.pixelate.items;
 
-import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.inventory.Inventory;
 
 public interface InventoryHolder {
-    PlayerInventory getInventory();
+    Inventory getInventory();
 }

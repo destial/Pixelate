@@ -27,6 +27,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     protected AABB collision;
     protected Direction facing;
     protected Direction target;
+    private boolean removed;
 
     public Entity(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
@@ -37,6 +38,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         facing = Direction.RIGHT;
         target = facing;
         modules = new HashMap<>();
+        removed = false;
     }
 
     public Location getLocation() {
@@ -44,7 +46,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     }
 
     public void teleport(Location location) {
-        this.location = location;
+        this.location = location.clone();
     }
 
     public Vector2 getVelocity() {
@@ -52,21 +54,38 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     }
 
     public void setVelocity(Vector2 velocity) {
-        this.velocity = velocity;
+        this.velocity = velocity.clone();
     }
 
     @Override
     public void update() {
+        updateSpriteAnimation();
+        updateModules();
+    }
+
+    public void updateModules() {
+        for (Module m : modules.values()) {
+            m.update();
+        }
+    }
+
+    public void remove() {
+        if (isRemoved() || location.getWorld() == null) return;
+        location.getWorld().removeEntity(this);
+        removed = true;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void updateSpriteAnimation() {
         // Update sprite animation
         currentAnimation += Timer.getDeltaTime() * Timer.getFPS();
         if (currentAnimation >= columns)  {
             currentAnimation = 0;
         }
         spriteSheet.setCurrentAnimation((int) currentAnimation);
-
-        for (Module m : modules.values()) {
-            m.update();
-        }
     }
 
     public AABB getBounds() {
@@ -128,6 +147,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     @Override
     public <N extends Module> N getModule(Class<N> clazz) {
+        if (!hasModule(clazz)) return null;
         return (N) modules.get(clazz);
     }
 

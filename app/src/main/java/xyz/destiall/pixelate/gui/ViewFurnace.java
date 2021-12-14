@@ -17,8 +17,6 @@ import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.items.crafting.Recipe;
-import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
@@ -259,10 +257,7 @@ public class ViewFurnace implements View {
                         furnaceInventory.setBurnerSlot(null);
                     else
                         playerInventory.setItem(draggingSlot, null);
-                    dragging = null;
-                    return;
-                }
-                if (itemStack.similar(dragging)) {
+                } else if (itemStack.similar(dragging)) {
                     if (slot>= playerInventory.getSize()) {
                         if (slot == 98) {
                             furnaceInventory.getToSmeltSlot().addAmount(dragging.getAmount());
@@ -276,8 +271,8 @@ public class ViewFurnace implements View {
                             furnaceInventory.setBurnerSlot(null);
                         itemStack.addAmount(dragging.getAmount());
                     }
-                    dragging = null;
                 }
+                dragging = null;
             }
         }
     }

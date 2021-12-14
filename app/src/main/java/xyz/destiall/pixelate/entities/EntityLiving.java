@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.items.InventoryHolder;
-import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.inventory.EntityInventory;
 import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class EntityLiving extends Entity implements InventoryHolder {
@@ -13,7 +13,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected float speed;
     protected float armor;
     protected float damageDelay;
-    protected PlayerInventory playerInventory;
+    protected EntityInventory inventory;
     public EntityLiving(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
         health = maxHealth = 20f;
@@ -43,8 +43,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     }
 
     @Override
-    public PlayerInventory getInventory() {
-        return playerInventory;
+    public EntityInventory getInventory() {
+        return inventory;
     }
 
     public void damage(float damage) {
@@ -59,10 +59,6 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
                 remove();
             }
         }
-    }
-
-    public void remove() {
-        location.getWorld().removeEntity(this);
     }
 
     @Override

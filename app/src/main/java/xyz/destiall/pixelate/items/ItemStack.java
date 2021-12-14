@@ -51,7 +51,6 @@ public class ItemStack extends Imageable {
     private void removeFromInventory() {
         this.amount = 0;
         if (inventory != null) {
-            System.out.println("Inventory: " + inventory.toString());
             inventory.removeItem(this);
         }
     }
