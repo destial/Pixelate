@@ -14,5 +14,9 @@ public abstract class ContainerTile extends Tile {
         this.tileInventory = inventory;
     }
 
+    /**
+     * Get the inventory related to this container tile
+     * @return The inventory
+     */
     public abstract Inventory getInventory();
 }

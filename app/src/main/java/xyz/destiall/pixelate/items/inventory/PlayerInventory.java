@@ -14,6 +14,12 @@ public class PlayerInventory extends EntityInventory {
         crafting = new ItemStack[4];
     }
 
+    /**
+     * Set the crafting item slot in this inventory
+     * @param index The index of the slot (between 0 and 3)
+     * @param itemStack The item to set
+     * @return The previous item, null if none
+     */
     public ItemStack setCrafting(int index, ItemStack itemStack) {
         ItemStack prev = crafting[index];
         crafting[index] = itemStack;
@@ -63,6 +69,9 @@ public class PlayerInventory extends EntityInventory {
         }
     }
 
+    /**
+     * Clear the current items in the crafting slots
+     */
     public void clearCrafting() {
         for (ItemStack c : crafting) {
             setItemStackInventory(c, null);
@@ -70,14 +79,28 @@ public class PlayerInventory extends EntityInventory {
         Arrays.fill(crafting, null);
     }
 
+    /**
+     * Get the item in this crafting slot
+     * @param index The crafting slot index (between 0 and 3)
+     * @return The item in this slot, null if none
+     */
     public ItemStack getCraftingItem(int index) {
         return crafting[index];
     }
 
+    /**
+     * Get all the items in this crafting
+     * @return The crafting items
+     */
     public ItemStack[] getCrafting() {
         return crafting;
     }
 
+    /**
+     * Get the crafting slot that this item is in
+     * @param itemStack The item to find
+     * @return The slot (between 0 and 3) if found, otherwise -1
+     */
     public int getCraftingSlot(ItemStack itemStack) {
         for (int i = 0; i < crafting.length; i++) {
             if (crafting[i] == itemStack) return i;

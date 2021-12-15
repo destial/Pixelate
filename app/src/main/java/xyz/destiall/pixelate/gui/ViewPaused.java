@@ -33,7 +33,7 @@ public class ViewPaused implements View {
 
         if (bg == null) {
             bg = ResourceManager.getBitmap(R.drawable.background);
-            bg = Imageable.scaleImage(bg, (float) Pixelate.HEIGHT / bg.getHeight());
+            bg = Imageable.resizeImage(bg, (float) Pixelate.HEIGHT / bg.getHeight());
         }
 
         Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);

@@ -2,6 +2,9 @@ package xyz.destiall.pixelate.events;
 
 import android.view.MotionEvent;
 
+/**
+ * Called when the user touches on the screen
+ */
 public class EventTouch extends ControlEvent {
     private final MotionEvent motionEvent;
     public EventTouch(MotionEvent e) {

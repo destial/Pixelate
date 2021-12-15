@@ -17,10 +17,19 @@ public class Recipe {
         this.item = item;
     }
 
+    /**
+     * The key name of this recipe
+     * @return The name
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * Check if this current crafting array fulfills this recipe
+     * @param crafting The crafting array
+     * @return true if fulfilled, otherwise false
+     */
     // TODO: Make crafting recipes fulfill if they are just in the correct order, regardless of position
     public boolean isFulfilled(ItemStack[] crafting) {
         int i = 0;
@@ -34,8 +43,17 @@ public class Recipe {
         return false;
     }
 
+    /**
+     * Set the shape of the crafting recipe.
+     * This is the args order:
+     * {0, 1, 2}
+     * {3, 4, 5}
+     * {6, 7, 8}
+     * If there is an empty spot between elements, use null
+     * @param args The shape
+     */
     public void setShape(String... args) {
-        recipe = new Material[4];
+        recipe = new Material[9];
         format = new HashMap<>(args.length);
         int i = 0;
         for (String s : args) {
@@ -43,6 +61,11 @@ public class Recipe {
         }
     }
 
+    /**
+     * Set the ingredient of the arguments in the shape
+     * @param element The element to find
+     * @param material The material to replace
+     */
     public void setIngredient(String element, Material material) {
         format.entrySet().stream().filter(en -> en.getValue() != null && en.getValue().equals(element)).forEach(en -> recipe[en.getKey()] = material);
     }

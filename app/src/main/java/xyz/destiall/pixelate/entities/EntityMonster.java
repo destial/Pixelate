@@ -18,23 +18,23 @@ public class EntityMonster extends EntityLiving {
     public EntityMonster(Entity.Type type) {
         super(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
         location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
-        spriteSheet.addSprite("LOOK RIGHT", createAnimation(0));
-        spriteSheet.addSprite("LOOK LEFT", createAnimation(1));
+        spriteSheet.addAnimation("LOOK RIGHT", createAnimation(0));
+        spriteSheet.addAnimation("LOOK LEFT", createAnimation(1));
         switch (type) {
             case CREEPER:
-                spriteSheet.addSprite("BLOW RIGHT", createAnimation(4));
-                spriteSheet.addSprite("BLOW LEFT", createAnimation(5));
+                spriteSheet.addAnimation("BLOW RIGHT", createAnimation(4));
+                spriteSheet.addAnimation("BLOW LEFT", createAnimation(5));
             case ZOMBIE:
-                spriteSheet.addSprite("WALK RIGHT", createAnimation(2));
-                spriteSheet.addSprite("WALK LEFT", createAnimation(3));
+                spriteSheet.addAnimation("WALK RIGHT", createAnimation(2));
+                spriteSheet.addAnimation("WALK LEFT", createAnimation(3));
                 break;
             case SKELETON:
-                spriteSheet.addSprite("WALK RIGHT", createAnimation(0));
-                spriteSheet.addSprite("WALK LEFT", createAnimation(1));
+                spriteSheet.addAnimation("WALK RIGHT", createAnimation(0));
+                spriteSheet.addAnimation("WALK LEFT", createAnimation(1));
                 break;
             default: break;
         }
-        spriteSheet.setCurrentSprite("LOOK RIGHT");
+        spriteSheet.setCurrentAnimation("LOOK RIGHT");
         scale = 0.5f;
         health = 20f;
         this.type = type;
@@ -48,7 +48,7 @@ public class EntityMonster extends EntityLiving {
         facing = Direction.RIGHT;
         if (velocity.getX() < 0) facing = Direction.LEFT;
         String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
-        spriteSheet.setCurrentSprite(anim);
+        spriteSheet.setCurrentAnimation(anim);
     }
 
     public Type getType() {

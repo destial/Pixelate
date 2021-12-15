@@ -109,6 +109,20 @@ public class StateGame extends State implements Modular {
         }
     }
 
+    @Override
+    public void destroy() {
+        for (Object o : allObjects) {
+            if (o instanceof Module) {
+                ((Module) o).destroy();
+            }
+        }
+        for (Module m : modules.values()) {
+            m.destroy();
+        }
+        allObjects.clear();
+        modules.clear();
+    }
+
     public <N> N getObject(Class<N> clazz) {
         return (N) allObjects.stream().filter(o -> o.getClass().isAssignableFrom(clazz)).findFirst().orElse(null);
     }
@@ -119,7 +133,7 @@ public class StateGame extends State implements Modular {
     }
 
     @Override
-    public <N extends Module> void addModule(N module) {
+    public  void addModule(Module module) {
         modules.putIfAbsent(module.getClass(), module);
     }
 

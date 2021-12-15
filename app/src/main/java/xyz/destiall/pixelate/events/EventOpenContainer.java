@@ -4,6 +4,9 @@ import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Event;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 
+/**
+ * Called when the player opens a container tile
+ */
 public class EventOpenContainer extends Event implements Cancellable {
     private final ContainerTile tile;
     private boolean cancelled = false;
@@ -12,6 +15,10 @@ public class EventOpenContainer extends Event implements Cancellable {
         this.tile = tile;
     }
 
+    /**
+     * Get the container tile that was opened
+     * @return The container
+     */
     public ContainerTile getContainer() {
         return this.tile;
     }

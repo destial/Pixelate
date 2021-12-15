@@ -36,33 +36,51 @@ public class Tile extends Imageable implements Updateable,Renderable {
         brokenProgression = 0.f;
     }
 
+    /**
+     * Get the location of this tile
+     * @return An immutable location
+     */
     public Vector2 getLocation() {
         return location.clone();
     }
 
+    /**
+     * Get the tile type of this tile
+     * @return The tile type
+     */
     public TileType getTileType() {
         return tileType;
     }
 
+    /**
+     * Get the material of this tile
+     * @return The material
+     */
     public Material getMaterial() {
         return material;
     }
 
-    public void setMaterial(Material mat) {
+    /**
+     * Set the material of this tile.
+     * Will replace the tile if its of different category
+     * @param mat The material to set
+     * @return The tile after being set
+     */
+    public Tile setMaterial(Material mat) {
         if (mat != material && mat.isContainer()) {
+            Tile t = TileFactory.createTile(mat, (int) location.getX(), (int) location.getY(), world);
             world.replaceTile(this, TileFactory.createTile(mat, (int) location.getX(), (int) location.getY(), world));
-            return;
+            return t;
         }
         material = mat;
         image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * (int) width, material.getRow() * (int) height, (int) Tile.SIZE, (int) Tile.SIZE);
         tileType = mat.getTileType();
         brokenProgression = 0;
+        return this;
     }
 
     @Override
-    public void update() {
-
-    }
+    public void update() {}
 
     public enum TileType {
         BACKGROUND,
@@ -70,16 +88,28 @@ public class Tile extends Imageable implements Updateable,Renderable {
         UNKNOWN
     }
 
+    /**
+     * Get the block break progression of this tile
+     * @return The progression (between 0 and 100)
+     */
     public float getBlockBreakProgress() {
         return this.brokenProgression;
     }
 
+    /**
+     * Add a block break progression to this tile
+     * @param progression The progress to add
+     */
     public void addBlockBreakProgression(float progression) {
         brokenProgression += progression;
         if (brokenProgression < 0) brokenProgression = 0;
         if (brokenProgression > 100) brokenProgression = 100;
     }
 
+    /**
+     * Check if this tile is ready to be broken
+     * @return true if ready, otherwise false
+     */
     public boolean readyToBreak() {
         return brokenProgression >= 100;
     }

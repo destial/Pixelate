@@ -34,9 +34,9 @@ public class Pixelate extends Thread {
         Pixelate.gameSurface = gameSurface;
         Pixelate.surfaceHolder = surfaceHolder;
         tileMap = ResourceManager.getBitmap(R.drawable.tilemap);
-        tileMap = Imageable.scaleImage(tileMap, 1.52f);
+        tileMap = Imageable.resizeImage(tileMap, 1.52f);
         blockBreakAnimationMap = ResourceManager.getBitmap(R.drawable.blockbreakanimation);
-        blockBreakAnimationMap = Imageable.scaleImage(blockBreakAnimationMap, 2.12f);
+        blockBreakAnimationMap = Imageable.resizeImage(blockBreakAnimationMap, 2.12f);
         HEIGHT = gameSurface.getHeight();
         WIDTH = gameSurface.getWidth();
         timer = new Timer();
@@ -63,6 +63,7 @@ public class Pixelate extends Thread {
                 }
             }
         }
+        stateManager.destroy();
     }
 
     public void setRunning(boolean running)  {

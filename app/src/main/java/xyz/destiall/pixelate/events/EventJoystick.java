@@ -1,5 +1,8 @@
 package xyz.destiall.pixelate.events;
 
+/**
+ * Called when the joystick is used
+ */
 public class EventJoystick extends ControlEvent {
     private double offsetX;
     private double offsetY;
@@ -17,10 +20,18 @@ public class EventJoystick extends ControlEvent {
         return this;
     }
 
+    /**
+     * Get the offset X from center
+     * @return The offset X
+     */
     public double getOffsetX() {
         return offsetX;
     }
 
+    /**
+     * Get the offset Y from center
+     * @return The offset Y
+     */
     public double getOffsetY() {
         return offsetY;
     }

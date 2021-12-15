@@ -5,8 +5,9 @@ import android.graphics.Canvas;
 import java.util.HashMap;
 
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.modular.Module;
 
-public class GSM implements Updateable {
+public class GSM implements Updateable, Module {
     private final HashMap<String, State> states;
     private String currentState;
     public GSM() {
@@ -39,5 +40,13 @@ public class GSM implements Updateable {
         if (currentState != null) {
             getCurrentState().render(canvas);
         }
+    }
+
+    @Override
+    public void destroy() {
+        for (State state : states.values()) {
+            state.destroy();
+        }
+        states.clear();
     }
 }

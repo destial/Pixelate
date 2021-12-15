@@ -15,9 +15,9 @@ public class EntityItem extends Entity {
         super(itemStack.getImage(), 1, 1);
         scale = 0.5f;
         this.drop = itemStack;
-        spriteSheet.addSprite("DROP", createAnimation(0));
-        spriteSheet.setCurrentSprite("DROP");
-        spriteSheet.setCurrentAnimation(0);
+        spriteSheet.addAnimation("DROP", createAnimation(0));
+        spriteSheet.setCurrentAnimation("DROP");
+        spriteSheet.setCurrentFrame(0);
         upAndDownTimer = 0f;
         down = false;
     }
@@ -49,6 +49,10 @@ public class EntityItem extends Entity {
         location.subtract(0, upAndDownTimer);
     }
 
+    /**
+     * Get the item that this drop is representing
+     * @return The dropped item
+     */
     public ItemStack getDrop() {
         return drop;
     }

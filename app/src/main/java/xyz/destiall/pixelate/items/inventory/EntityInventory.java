@@ -15,14 +15,28 @@ public class EntityInventory extends Inventory {
         items = new ItemStack[size];
     }
 
+    /**
+     * Get the holder of this inventory
+     * @return The holder
+     */
     public InventoryHolder getHolder() {
         return holder;
     }
 
+    /**
+     * Get the size of this inventory
+     * @return The size
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Set the slot of this item in this inventory
+     * @param index The slot to set (between 0 and getSize() - 1)
+     * @param itemStack The item to set
+     * @return The previous item in the slot, or null if none
+     */
     public ItemStack setItem(int index, ItemStack itemStack) {
         ItemStack prev = items[index];
         items[index] = itemStack;
@@ -72,10 +86,20 @@ public class EntityInventory extends Inventory {
         Arrays.fill(items, null);
     }
 
+    /**
+     * Get the item in this slot
+     * @param index The slot
+     * @return The item, null if none
+     */
     public ItemStack getItem(int index) {
         return items[index];
     }
 
+    /**
+     * Get the slot of this item
+     * @param itemStack The item to find
+     * @return The slot if found, otherwise -1
+     */
     public int getSlot(ItemStack itemStack) {
         for (int i = 0; i < size; i++) {
             if (items[i] == itemStack) return i;

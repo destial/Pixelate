@@ -24,9 +24,9 @@ public class EntityPrimedTnt extends Entity {
         location.set(x, y);
         location.setWorld(world);
         scale = 0.8f;
-        spriteSheet.addSprite("TNT", createAnimation(0));
-        spriteSheet.setCurrentSprite("TNT");
-        spriteSheet.setCurrentAnimation(0);
+        spriteSheet.addAnimation("TNT", createAnimation(0));
+        spriteSheet.setCurrentAnimation("TNT");
+        spriteSheet.setCurrentFrame(0);
         animationSpeed = 5;
     }
 

@@ -43,18 +43,34 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         animationSpeed = 60;
     }
 
+    /**
+     * Get this entity's location
+     * @return An immutable location
+     */
     public Location getLocation() {
         return location.clone();
     }
 
+    /**
+     * Teleport this entity to the requested location
+     * @param location The location to teleport to
+     */
     public void teleport(Location location) {
         this.location = location.clone();
     }
 
+    /**
+     * Get this entity's velocity
+     * @return An immutable velocity
+     */
     public Vector2 getVelocity() {
         return velocity.clone();
     }
 
+    /**
+     * Set this entity's velocity
+     * @param velocity The velocity to set
+     */
     public void setVelocity(Vector2 velocity) {
         this.velocity = velocity.clone();
     }
@@ -65,12 +81,32 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         updateModules();
     }
 
-    public void updateModules() {
+    protected void updateModules() {
         for (Module m : modules.values()) {
             m.update();
         }
     }
 
+    protected void updateSpriteAnimation() {
+        // Update sprite animation
+        currentAnimation += Timer.getDeltaTime() * animationSpeed;
+        if (currentAnimation >= columns)  {
+            currentAnimation = 0;
+        }
+        spriteSheet.setCurrentFrame((int) currentAnimation);
+    }
+
+    /**
+     * Get the collision bounds of this entity
+     * @return The bounds
+     */
+    public AABB getBounds() {
+        return collision;
+    }
+
+    /**
+     * Remove this entity from the world
+     */
     public void remove() {
         if (isRemoved() || location.getWorld() == null) return;
         location.getWorld().removeEntity(this);
@@ -81,24 +117,11 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         return removed;
     }
 
-    public void updateSpriteAnimation() {
-        // Update sprite animation
-        currentAnimation += Timer.getDeltaTime() * animationSpeed;
-        if (currentAnimation >= columns)  {
-            currentAnimation = 0;
-        }
-        spriteSheet.setCurrentAnimation((int) currentAnimation);
-    }
-
-    public AABB getBounds() {
-        return collision;
-    }
-
     @Override
     public void render(Screen screen) {
-        Bitmap map = spriteSheet.getCurrentAnimation();
+        Bitmap map = spriteSheet.getCurrentSprite();
         if (scale != 1 && scale > 0) {
-            map = Imageable.scaleImage(map, scale);
+            map = Imageable.resizeImage(map, scale);
         }
         Vector2 offset = Screen.convert(location.toVector());
         screen.draw(map, offset.getX(), offset.getY());
@@ -154,7 +177,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     }
 
     @Override
-    public <N extends Module> void addModule(N module) {
+    public void addModule(Module module) {
         modules.putIfAbsent(module.getClass(), module);
     }
 

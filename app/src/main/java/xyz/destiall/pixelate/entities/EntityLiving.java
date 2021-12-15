@@ -22,22 +22,42 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         damageDelay = 0f;
     }
 
+    /**
+     * Set the max health of this entity
+     * @param maxHealth The requested max health
+     */
     public void setMaxHealth(float maxHealth) {
         this.maxHealth = maxHealth;
     }
 
+    /**
+     * Get the max health of this entity
+     * @return The max health
+     */
     public float getMaxHealth() {
         return maxHealth;
     }
 
+    /**
+     * Get the current health of this entity
+     * @return The current health
+     */
     public float getHealth() {
         return health;
     }
 
+    /**
+     * Get the current speed of this entity
+     * @return The current speed
+     */
     public float getSpeed() {
         return speed;
     }
 
+    /**
+     * Get the current armor strength of this entity
+     * @return The current armor strength
+     */
     public float getArmor() {
         return armor;
     }
@@ -47,6 +67,10 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         return inventory;
     }
 
+    /**
+     * Damage this entity. Removes this entity from the world if health is <= 0
+     * @param damage The damage to deal
+     */
     public void damage(float damage) {
         if (damageDelay != 0) return;
         damageDelay = (float) Timer.getDeltaTime();
@@ -75,13 +99,13 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         }
     }
 
-    public void updateSprite() {
+    protected void updateSprite() {
         // Set animation sprite for entity based on velocity
         String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
-        if (spriteSheet.hasAnimation(anim)) spriteSheet.setCurrentSprite(anim);
+        if (spriteSheet.hasAnimation(anim)) spriteSheet.setCurrentAnimation(anim);
     }
 
-    public void updateDirection() {
+    protected void updateDirection() {
         // Set direction of entity based on velocity
         if (!velocity.isZero()) {
             if (velocity.getY() > 0 && Math.abs(velocity.getY()) > Math.abs(velocity.getX())) {
@@ -96,7 +120,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         }
     }
 
-    public void collide() {
+    protected void collide() {
         // Move entity
         location.add(velocity);
 
@@ -141,9 +165,9 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         }
     }
 
-    public void updateAABB() {
+    protected void updateAABB() {
         // Get the scale and size of the entity based on the animation image (lazy hack)
-        Bitmap map = spriteSheet.getCurrentAnimation();
+        Bitmap map = spriteSheet.getCurrentSprite();
         if (scale == 0) scale = 1;
 
         // Set collision bounds based on image
@@ -151,7 +175,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         collision.setMax(location.getX() + (int)(map.getWidth() * scale), location.getY() + (int)(map.getHeight() * scale));
     }
 
-    public void constraint() {
+    protected void constraint() {
         if (location.getX() < -Pixelate.WIDTH) {
             location.set(-Pixelate.WIDTH, location.getY());
         }

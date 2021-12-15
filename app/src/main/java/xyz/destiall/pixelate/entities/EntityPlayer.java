@@ -47,24 +47,25 @@ public class EntityPlayer extends EntityLiving implements Listener {
     public EntityPlayer() {
         super(ResourceManager.getBitmap(R.drawable.player), 6, 3);
         location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
-        spriteSheet.addSprite("LOOK RIGHT", createAnimation(0));
-        spriteSheet.addSprite("LOOK LEFT", createAnimation(1));
-        spriteSheet.addSprite("WALK RIGHT", createAnimation(2));
-        spriteSheet.addSprite("WALK LEFT", createAnimation(3));
-        spriteSheet.setCurrentSprite("LOOK RIGHT");
+        spriteSheet.addAnimation("LOOK RIGHT", createAnimation(0));
+        spriteSheet.addAnimation("LOOK LEFT", createAnimation(1));
+        spriteSheet.addAnimation("WALK RIGHT", createAnimation(2));
+        spriteSheet.addAnimation("WALK LEFT", createAnimation(3));
+        spriteSheet.setCurrentAnimation("LOOK RIGHT");
         scale = 0.5f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
         inventory = new PlayerInventory(this, 27);
         HUD.INSTANCE.setHotbar(getInventory());
-        Pixelate.HANDLER.registerListener(this);
         playSwingAnimation = false;
         slash = new SpriteSheet();
         Bitmap slashSheet = ResourceManager.getBitmap(R.drawable.slashanimation);
-        slash.addSprite("RIGHT", createAnimation(slashSheet, 4, 4, 0));
-        slash.addSprite("UP", createAnimation(slashSheet, 4, 4, 1));
-        slash.addSprite("LEFT", createAnimation(slashSheet, 4, 4, 2));
-        slash.addSprite("DOWN", createAnimation(slashSheet, 4, 4, 3));
+        slash.addAnimation("RIGHT", createAnimation(slashSheet, 4, 4, 0));
+        slash.addAnimation("UP", createAnimation(slashSheet, 4, 4, 1));
+        slash.addAnimation("LEFT", createAnimation(slashSheet, 4, 4, 2));
+        slash.addAnimation("DOWN", createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
+
+        Pixelate.HANDLER.registerListener(this);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (velocity.getX() > 0) facing = Direction.RIGHT;
         else if (velocity.getX() < 0) facing = Direction.LEFT;
         String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
-        spriteSheet.setCurrentSprite(anim);
+        spriteSheet.setCurrentAnimation(anim);
     }
 
     @Override
@@ -109,18 +110,18 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
         if (playSwingAnimation) {
             playSwingAnimation = false;
-            slash.setCurrentSprite(target.name());
+            slash.setCurrentAnimation(target.name());
             swingAnimationTimer += Timer.getDeltaTime();
-            slash.setCurrentAnimation((int) swingAnimationTimer);
+            slash.setCurrentFrame((int) swingAnimationTimer);
         }
         if (swingAnimationTimer >= 4) {
-            slash.setCurrentAnimation(0);
+            slash.setCurrentFrame(0);
             swingAnimationTimer = 0;
         }
         if (swingAnimationTimer != 0) {
-            slash.setCurrentAnimation((int) swingAnimationTimer);
-            Bitmap map = slash.getCurrentAnimation();
-            map = scaleImage(map, 0.3f);
+            slash.setCurrentFrame((int) swingAnimationTimer);
+            Bitmap map = slash.getCurrentSprite();
+            map = resizeImage(map, 0.3f);
             Vector2 offset = vector.subtract(Tile.SIZE * 0.5, Tile.SIZE * 0.5);
             screen.draw(map, offset.getX(), offset.getY());
         }

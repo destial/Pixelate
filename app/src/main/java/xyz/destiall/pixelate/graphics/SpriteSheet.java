@@ -13,38 +13,72 @@ public class SpriteSheet {
         animationFrame = 0;
     }
 
+    /**
+     * Get all the sprites of this animation
+     * @return The sprites (raw pointer)
+     */
     public HashMap<String, Bitmap[]> getSprites() {
         return sprites;
     }
 
-    public void setCurrentAnimation(int value) {
+    /**
+     * Set the current animation frame
+     * @param value The frame
+     */
+    public void setCurrentFrame(int value) {
         animationFrame = value;
     }
 
-    public void addSprite(String name, Bitmap[] images) {
+    /**
+     * Add an animation to this sheet
+     * @param name The name of this animation
+     * @param images The animation array
+     */
+    public void addAnimation(String name, Bitmap[] images) {
         sprites.put(name, images);
     }
 
-    public void setCurrentSprite(String name) {
+    /**
+     * Set the current animation ti play
+     * @param name The requested animation name
+     */
+    public void setCurrentAnimation(String name) {
         current = name;
     }
 
+    /**
+     * Check if this sheet has this animation
+     * @param name The requested animation name
+     * @return true if exists, otherwise false
+     */
     public boolean hasAnimation(String name) {
         return sprites.containsKey(name);
     }
 
-    public Bitmap[] getCurrentSprites() {
+    /**
+     * Get the current animation array that is playing
+     * @return The current animation array
+     */
+    public Bitmap[] getCurrentAnimation() {
         if (current != null) {
             return sprites.get(current);
         }
         return sprites.values().stream().findFirst().orElse(new Bitmap[4]);
     }
 
+    /**
+     * Get the current animation frame that is playing
+     * @return The current animation frame
+     */
     public int getAnimationFrame() {
         return animationFrame;
     }
 
-    public Bitmap getCurrentAnimation() {
-        return getCurrentSprites()[animationFrame];
+    /**
+     * Get the current sprite from this animation frame
+     * @return The current sprite
+     */
+    public Bitmap getCurrentSprite() {
+        return getCurrentAnimation()[animationFrame];
     }
 }

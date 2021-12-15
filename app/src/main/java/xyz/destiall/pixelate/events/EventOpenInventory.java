@@ -3,6 +3,9 @@ package xyz.destiall.pixelate.events;
 import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Event;
 
+/**
+ * Called when the player opens their inventory
+ */
 public class EventOpenInventory extends Event implements Cancellable {
     private boolean cancelled = false;
     @Override

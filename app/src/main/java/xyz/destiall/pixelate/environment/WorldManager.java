@@ -6,8 +6,9 @@ import java.util.Set;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.modular.Module;
 
-public class WorldManager implements Updateable, Renderable {
+public class WorldManager implements Updateable, Renderable, Module {
     private final HashMap<String, World> worlds;
     private String activeWorld;
 
@@ -64,5 +65,13 @@ public class WorldManager implements Updateable, Renderable {
     @Override
     public void update() {
         getCurrentWorld().update();
+    }
+
+    @Override
+    public void destroy() {
+        for (World world : worlds.values()) {
+            world.destroy();
+        }
+        worlds.clear();
     }
 }

@@ -32,22 +32,34 @@ public class Timer implements Updateable {
         lastNanoTime = now;
     }
 
+    /**
+     * Get the last updated nano time
+     * @return The last nano time in nanoseconds
+     */
     public static long getLastNanoTime() {
         return lastNanoTime;
     }
 
+    /**
+     * Get the current delta time between each update call
+     * @return The delta time in milliseconds
+     */
     public static double getDeltaTime() {
         return deltaTime;
     }
 
+    /**
+     * Get the current FPS
+     * @return The FPS
+     */
     public static int getFPS() {
         return fps;
     }
 
-    public static boolean isSecond() {
-        return isSecond;
-    }
-
+    /**
+     * Get the elapsed time of this game
+     * @return The elapsed time in milliseconds
+     */
     public static double getElapsedTime() {
         return elapsedTime;
     }

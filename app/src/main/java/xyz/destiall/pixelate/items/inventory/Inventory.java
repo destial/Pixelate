@@ -18,14 +18,36 @@ public abstract class Inventory {
         }
     }
 
+    /**
+     * Remove an item from this inventory
+     * @param item The item to remove
+     */
     public abstract void removeItem(ItemStack item);
+
+    /**
+     * Add an item to this inventory
+     * @param item The item to add
+     * @return true if succeeded, otherwise false
+     */
     public abstract boolean addItem(ItemStack item);
+
+    /**
+     * Clear all the items from this inventory
+     */
     public abstract void clear();
 
+    /**
+     * Check if this inventory is full and can no longer accept any new items
+     * @return true if full, otherwise false
+     */
     public boolean isFull() {
         return Arrays.stream(items).allMatch(Objects::nonNull);
     }
 
+    /**
+     * Get all the items in this inventory
+     * @return The current items
+     */
     public ItemStack[] getItems() {
         return items;
     }
