@@ -52,6 +52,10 @@ public class Location implements Cloneable {
         return distance(location.toVector());
     }
 
+    public double distanceSquared(Location location) {
+        return toVector().distanceSquared(location.toVector());
+    }
+
     public double distance(Vector2 vector) {
         return toVector().distance(vector);
     }

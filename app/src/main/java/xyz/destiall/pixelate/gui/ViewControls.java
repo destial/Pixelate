@@ -11,8 +11,10 @@ import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
+import xyz.destiall.pixelate.events.EventLeftReleaseButton;
 import xyz.destiall.pixelate.events.EventLeftTapButton;
 import xyz.destiall.pixelate.events.EventOpenInventory;
+import xyz.destiall.pixelate.events.EventRightReleaseButton;
 import xyz.destiall.pixelate.events.EventRightTapButton;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -118,7 +120,7 @@ public class ViewControls implements View {
     }
 
     private boolean isOnButton(Vector2 vect, float x, float y, int radius) {
-        return vect.distance(x, y) < radius;
+        return vect.distanceSquared(x, y) <= radius * radius;
     }
 
     public boolean isJoystick() {
@@ -218,12 +220,14 @@ public class ViewControls implements View {
                 case UP:
                     if (isOnMineButton(x, y)) {
                         setSwinging(false);
+                        Pixelate.HANDLER.call(new EventLeftReleaseButton());
                     } else if (isJoystick()) {
                         setJoystick(false);
                         setActuator(0, 0);
                         Pixelate.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
                     } else if (isOnPlaceButton(x, y)) {
                         setPlacing(false);
+                        Pixelate.HANDLER.call(new EventRightReleaseButton());
                     }
             }
         }

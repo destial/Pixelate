@@ -205,7 +205,7 @@ public class ViewChest implements View {
     }
 
     private boolean isOnExit(float x, float y) {
-        return exitButton.distance(x, y) < exitButtonRadius;
+        return exitButton.distanceSquared(x, y) <= exitButtonRadius * exitButtonRadius;
     }
 
     @Override

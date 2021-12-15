@@ -1,7 +1,9 @@
 package xyz.destiall.pixelate.environment;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import xyz.destiall.java.events.Listener;
@@ -10,15 +12,17 @@ import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityItem;
 import xyz.destiall.pixelate.entities.EntityMonster;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.entities.EntityPrimedTnt;
+import xyz.destiall.pixelate.entities.EntityPrimedTNT;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
@@ -90,20 +94,16 @@ public class World implements Updateable, Renderable, Module {
      * @return List of entities around the location, can be empty but never null
      */
     public List<Entity> getNearestEntities(Location requestedLocation, double radius) {
-        return entities.stream().filter(e -> e.getLocation().distance(requestedLocation) <= radius).collect(Collectors.toList());
+        return entities.stream().filter(e -> e.getLocation().distanceSquared(requestedLocation) <= radius * radius).collect(Collectors.toList());
     }
 
     /**
      * Get the nearest spawnable location at the requested location
-     * @param requestedLocation The requested location
+     * @param location The requested location
      * @return An empty location, never null
      */
-    public Location getNearestEmpty(Location requestedLocation) {
-        // TODO: a better location finding alogrithm based on recursive function that searches surrounding locations)
-        while (requestedLocation.getTile().getTileType() != Tile.TileType.BACKGROUND) {
-            requestedLocation.add(Tile.SIZE, Tile.SIZE);
-        }
-        return requestedLocation;
+    public Location getNearestEmpty(Location location) {
+        return getNearestEmpty(location.getX(), location.getY());
     }
 
     /**
@@ -114,6 +114,7 @@ public class World implements Updateable, Renderable, Module {
      */
     public Location getNearestEmpty(double x, double y) {
         Location loc = new Location(x, y, this);
+        // TODO: a better location finding alogrithm based on recursive function that searches surrounding locations)
         while (loc.getTile().getTileType() != Tile.TileType.BACKGROUND) {
             loc.add(Tile.SIZE, Tile.SIZE);
         }
@@ -140,8 +141,8 @@ public class World implements Updateable, Renderable, Module {
      * @return The spawned entity, or null if invalid entity class
      */
     public <E> E spawnEntity(Class<? extends Entity> clazz, Location location) {
-        if (clazz == EntityPrimedTnt.class) {
-            Entity e = new EntityPrimedTnt(location.getX(), location.getY(), this);
+        if (clazz == EntityPrimedTNT.class) {
+            Entity e = new EntityPrimedTNT(location.getX(), location.getY(), this);
             entities.add(e);
             return (E) e;
         } else if (clazz == EntityMonster.class) {
@@ -172,12 +173,12 @@ public class World implements Updateable, Renderable, Module {
     /**
      * Drop an item at the requested location
      * @param item The item to drop
-     * @param location The requested location
+     * @param vector The requested location
      * @return The dropped item entity, never null
      */
-    public EntityItem dropItem(ItemStack item, Location location) {
+    public EntityItem dropItem(ItemStack item, Vector2 vector) {
         EntityItem drop = new EntityItem(item);
-        drop.teleport(location);
+        drop.teleport(new Location(vector.getX(), vector.getY(), this));
         entities.add(drop);
         return drop;
     }
@@ -188,23 +189,33 @@ public class World implements Updateable, Renderable, Module {
      * @param location The requested location
      * @return The dropped item entity, never null
      */
-    public EntityItem dropItem(ItemStack item, Vector2 location) {
-        EntityItem drop = new EntityItem(item);
-        drop.teleport(new Location(location.getX(), location.getY(), this));
-        entities.add(drop);
-        return drop;
+    public EntityItem dropItem(ItemStack item, Location location) {
+        return dropItem(item, location.toVector());
     }
 
     /**
      * Break a tile at the requested location
      * @param location The requested location
-     * @return The broken tile, never null
+     * @return List of drops, or null if can't be broken
      */
-    public Tile breakTile(Location location) {
-        Tile tile = findTile(location);
+    public List<ItemStack> breakTile(Location location) {
+        return breakTile(findTile(location));
+    }
+
+    /**
+     * Break the requested tile
+     * @param tile The requested tile
+     * @return List of drops, or null if can't be broken
+     */
+    public List<ItemStack> breakTile(Tile tile) {
         if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return null;
+        List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), 0);
+        if (tile instanceof ContainerTile) {
+            ContainerTile containerTile = (ContainerTile) tile;
+            drops.addAll(Arrays.stream(containerTile.getInventory().getItems()).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
         tile.setMaterial(Material.STONE);
-        return tile;
+        return drops;
     }
 
     /**
@@ -229,7 +240,7 @@ public class World implements Updateable, Renderable, Module {
 
 
     /**
-     * Remove an entity from this world
+     * Remove an entity from this world.
      * (Deprecated) Use Entity.remove() for better checking
      * @param entity The entity to remove
      */
@@ -260,7 +271,8 @@ public class World implements Updateable, Renderable, Module {
 
     @Override
     public void destroy() {
-        for (Entity e : entities) {
+        for (int i = 0; i < entities.size(); i++) {
+            Entity e = entities.get(i);
             if (e instanceof Listener) {
                 Pixelate.HANDLER.unregisterListener((Listener) e);
             }

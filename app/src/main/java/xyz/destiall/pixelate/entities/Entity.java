@@ -107,6 +107,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     /**
      * Remove this entity from the world
      */
+    @SuppressWarnings("all")
     public void remove() {
         if (isRemoved() || location.getWorld() == null) return;
         location.getWorld().removeEntity(this);

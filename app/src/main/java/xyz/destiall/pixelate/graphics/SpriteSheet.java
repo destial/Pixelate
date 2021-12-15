@@ -39,7 +39,7 @@ public class SpriteSheet {
     }
 
     /**
-     * Set the current animation ti play
+     * Set the current animation to play
      * @param name The requested animation name
      */
     public void setCurrentAnimation(String name) {

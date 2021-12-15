@@ -65,17 +65,17 @@ public class AABB {
     }
 
     public boolean isOverlap(Tile tile) {
-        return min.getX() <= tile.getLocation().getX() + Tile.SIZE &&
-                max.getX() >= tile.getLocation().getX() &&
-                min.getY() <= tile.getLocation().getY() + Tile.SIZE &&
-                max.getY() >= tile.getLocation().getY();
+        return min.getX() <= tile.getVector().getX() + Tile.SIZE &&
+                max.getX() >= tile.getVector().getX() &&
+                min.getY() <= tile.getVector().getY() + Tile.SIZE &&
+                max.getY() >= tile.getVector().getY();
     }
 
     public static boolean isOverlap(int x, int y, Tile tile) {
-        return x <= tile.getLocation().getX() + Tile.SIZE &&
-                x >= tile.getLocation().getX() &&
-                y <= tile.getLocation().getY() + Tile.SIZE &&
-                y >= tile.getLocation().getY();
+        return x <= tile.getVector().getX() + Tile.SIZE &&
+                x >= tile.getVector().getX() &&
+                y <= tile.getVector().getY() + Tile.SIZE &&
+                y >= tile.getVector().getY();
     }
 
     public static boolean isOverlap(Location location, Tile tile) {

@@ -11,6 +11,7 @@ import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class Tile extends Imageable implements Updateable,Renderable {
@@ -37,11 +38,19 @@ public class Tile extends Imageable implements Updateable,Renderable {
     }
 
     /**
+     * Get the location vector of this tile
+     * @return An immutable vector
+     */
+    public Vector2 getVector() {
+        return location.clone();
+    }
+
+    /**
      * Get the location of this tile
      * @return An immutable location
      */
-    public Vector2 getLocation() {
-        return location.clone();
+    public Location getLocation() {
+        return new Location(location.getX(), location.getY(), world);
     }
 
     /**
@@ -128,7 +137,7 @@ public class Tile extends Imageable implements Updateable,Renderable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tile tile = (Tile) o;
-        return location.equals(tile.getLocation()) && material == tile.material && Objects.equals(world, tile.world) && tileType == tile.tileType;
+        return location.equals(tile.getVector()) && material == tile.material && Objects.equals(world, tile.world) && tileType == tile.tileType;
     }
 
     @Override

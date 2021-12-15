@@ -3,10 +3,7 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
@@ -19,6 +16,7 @@ import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
+import xyz.destiall.pixelate.events.EventLeftReleaseButton;
 import xyz.destiall.pixelate.events.EventLeftTapButton;
 import xyz.destiall.pixelate.events.EventOpenContainer;
 import xyz.destiall.pixelate.events.EventOpenInventory;
@@ -28,7 +26,6 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
@@ -42,7 +39,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private final SpriteSheet slash;
     private final Bitmap crosshair;
     private boolean playSwingAnimation;
+    private boolean playPunchAnimation;
     private double swingAnimationTimer;
+    private final float originalAnimSpeed;
 
     public EntityPlayer() {
         super(ResourceManager.getBitmap(R.drawable.player), 6, 3);
@@ -51,12 +50,15 @@ public class EntityPlayer extends EntityLiving implements Listener {
         spriteSheet.addAnimation("LOOK LEFT", createAnimation(1));
         spriteSheet.addAnimation("WALK RIGHT", createAnimation(2));
         spriteSheet.addAnimation("WALK LEFT", createAnimation(3));
+        spriteSheet.addAnimation("PUNCH RIGHT", createAnimation(4));
+        spriteSheet.addAnimation("PUNCH LEFT", createAnimation(5));
         spriteSheet.setCurrentAnimation("LOOK RIGHT");
         scale = 0.5f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
         inventory = new PlayerInventory(this, 27);
         HUD.INSTANCE.setHotbar(getInventory());
         playSwingAnimation = false;
+        playPunchAnimation = false;
         slash = new SpriteSheet();
         Bitmap slashSheet = ResourceManager.getBitmap(R.drawable.slashanimation);
         slash.addAnimation("RIGHT", createAnimation(slashSheet, 4, 4, 0));
@@ -64,7 +66,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addAnimation("LEFT", createAnimation(slashSheet, 4, 4, 2));
         slash.addAnimation("DOWN", createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
-
+        originalAnimSpeed = animationSpeed;
         Pixelate.HANDLER.registerListener(this);
     }
 
@@ -78,8 +80,14 @@ public class EntityPlayer extends EntityLiving implements Listener {
     public void updateSprite() {
         if (velocity.getX() > 0) facing = Direction.RIGHT;
         else if (velocity.getX() < 0) facing = Direction.LEFT;
-        String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
+
+        String anim = (velocity.isZero() ? (playPunchAnimation || swingAnimationTimer != 0 ? "PUNCH " : "LOOK ") : "WALK ") + facing.name();
         spriteSheet.setCurrentAnimation(anim);
+        if (playPunchAnimation || swingAnimationTimer != 0) {
+            animationSpeed = originalAnimSpeed * 0.2f;
+        } else {
+            animationSpeed = originalAnimSpeed;
+        }
     }
 
     @Override
@@ -101,7 +109,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (Settings.ENABLE_BLOCK_TRACE) {
             Tile t = location.clone().add(dir).getTile();
             if (t != null) {
-                Vector2 tile = Screen.convert(t.getLocation());
+                Vector2 tile = Screen.convert(t.getVector());
                 screen.quad(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, Color.argb(100, 0, 0, 255));
             }
         }
@@ -114,10 +122,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
             swingAnimationTimer += Timer.getDeltaTime();
             slash.setCurrentFrame((int) swingAnimationTimer);
         }
+
         if (swingAnimationTimer >= 4) {
             slash.setCurrentFrame(0);
             swingAnimationTimer = 0;
         }
+
         if (swingAnimationTimer != 0) {
             slash.setCurrentFrame((int) swingAnimationTimer);
             Bitmap map = slash.getCurrentSprite();
@@ -132,6 +142,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
         return (PlayerInventory) inventory;
     }
 
+    /**
+     * Get the current item in hand
+     * @return The item in hand, or null if none
+     */
     public ItemStack getItemInHand() {
         return inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
     }
@@ -144,8 +158,15 @@ public class EntityPlayer extends EntityLiving implements Listener {
     }
 
     @EventHandler
+    private void onLeftRelease(EventLeftReleaseButton e) {
+        playPunchAnimation = false;
+    }
+
+    @EventHandler
     private void onLeftTap(EventLeftTapButton e) {
         if (location.getWorld() == null) return;
+        playPunchAnimation = true;
+        spriteSheet.setCurrentFrame(0);
         List<Tile> currentTiles = location.getWorld().findTiles(collision);
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
@@ -174,24 +195,23 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler
     private void onLeftHold(EventLeftHoldButton e) {
         if (location.getWorld() == null) return;
-        List<Tile> currentTiles = location.getWorld().findTiles(collision);
         Location newLoc = getLocation().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
-        if (tile == null || currentTiles.contains(tile) || tile.getTileType() != Tile.TileType.FOREGROUND) return;
-        Vector2 tileLoc = tile.getLocation();
+        if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) {
+            playPunchAnimation = false;
+            return;
+        }
+        if (!playPunchAnimation) spriteSheet.setCurrentFrame(0);
+        playPunchAnimation = true;
+        Vector2 tileLoc = tile.getVector();
         float bbProgress = tile.getBlockBreakProgress(); //Out of 100.0
-        float bbDuration = tile.getMaterial().getRequiredMineDuration(getItemInHand().getType());
+        float bbDuration = tile.getMaterial().getRequiredMineDuration(getItemInHand());
         float timeRelative = bbProgress / 100.0f * bbDuration;
         timeRelative += Timer.getDeltaTime();
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
         tile.addBlockBreakProgression(bbProgressDiff);
         if (tile.getBlockBreakProgress() >= 100) {
-            List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), 0);
-            Tile brokenTile = location.getWorld().breakTile(newLoc);
-            if (brokenTile instanceof ContainerTile) {
-                ContainerTile containerTile = (ContainerTile) brokenTile;
-                drops.addAll(Arrays.stream(containerTile.getInventory().getItems()).filter(Objects::nonNull).collect(Collectors.toList()));
-            }
+            List<ItemStack> drops = location.getWorld().breakTile(newLoc);
             for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
                 ItemStack drop = drops.get((int) i);
                 double x = Math.cos(i) * Tile.SIZE * 0.3;

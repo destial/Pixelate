@@ -9,7 +9,7 @@ import java.util.List;
 import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.entities.EntityPrimedTnt;
+import xyz.destiall.pixelate.entities.EntityPrimedTNT;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
@@ -70,7 +70,7 @@ public class StateGame extends State implements Modular {
         player.teleport(loc.subtract(Tile.SIZE, Tile.SIZE));
         worldManager.getCurrentWorld().getEntities().add(player);
 
-        world.spawnEntity(EntityPrimedTnt.class, loc);
+        world.spawnEntity(EntityPrimedTNT.class, loc);
 
         allObjects.add(HUD.INSTANCE);
         screen = new Screen(null, player, Pixelate.WIDTH, Pixelate.HEIGHT);

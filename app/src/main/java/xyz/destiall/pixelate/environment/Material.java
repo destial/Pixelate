@@ -1,11 +1,10 @@
 package xyz.destiall.pixelate.environment;
 
-import java.util.Arrays;
-
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.GenericModifierType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.items.ItemStack;
 
 public enum Material {
     STONE(0, 0, Tile.TileType.BACKGROUND, 10, GenericModifierType.PICKAXE_EFFICIENT),
@@ -132,21 +131,6 @@ public enum Material {
         return rows;
     }
 
-    public static long amtOfBlocks() {
-        return Arrays.stream(values()).filter(Material::isBlock).count();
-    }
-
-    public float getRequiredMineDuration(Material itemMaterial)
-    {
-        //Can speed up mining since this tool is for the right typ eof block
-        if(itemMaterial.getGenericModifierType() == this.genericModifierType)
-        {
-            float breakDuration = this.defaultBreakDuration / itemMaterial.getEfficiencyTier().getMultiplier();
-            return breakDuration;
-        }
-        return this.defaultBreakDuration;
-    }
-
     public GenericModifierType getGenericModifierType()
     {
         return genericModifierType;
@@ -161,10 +145,6 @@ public enum Material {
         return drawable;
     }
 
-    public boolean isBlock() {
-        return block;
-    }
-
     public int getColumn() {
         return column;
     }
@@ -177,7 +157,24 @@ public enum Material {
         return tileType;
     }
 
+    public float getRequiredMineDuration(Material itemMaterial) {
+        // Can speed up mining since this tool is for the right type of block
+        if (itemMaterial.getGenericModifierType() == genericModifierType) {
+            return defaultBreakDuration / itemMaterial.getEfficiencyTier().getMultiplier();
+        }
+        return defaultBreakDuration;
+    }
+
+    public float getRequiredMineDuration(ItemStack item) {
+        if (item == null) return defaultBreakDuration;
+        return getRequiredMineDuration(item.getType());
+    }
+
     public boolean isContainer() {
         return container;
+    }
+
+    public boolean isBlock() {
+        return block;
     }
 }

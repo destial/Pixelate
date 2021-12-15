@@ -69,11 +69,11 @@ public class ViewPaused implements View {
     }
 
     private boolean isOnResume(float x, float y) {
-        return resumeButton.distance(x, y) < resumeButtonRadius;
+        return resumeButton.distanceSquared(x, y) <= resumeButtonRadius * resumeButtonRadius;
     }
 
     private boolean isOnExit(float x, float y) {
-        return exitButton.distance(x, y) < exitButtonRadius;
+        return exitButton.distanceSquared(x, y) <= exitButtonRadius * exitButtonRadius;
     }
 
     @Override
