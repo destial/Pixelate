@@ -54,6 +54,15 @@ public class Screen {
     }
 
     /**
+     * Convert screenSpace to worldSpace
+     * @param screenSpace Vector to convert
+     * @return worldSpace vector
+     */
+    public static Vector2 world(@NonNull Vector2 screenSpace) {
+        return screenSpace.clone().subtract(offset);
+    }
+
+    /**
      * Draw an image
      * @param image Image to draw
      * @param x Top left x

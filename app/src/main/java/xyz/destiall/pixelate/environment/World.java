@@ -1,6 +1,7 @@
 package xyz.destiall.pixelate.environment;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import xyz.destiall.pixelate.entities.EntityItem;
 import xyz.destiall.pixelate.entities.EntityMonster;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.entities.EntityPrimedTNT;
+import xyz.destiall.pixelate.environment.effects.EffectsModule;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
@@ -23,13 +25,15 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
+import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
-public class World implements Updateable, Renderable, Module {
+public class World implements Updateable, Renderable, Module, Modular {
     private final List<Entity> entities;
+    protected final HashMap<Class<? extends Module>, Module> modules;
     // TODO: Maybe split tiles into chunks?
     private final List<Tile> tiles;
     private final Generator generator;
@@ -42,12 +46,25 @@ public class World implements Updateable, Renderable, Module {
     public World(Generator generator) {
         entities = new LinkedList<>();
         tiles = new LinkedList<>();
+        modules = new HashMap<>();
         this.generator = generator;
-        if (generator instanceof GeneratorBasic) {
-            environment = Environment.OVERWORLD;
-        } else if (generator instanceof GeneratorUnderground) {
+        environment = Environment.OVERWORLD;
+        if (generator instanceof GeneratorUnderground) {
             environment = Environment.CAVE;
         }
+    }
+
+    /**
+     * Generate this world using the given generator and seed
+     * @param seed The seed to use
+     * @param force Regenerate if world is already generated
+     */
+    public void generateWorld(int seed, boolean force) {
+        if (tiles.size() == 0 || force) {
+            if (force) tiles.clear();
+            generator.generate(seed, this, tiles);
+        }
+        addModule(new EffectsModule(this));
     }
 
     /**
@@ -73,18 +90,6 @@ public class World implements Updateable, Renderable, Module {
      */
     public boolean isForegroundTile(AABB aabb) {
         return tiles.stream().anyMatch(t -> aabb.isOverlap(t) && t.getTileType() == Tile.TileType.FOREGROUND);
-    }
-
-    /**
-     * Generate this world using the given generator and seed
-     * @param seed The seed to use
-     * @param force Regenerate if world is already generated
-     */
-    public void generateWorld(int seed, boolean force) {
-        if (tiles.size() == 0 || force) {
-            if (force) tiles.clear();
-            generator.generate(seed, this, tiles);
-        }
     }
 
     /**
@@ -257,6 +262,9 @@ public class World implements Updateable, Renderable, Module {
         for (int i = 0; i < tiles.size(); i++) {
             tiles.get(i).update();
         }
+        for (Module m : modules.values()) {
+            m.update();
+        }
     }
 
     @Override
@@ -266,6 +274,11 @@ public class World implements Updateable, Renderable, Module {
         }
         for (int i = 0; i < entities.size(); i++) {
             entities.get(i).render(canvas);
+        }
+        for (Module m : modules.values()) {
+            if (m instanceof Renderable) {
+                ((Renderable) m).render(canvas);
+            }
         }
     }
 
@@ -279,5 +292,35 @@ public class World implements Updateable, Renderable, Module {
         }
         entities.clear();
         tiles.clear();
+        for (Module m : modules.values()) {
+            m.destroy();
+        }
+        modules.clear();
+    }
+
+    @Override
+    public <N extends Module> N getModule(Class<N> clazz) {
+        if (!hasModule(clazz)) return null;
+        return (N) modules.get(clazz);
+    }
+
+    @Override
+    public void addModule(Module module) {
+        modules.putIfAbsent(module.getClass(), module);
+    }
+
+    @Override
+    public <N extends Module> boolean hasModule(Class<N> clazz) {
+        return modules.containsKey(clazz);
+    }
+
+    @Override
+    public <N extends Module> N removeModule(Class<N> clazz) {
+        N module = getModule(clazz);
+        if (module != null) {
+            module.destroy();
+            modules.remove(clazz);
+        }
+        return module;
     }
 }

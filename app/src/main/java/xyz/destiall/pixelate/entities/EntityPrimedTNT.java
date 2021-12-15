@@ -4,6 +4,8 @@ import java.util.List;
 
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.effects.EffectsModule;
+import xyz.destiall.pixelate.environment.effects.ParticleEffect;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -36,7 +38,8 @@ public class EntityPrimedTNT extends Entity {
     public void explode() {
         if (location.getWorld() == null) return;
         this.remove();
-        location.getWorld().getNearestEntities(location, Tile.SIZE * 2).forEach(e -> {
+        World world = location.getWorld();
+        world.getNearestEntities(location, Tile.SIZE * 2).forEach(e -> {
             if (e instanceof EntityLiving) {
                 ((EntityLiving) e).damage((float) ((Tile.SIZE * 2 - e.getLocation().distance(location)) / 20f));
             } else {
@@ -44,12 +47,14 @@ public class EntityPrimedTNT extends Entity {
             }
         });
         AABB explosionBounds = new AABB(location.getX() - Tile.SIZE, location.getY() - Tile.SIZE, location.getX() + 2 * Tile.SIZE, location.getY() + 2 * Tile.SIZE);
-        location.getWorld().findTiles(explosionBounds).forEach(t -> {
+        world.findTiles(explosionBounds).forEach(t -> {
             if (t.getTileType() == Tile.TileType.BACKGROUND) return;
-            List<ItemStack> drops = location.getWorld().breakTile(t);
+            List<ItemStack> drops = world.breakTile(t);
             for (ItemStack drop : drops) {
-                location.getWorld().dropItem(drop, t.getVector());
+                world.dropItem(drop, t.getVector());
             }
         });
+        if (world.hasModule(EffectsModule.class))
+            world.getModule(EffectsModule.class).spawnEffect(ParticleEffect.ParticleType.EXPLOSION, location);
     }
 }
