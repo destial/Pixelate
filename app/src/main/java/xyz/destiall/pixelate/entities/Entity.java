@@ -1,6 +1,7 @@
 package xyz.destiall.pixelate.entities;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 import java.util.HashMap;
 
@@ -15,6 +16,7 @@ import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class Entity extends Imageable implements Updateable, Renderable, Modular {
@@ -126,6 +128,10 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         }
         Vector2 offset = Screen.convert(location.toVector());
         screen.draw(map, offset.getX(), offset.getY());
+
+        if (Settings.ENABLE_HITBOXES) {
+            screen.quadRing(offset.getX(), offset.getY(), map.getWidth(), map.getHeight(), 0.5f, Color.WHITE);
+        }
     }
 
     public enum Type {

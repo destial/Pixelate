@@ -129,6 +129,21 @@ public class Screen {
     }
 
     /**
+     * Draw a ring quad
+     * @param x Top left x
+     * @param y Top left y
+     * @param width Width of ring quad
+     * @param height Height of ring quad
+     * @param thickness Thickness of ring
+     * @param color Color of ring quad
+     */
+    public void quadRing(double x, double y, double width, double height, float thickness, int color) {
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
+    }
+
+    /**
      * Draw a progress bar
      * @param x Top left x
      * @param y Top left y

@@ -77,9 +77,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
     }
 
     @Override
-    public void updateSprite() {
+    protected void updateSprite() {
         if (velocity.getX() > 0) facing = Direction.RIGHT;
         else if (velocity.getX() < 0) facing = Direction.LEFT;
+        //else facing = Direction.RIGHT;
 
         String anim = (velocity.isZero() ? (playPunchAnimation || swingAnimationTimer != 0 ? "PUNCH " : "LOOK ") : "WALK ") + facing.name();
         spriteSheet.setCurrentAnimation(anim);

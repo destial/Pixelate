@@ -8,12 +8,14 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.ControlEvent;
+import xyz.destiall.pixelate.events.EventGamePause;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
 import xyz.destiall.pixelate.events.EventLeftReleaseButton;
 import xyz.destiall.pixelate.events.EventLeftTapButton;
 import xyz.destiall.pixelate.events.EventOpenInventory;
+import xyz.destiall.pixelate.events.EventRightHoldButton;
 import xyz.destiall.pixelate.events.EventRightReleaseButton;
 import xyz.destiall.pixelate.events.EventRightTapButton;
 import xyz.destiall.pixelate.events.EventTouch;
@@ -37,10 +39,20 @@ public class ViewControls implements View {
     private final int placeButtonRadius;
     private final int pauseButtonRadius;
     private final int switchWorldButtonRadius;
-    private final EventJoystick eventJoystick;
     private boolean joystick;
     private boolean swing;
     private boolean place;
+
+    private final EventJoystick eventJoystick;
+    private final EventLeftHoldButton eventLeftHoldButton;
+    private final EventLeftReleaseButton eventLeftReleaseButton;
+    private final EventLeftTapButton eventLeftTapButton;
+
+    private final EventRightHoldButton eventRightHoldButton;
+    private final EventRightReleaseButton eventRightReleaseButton;
+    private final EventRightTapButton eventRightTapButton;
+
+    private final EventGamePause eventGamePause;
 
     public ViewControls() {
         outerCircleCenter = new Vector2(275, Pixelate.HEIGHT - 200);
@@ -65,6 +77,13 @@ public class ViewControls implements View {
         switchWorldButtonRadius = 25;
 
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
+        eventLeftHoldButton = new EventLeftHoldButton();
+        eventLeftReleaseButton = new EventLeftReleaseButton();
+        eventLeftTapButton = new EventLeftTapButton();
+        eventRightHoldButton = new EventRightHoldButton();
+        eventRightReleaseButton = new EventRightReleaseButton();
+        eventRightTapButton = new EventRightTapButton();
+        eventGamePause = new EventGamePause();
         Pixelate.HANDLER.registerListener(this);
     }
 
@@ -91,7 +110,9 @@ public class ViewControls implements View {
             innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
         }
         if (isSwinging())
-            Pixelate.HANDLER.call(new EventLeftHoldButton());
+            Pixelate.HANDLER.call(eventLeftHoldButton);
+        if (isPlacing())
+            Pixelate.HANDLER.call(eventRightHoldButton);
     }
 
     private boolean isOnJoystick(float x, float y) {
@@ -142,13 +163,17 @@ public class ViewControls implements View {
     public void setSwinging(boolean swing) {
         this.swing = swing;
         if (swing)
-            Pixelate.HANDLER.call(new EventLeftTapButton());
+            Pixelate.HANDLER.call(eventLeftTapButton);
+        else
+            Pixelate.HANDLER.call(eventLeftReleaseButton);
     }
 
     public void setPlacing(boolean place) {
         this.place = place;
         if (place)
-            Pixelate.HANDLER.call(new EventRightTapButton());
+            Pixelate.HANDLER.call(eventRightTapButton);
+        else
+            Pixelate.HANDLER.call(eventRightReleaseButton);
     }
 
     public void setActuator(float x, float y) {
@@ -192,8 +217,7 @@ public class ViewControls implements View {
                     } else if (isOnPauseButton(x, y)) {
                         HUD.INSTANCE.setPauseMenu();
                         Pixelate.PAUSED = true;
-
-                        //Pixelate.HANDLER.call(new EventGamePause());
+                        //Pixelate.HANDLER.call(eventGamePause);
                     } else if (isOnSwitchWorldButton(x,y)) {
                         StateGame gameState = ((StateGame) Pixelate.getGSM().getState("Game"));
                         WorldManager wm = gameState.getObject(WorldManager.class);
@@ -202,8 +226,6 @@ public class ViewControls implements View {
                             Pixelate.setWorld("Overworld");
                         else
                             Pixelate.setWorld("Cave");
-
-
                     }
                     break;
                 case MOVE:
@@ -220,38 +242,39 @@ public class ViewControls implements View {
                 case UP:
                     if (isOnMineButton(x, y)) {
                         setSwinging(false);
-                        Pixelate.HANDLER.call(new EventLeftReleaseButton());
                     } else if (isJoystick()) {
                         setJoystick(false);
                         setActuator(0, 0);
-                        Pixelate.HANDLER.call(eventJoystick.update(0, 0, EventJoystick.Action.UP));
+                        Pixelate.HANDLER.call(eventJoystick.update(0, 0, ControlEvent.Action.UP));
                     } else if (isOnPlaceButton(x, y)) {
                         setPlacing(false);
-                        Pixelate.HANDLER.call(new EventRightReleaseButton());
                     }
             }
         }
     }
 
     // TODO: Add keyboard support
-    @EventHandler
+    // @EventHandler
     public void onKeyboard(EventKeyboard e) {
         float x = 0; float y = 0;
         if (e.getAction() == ControlEvent.Action.DOWN) {
             if (e.getKeyCode() == KeyEvent.KEYCODE_W) {
-                y = -5;
+                y = -outerCircleRadius;
             } else if (e.getKeyCode() == KeyEvent.KEYCODE_S) {
-                y = 5;
+                y = outerCircleRadius;
             }
 
             if (e.getKeyCode() == KeyEvent.KEYCODE_A) {
-                x = -5;
+                x = -outerCircleRadius;
             } else if (e.getKeyCode() == KeyEvent.KEYCODE_D) {
-                x = 5;
+                x = outerCircleRadius;
             }
         }
         if (x == 0 && y == 0) {
             setActuator(0, 0);
+            if (!EventKeyboard.isKeyPressed(e.getKeyCode())) {
+                Pixelate.HANDLER.call(eventJoystick.update(0, 0, ControlEvent.Action.UP));
+            }
             return;
         }
         setActuator((float) outerCircleCenter.getX() + x, (float) outerCircleCenter.getY() + y);
