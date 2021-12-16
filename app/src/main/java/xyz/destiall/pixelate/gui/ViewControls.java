@@ -34,6 +34,7 @@ public class ViewControls implements View {
     private boolean joystick;
 
     private final EventJoystick eventJoystick;
+    private final EventOpenInventory eventOpenInventory;
 
     private final EventLeftHoldButton eventLeftHoldButton;
     private final EventLeftReleaseButton eventLeftReleaseButton;
@@ -63,6 +64,7 @@ public class ViewControls implements View {
         eventRightHoldButton = new EventRightHoldButton();
         eventRightReleaseButton = new EventRightReleaseButton();
         eventRightTapButton = new EventRightTapButton();
+        eventOpenInventory = new EventOpenInventory();
         //eventGamePause = new EventGamePause();
         Pixelate.HANDLER.registerListener(this);
 
@@ -75,25 +77,19 @@ public class ViewControls implements View {
         buttons.add(pause);
 
         Button inv = new CircleButton(new Vector2(Pixelate.WIDTH - 150, Pixelate.HEIGHT - 100), 50, Color.GREEN);
-        inv.onTap(() -> Pixelate.HANDLER.call(new EventOpenInventory()));
+        inv.onTap(() -> Pixelate.HANDLER.call(eventOpenInventory));
         buttons.add(inv);
 
         Button left = new CircleButton(new Vector2(Pixelate.WIDTH - 300, Pixelate.HEIGHT - 150), 50, Color.YELLOW);
-        left.onHold(() -> {
-            setPlacing(true);
-            Pixelate.HANDLER.call(eventLeftHoldButton);
-        });
-        left.onTap(() -> setSwinging(true));
-        left.onRelease(() -> setSwinging(false));
+        left.onHold(() -> Pixelate.HANDLER.call(eventLeftHoldButton));
+        left.onTap(() -> Pixelate.HANDLER.call(eventLeftTapButton));
+        left.onRelease(() -> Pixelate.HANDLER.call(eventLeftReleaseButton));
         buttons.add(left);
 
         Button right = new CircleButton(new Vector2(Pixelate.WIDTH - 200, Pixelate.HEIGHT - 250), 50, Color.BLUE);
-        right.onHold(() -> {
-            setPlacing(true);
-            Pixelate.HANDLER.call(eventRightHoldButton);
-        });
-        right.onTap(() -> setPlacing(true));
-        right.onRelease(() -> setPlacing(false));
+        right.onHold(() -> Pixelate.HANDLER.call(eventRightHoldButton));
+        right.onTap(() -> Pixelate.HANDLER.call(eventRightTapButton));
+        right.onRelease(() -> Pixelate.HANDLER.call(eventRightReleaseButton));
         buttons.add(right);
 
         Button world = new CircleButton(new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.1), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9)), 25, Color.MAGENTA);
@@ -128,12 +124,8 @@ public class ViewControls implements View {
                 button.hold();
             }
         }
-        if (actuator.isZero()) {
-            innerCircleCenter.set(outerCircleCenter);
-        } else {
-            innerCircleCenter.setX(outerCircleCenter.getX() + actuator.getX() * outerCircleRadius);
-            innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
-        }
+        innerCircleCenter.setX(outerCircleCenter.getX() + actuator.getX() * outerCircleRadius);
+        innerCircleCenter.setY(outerCircleCenter.getY() + actuator.getY() * outerCircleRadius);
     }
 
     private boolean isOnJoystick(float x, float y) {
@@ -146,20 +138,6 @@ public class ViewControls implements View {
 
     public void setJoystick(boolean joystick) {
         this.joystick = joystick;
-    }
-
-    public void setSwinging(boolean swing) {
-        if (swing)
-            Pixelate.HANDLER.call(eventLeftTapButton);
-        else
-            Pixelate.HANDLER.call(eventLeftReleaseButton);
-    }
-
-    public void setPlacing(boolean place) {
-        if (place)
-            Pixelate.HANDLER.call(eventRightTapButton);
-        else
-            Pixelate.HANDLER.call(eventRightReleaseButton);
     }
 
     public void setActuator(float x, float y) {

@@ -23,6 +23,8 @@ import xyz.destiall.pixelate.events.EventLeftTapButton;
 import xyz.destiall.pixelate.events.EventOpenContainer;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventRightTapButton;
+import xyz.destiall.pixelate.events.EventTileBreak;
+import xyz.destiall.pixelate.events.EventTilePlace;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
@@ -223,6 +225,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
         tile.addBlockBreakProgression(bbProgressDiff);
         if (tile.getBlockBreakProgress() >= 100) {
+            EventTileBreak ev = new EventTileBreak(tile);
+            Pixelate.HANDLER.call(ev);
+            if (ev.isCancelled()) {
+                tile.addBlockBreakProgression(-500);
+                return;
+            }
             List<ItemStack> drops = location.getWorld().breakTile(newLoc);
             for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
                 ItemStack drop = drops.get((int) i);
@@ -256,7 +264,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
             }
         } else if (current != null && current.getType().isBlock()) {
             if (tile.getTileType() != Tile.TileType.FOREGROUND && !location.getWorld().findTiles(collision).contains(tile)) {
-                tile.setMaterial(current.getType());
+                EventTilePlace ev = new EventTilePlace(tile, current.getType());
+                Pixelate.HANDLER.call(ev);
+                if (ev.isCancelled()) return;
+                tile.setMaterial(ev.getReplaced());
                 current.setAmount(current.getAmount() - 1);
             }
         }
@@ -265,5 +276,16 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler(priority = EventHandler.Priority.HIGHEST)
     private void onOpenInventory(EventOpenInventory e) {
         HUD.INSTANCE.setInventory(getInventory());
+    }
+
+    @EventHandler
+    private void onPlace(EventTilePlace e) {
+        if (e.getReplaced() == Material.TNT) {
+            e.setCancelled(true);
+            Location location = e.getTile().getLocation();
+            location.getWorld().spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
+            ItemStack current = getItemInHand();
+            current.setAmount(current.getAmount() - 1);
+        }
     }
 }

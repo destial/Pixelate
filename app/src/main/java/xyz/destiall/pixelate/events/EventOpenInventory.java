@@ -8,6 +8,7 @@ import xyz.destiall.java.events.Event;
  */
 public class EventOpenInventory extends Event implements Cancellable {
     private boolean cancelled = false;
+
     @Override
     public void setCancelled(boolean cancel) {
         this.cancelled = cancel;

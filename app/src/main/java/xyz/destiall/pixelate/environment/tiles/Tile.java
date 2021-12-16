@@ -78,7 +78,10 @@ public class Tile extends Imageable implements Updateable,Renderable {
     public Tile setMaterial(Material mat) {
         if (mat != material && mat.isContainer()) {
             Tile t = TileFactory.createTile(mat, (int) location.getX(), (int) location.getY(), world);
-            world.replaceTile(this, TileFactory.createTile(mat, (int) location.getX(), (int) location.getY(), world));
+            world.replaceTile(this, t);
+            material = mat;
+            tileType = mat.getTileType();
+            brokenProgression = 0;
             return t;
         }
         material = mat;

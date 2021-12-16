@@ -12,6 +12,7 @@ public class EventItemPickup extends Event implements Cancellable {
     private final EntityItem item;
     private final Entity entity;
     private boolean cancelled = false;
+
     public EventItemPickup(Entity entity, EntityItem item) {
         this.entity = entity;
         this.item = item;

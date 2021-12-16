@@ -23,6 +23,7 @@ import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.sounds.SoundsModule;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
+import xyz.destiall.pixelate.events.EventTileReplace;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -256,6 +257,9 @@ public class World implements Updateable, Renderable, Module, Modular {
     public void replaceTile(Tile oldTile, Tile newTile) {
         int index = tiles.indexOf(oldTile);
         if (index == -1) return;
+        EventTileReplace replace = new EventTileReplace(oldTile, newTile);
+        Pixelate.HANDLER.call(replace);
+        if (replace.isCancelled()) return;
         tiles.set(index, newTile);
     }
 

@@ -6,6 +6,7 @@ package xyz.destiall.pixelate.events;
 public class EventJoystick extends ControlEvent {
     private double offsetX;
     private double offsetY;
+
     public EventJoystick(double x, double y, Action action) {
         super(action);
         offsetX = x;

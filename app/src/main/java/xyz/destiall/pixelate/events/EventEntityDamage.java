@@ -10,12 +10,11 @@ import xyz.destiall.pixelate.entities.EntityLiving;
 public class EventEntityDamage extends Event implements Cancellable {
     private final EntityLiving damaged;
     private float damage;
-    private boolean cancelled;
+    private boolean cancelled = false;
 
     public EventEntityDamage(EntityLiving damaged, float damage) {
         this.damaged = damaged;
         this.damage = damage;
-        cancelled = false;
     }
 
     /**

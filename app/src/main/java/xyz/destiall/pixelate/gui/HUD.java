@@ -73,7 +73,6 @@ public class HUD implements Updateable, Renderable, Listener {
             return;
         }
         buttons.setJoystick(false);
-        buttons.setSwinging(false);
         buttons.setActuator(0, 0);
         setHotbar(playerInventory);
         this.inventory = new ViewInventory(playerInventory);
@@ -88,7 +87,6 @@ public class HUD implements Updateable, Renderable, Listener {
             return;
         }
         buttons.setJoystick(false);
-        buttons.setSwinging(false);
         buttons.setActuator(0, 0);
         setHotbar(playerInventory);
         this.furnace = new ViewFurnace(playerInventory, tile);
@@ -103,7 +101,6 @@ public class HUD implements Updateable, Renderable, Listener {
             return;
         }
         buttons.setJoystick(false);
-        buttons.setSwinging(false);
         buttons.setActuator(0, 0);
         setHotbar(playerInventory);
         this.chest = new ViewChest(playerInventory, chestInventory);

@@ -8,6 +8,7 @@ import xyz.destiall.pixelate.entities.EntityLiving;
  */
 public class EventEntityDamageByEntity extends EventEntityDamage {
     private final Entity damager;
+
     public EventEntityDamageByEntity(EntityLiving damaged, Entity damager, float damage) {
         super(damaged, damage);
         this.damager = damager;
