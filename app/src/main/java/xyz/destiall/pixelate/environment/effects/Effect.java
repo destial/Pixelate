@@ -9,9 +9,9 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
-public class ParticleEffect extends Entity {
-    private final ParticleType type;
-    public ParticleEffect(ParticleType type) {
+public class Effect extends Entity {
+    private final EffectType type;
+    public Effect(EffectType type) {
         super(type.image, 1, type.columns);
         this.type = type;
         spriteSheet.addAnimation("EFFECT", createAnimation(0));
@@ -36,7 +36,7 @@ public class ParticleEffect extends Entity {
     @Override
     public void remove() {
         if (isRemoved() || location.getWorld() == null) return;
-        location.getWorld().getModule(EffectsModule.class).removeEffect((ParticleEffect) this);
+        location.getWorld().getModule(EffectsModule.class).removeEffect((Effect) this);
     }
 
     @Override
@@ -44,17 +44,17 @@ public class ParticleEffect extends Entity {
         super.render(screen);
     }
 
-    public ParticleType getType() {
+    public EffectType getType() {
         return type;
     }
 
-    public enum ParticleType {
+    public enum EffectType {
         EXPLOSION(R.drawable.explosion, 4);
 
         private final Bitmap image;
         private final int columns;
 
-        ParticleType(int id, int columns) {
+        EffectType(int id, int columns) {
             this.columns = columns;
             this.image = ResourceManager.getBitmap(id);
         }

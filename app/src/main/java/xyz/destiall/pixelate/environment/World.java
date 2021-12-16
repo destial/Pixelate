@@ -14,10 +14,13 @@ import xyz.destiall.pixelate.entities.EntityItem;
 import xyz.destiall.pixelate.entities.EntityMonster;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.entities.EntityPrimedTNT;
+import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.environment.effects.EffectsModule;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
+import xyz.destiall.pixelate.environment.sounds.Sound;
+import xyz.destiall.pixelate.environment.sounds.SoundsModule;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.graphics.Renderable;
@@ -55,6 +58,27 @@ public class World implements Updateable, Renderable, Module, Modular {
     }
 
     /**
+     * Play a particle effect at the requested location
+     * @param type The particle type
+     * @param location The requested location
+     */
+    public void playEffect(Effect.EffectType type, Location location) {
+        if (!hasModule(EffectsModule.class)) return;
+        getModule(EffectsModule.class).spawnEffect(type, location);
+    }
+
+    /**
+     * Play a sound at the requested location
+     * @param sound The sound to play
+     * @param location The requested location
+     * @param volume The volume of the sound
+     */
+    public void playSound(Sound.SoundType sound, Location location, float volume) {
+        if (!hasModule(SoundsModule.class)) return;
+        getModule(SoundsModule.class).playSound(sound, location, volume);
+    }
+
+    /**
      * Generate this world using the given generator and seed
      * @param seed The seed to use
      * @param force Regenerate if world is already generated
@@ -65,6 +89,7 @@ public class World implements Updateable, Renderable, Module, Modular {
             generator.generate(seed, this, tiles);
         }
         addModule(new EffectsModule(this));
+        addModule(new SoundsModule(this));
     }
 
     /**

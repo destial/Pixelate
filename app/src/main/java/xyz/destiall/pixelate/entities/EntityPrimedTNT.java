@@ -4,8 +4,10 @@ import java.util.List;
 
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.environment.effects.EffectsModule;
-import xyz.destiall.pixelate.environment.effects.ParticleEffect;
+import xyz.destiall.pixelate.environment.sounds.Sound;
+import xyz.destiall.pixelate.environment.sounds.SoundsModule;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -14,6 +16,7 @@ import xyz.destiall.pixelate.timer.Timer;
 
 public class EntityPrimedTNT extends Entity {
     private float explosionTimer = 5f;
+    private boolean sizzled;
 
     public EntityPrimedTNT(double x, double y, World world) {
         super(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2);
@@ -24,15 +27,25 @@ public class EntityPrimedTNT extends Entity {
         spriteSheet.setCurrentAnimation("TNT");
         spriteSheet.setCurrentFrame(0);
         animationSpeed = 5;
+        sizzled = false;
     }
 
     @Override
     public void update() {
         super.update();
+        if (explosionTimer == 5.f && !sizzled) {
+            sizzle();
+            sizzled = true;
+        }
         explosionTimer -= Timer.getDeltaTime();
         if (explosionTimer <= 0 && !isRemoved()) {
             explode();
         }
+    }
+
+    public void sizzle() {
+        if (location.getWorld() == null) return;
+        location.getWorld().playSound(Sound.SoundType.SIZZLE, location, 1.f);
     }
 
     public void explode() {
@@ -41,7 +54,7 @@ public class EntityPrimedTNT extends Entity {
         World world = location.getWorld();
         world.getNearestEntities(location, Tile.SIZE * 2).forEach(e -> {
             if (e instanceof EntityLiving) {
-                ((EntityLiving) e).damage((float) ((Tile.SIZE * 2 - e.getLocation().distance(location)) / 20f));
+                ((EntityLiving) e).damage(this, (float) ((Tile.SIZE * 2 - e.getLocation().distance(location)) / 20f));
             } else {
                 e.remove();
             }
@@ -55,6 +68,8 @@ public class EntityPrimedTNT extends Entity {
             }
         });
         if (world.hasModule(EffectsModule.class))
-            world.getModule(EffectsModule.class).spawnEffect(ParticleEffect.ParticleType.EXPLOSION, location);
+            world.playEffect(Effect.EffectType.EXPLOSION, location);
+        if (world.hasModule(SoundsModule.class))
+            world.playSound(Sound.SoundType.EXPLOSION, location, 1.f);
     }
 }

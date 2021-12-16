@@ -77,6 +77,10 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         this.velocity = velocity.clone();
     }
 
+    public Direction getFacing() {
+        return facing;
+    }
+
     @Override
     public void update() {
         updateSpriteAnimation();

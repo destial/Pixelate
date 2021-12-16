@@ -3,6 +3,8 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.events.EventEntityDamage;
+import xyz.destiall.pixelate.events.EventEntityDamageByEntity;
 import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.items.inventory.EntityInventory;
 import xyz.destiall.pixelate.timer.Timer;
@@ -75,7 +77,32 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         if (damageDelay != 0) return;
         damageDelay = (float) Timer.getDeltaTime();
         if (health > 0) {
-            health -= damage;
+            EventEntityDamage e = new EventEntityDamage(this, damage);
+            Pixelate.HANDLER.call(e);
+            if (e.isCancelled()) return;
+            health -= e.getDamage();
+            if (health < 0) {
+                health = 0;
+            }
+            if (health <= 0) {
+                remove();
+            }
+        }
+    }
+
+    /**
+     * Damage this entity. Removes this entity from the world if health is <= 0
+     * @param damager The Entity that damaged this entity
+     * @param damage The damage to deal
+     */
+    public void damage(Entity damager, float damage) {
+        if (damageDelay != 0) return;
+        damageDelay = (float) Timer.getDeltaTime();
+        if (health > 0) {
+            EventEntityDamage e = new EventEntityDamageByEntity(this, damager, damage);
+            Pixelate.HANDLER.call(e);
+            if (e.isCancelled()) return;
+            health -= e.getDamage();
             if (health < 0) {
                 health = 0;
             }

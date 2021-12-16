@@ -10,7 +10,9 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
@@ -19,6 +21,8 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
+import xyz.destiall.pixelate.position.Location;
+import xyz.destiall.pixelate.timer.Timer;
 
 public class ViewHotbar implements View {
     private final HashMap<Integer, AABB> positions;
@@ -26,6 +30,8 @@ public class ViewHotbar implements View {
     private final Bitmap image;
     private final Bitmap currentSlotImage;
     private PlayerInventory playerInventory;
+    private int droppingSlot;
+    private float dropTimer;
     private int currentSlot;
 
     public ViewHotbar(PlayerInventory playerInventory) {
@@ -36,6 +42,8 @@ public class ViewHotbar implements View {
         positions = new HashMap<>();
         Pixelate.HANDLER.registerListener(this);
         images = new HashMap<>();
+        droppingSlot = -1;
+        dropTimer = 0f;
     }
 
     public void setInventory(PlayerInventory playerInventory) {
@@ -88,10 +96,33 @@ public class ViewHotbar implements View {
                 positions.put(i, new AABB(x, y, x + image.getWidth(), y + image.getHeight()));
             }
         }
+        if (droppingSlot != -1) {
+            AABB aabb = positions.get(droppingSlot);
+            if (aabb == null) return;
+            screen.bar(aabb.getMin().getX(), aabb.getMin().getY(), aabb.getWidth(), aabb.getHeight(), Color.alpha(Color.WHITE), Color.argb(100, 255, 255, 255), dropTimer);
+        }
     }
 
     @Override
-    public void update() {}
+    public void update() {
+        if (droppingSlot != -1) {
+            dropTimer += Timer.getDeltaTime();
+            System.out.println("Dropping item");
+        }
+
+        if (dropTimer >= 1 && droppingSlot != -1) {
+            ItemStack item = playerInventory.getItem(droppingSlot);
+            if (item == null) return;
+            EntityPlayer player = (EntityPlayer) playerInventory.getHolder();
+            Location location = player.getLocation();
+            if (location.getWorld() == null) return;
+            location.add(player.getFacing().getVector().multiply(Tile.SIZE));
+            playerInventory.removeItem(item);
+            location.getWorld().dropItem(item, location);
+            droppingSlot = -1;
+            dropTimer = 0f;
+        }
+    }
 
     @Override
     public void destroy() {
@@ -111,11 +142,32 @@ public class ViewHotbar implements View {
     @EventHandler
     private void onTouch(EventTouch e) {
         if (e.getAction() == ControlEvent.Action.DOWN) {
-            float x = e.getX();
-            float y= e.getY();
-            int slot = getSlot(x, y);
+            int slot = getSlot(e.getX(), e.getY());
             if (slot == -1) return;
             setCurrentSlot(slot);
+            if (droppingSlot == -1) {
+                droppingSlot = slot;
+                dropTimer = 0f;
+            } else if (droppingSlot != slot) {
+                droppingSlot = slot;
+                dropTimer = 0f;
+            }
+        } else if (e.getAction() == ControlEvent.Action.MOVE) {
+            int slot = getSlot(e.getX(), e.getY());
+            if (slot == -1) return;
+            if (droppingSlot == -1) {
+                droppingSlot = slot;
+                dropTimer = 0f;
+            } else if (droppingSlot != slot) {
+                droppingSlot = slot;
+                dropTimer = 0f;
+            }
+        } else if (e.getAction() == ControlEvent.Action.UP) {
+            int slot = getSlot(e.getX(), e.getY());
+            if (slot == -1 || droppingSlot == slot) {
+                droppingSlot = -1;
+                dropTimer = 0f;
+            }
         }
     }
 

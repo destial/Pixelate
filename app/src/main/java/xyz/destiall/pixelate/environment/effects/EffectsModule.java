@@ -11,21 +11,25 @@ import xyz.destiall.pixelate.position.Location;
 
 public class EffectsModule implements Renderable, Module {
     private final World world;
-    private final List<ParticleEffect> effects;
+    private final List<Effect> effects;
 
     public EffectsModule(World world) {
         effects = new LinkedList<>();
         this.world = world;
     }
 
-    public ParticleEffect spawnEffect(ParticleEffect.ParticleType type, Location location) {
-        ParticleEffect effect = new ParticleEffect(type);
-        effect.teleport(location.setWorld(world));
+    /**
+     * Play a particle effect at the requested location
+     * @param type The particle type
+     * @param location The requested location
+     */
+    public void spawnEffect(Effect.EffectType type, Location location) {
+        Effect effect = new Effect(type);
+        effect.teleport(location.clone().setWorld(world));
         effects.add(effect);
-        return effect;
     }
 
-    public void removeEffect(ParticleEffect e) {
+    public void removeEffect(Effect e) {
         effects.remove(e);
     }
 

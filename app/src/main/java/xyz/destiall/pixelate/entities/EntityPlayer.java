@@ -10,10 +10,12 @@ import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
+import xyz.destiall.pixelate.events.EventItemPickup;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
 import xyz.destiall.pixelate.events.EventLeftReleaseButton;
@@ -72,7 +74,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @Override
     public void remove() {
-        teleport(location.getWorld().getNearestEmpty(0, 0));
+        if (location.getWorld() != null)
+            teleport(location.getWorld().getNearestEmpty(0, 0));
         health = 20.f;
     }
 
@@ -159,6 +162,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
     }
 
     @EventHandler
+    private void onPickUp(EventItemPickup e) {
+        if (location.getWorld() == null) return;
+        location.getWorld().playSound(Sound.SoundType.PICK_UP, location, 1.f);
+    }
+
+    @EventHandler
     private void onLeftRelease(EventLeftReleaseButton e) {
         playPunchAnimation = false;
     }
@@ -187,7 +196,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 if (en instanceof EntityPlayer) return;
                 if (en instanceof EntityLiving) {
                     EntityLiving living = (EntityLiving) en;
-                    living.damage(finalDamage);
+                    living.damage(this, finalDamage);
                 }
             });
         }
