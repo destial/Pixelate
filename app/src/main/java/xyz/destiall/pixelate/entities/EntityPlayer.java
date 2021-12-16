@@ -48,12 +48,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
     public EntityPlayer() {
         super(ResourceManager.getBitmap(R.drawable.player), 6, 3);
         location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
-        spriteSheet.addAnimation("LOOK RIGHT", createAnimation(0));
-        spriteSheet.addAnimation("LOOK LEFT", createAnimation(1));
-        spriteSheet.addAnimation("WALK RIGHT", createAnimation(2));
-        spriteSheet.addAnimation("WALK LEFT", createAnimation(3));
+        spriteSheet.addAnimation("LOOK RIGHT" , createAnimation(0));
+        spriteSheet.addAnimation("LOOK LEFT"  , createAnimation(1));
+        spriteSheet.addAnimation("WALK RIGHT" , createAnimation(2));
+        spriteSheet.addAnimation("WALK LEFT"  , createAnimation(3));
         spriteSheet.addAnimation("PUNCH RIGHT", createAnimation(4));
-        spriteSheet.addAnimation("PUNCH LEFT", createAnimation(5));
+        spriteSheet.addAnimation("PUNCH LEFT" , createAnimation(5));
         spriteSheet.setCurrentAnimation("LOOK RIGHT");
         scale = 0.5f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
@@ -64,9 +64,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash = new SpriteSheet();
         Bitmap slashSheet = ResourceManager.getBitmap(R.drawable.slashanimation);
         slash.addAnimation("RIGHT", createAnimation(slashSheet, 4, 4, 0));
-        slash.addAnimation("UP", createAnimation(slashSheet, 4, 4, 1));
-        slash.addAnimation("LEFT", createAnimation(slashSheet, 4, 4, 2));
-        slash.addAnimation("DOWN", createAnimation(slashSheet, 4, 4, 3));
+        slash.addAnimation("UP"   , createAnimation(slashSheet, 4, 4, 1));
+        slash.addAnimation("LEFT" , createAnimation(slashSheet, 4, 4, 2));
+        slash.addAnimation("DOWN" , createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
         Pixelate.HANDLER.registerListener(this);
@@ -114,9 +114,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
             Tile t = location.clone().add(dir).getTile();
             if (t != null) {
                 Vector2 tile = Screen.convert(t.getVector());
-                screen.quad(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, Color.argb(100, 0, 0, 255));
+                screen.quad(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, Color.argb(60, 0, 0, 255));
             }
         }
+
         if (Settings.ENABLE_CROSSHAIR)
             screen.draw(crosshair, vector.getX(), vector.getY());
 
@@ -163,6 +164,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onPickUp(EventItemPickup e) {
+        if (e.getPicker() != this) return;
         if (location.getWorld() == null) return;
         location.getWorld().playSound(Sound.SoundType.PICK_UP, location, 1.f);
     }

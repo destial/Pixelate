@@ -32,7 +32,7 @@ public class EntityItem extends Entity {
         if (location.getWorld() == null) return;
         location.getWorld().getNearestEntities(location, Tile.SIZE * 0.5).stream().anyMatch(e -> {
             if (e instanceof EntityPlayer) {
-                EventItemPickup ev = new EventItemPickup(this);
+                EventItemPickup ev = new EventItemPickup(e, this);
                 Pixelate.HANDLER.call(ev);
                 if (ev.isCancelled()) return false;
                 if (((EntityPlayer) e).getInventory().addItem(drop)) this.remove();

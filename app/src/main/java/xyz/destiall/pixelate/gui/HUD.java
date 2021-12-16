@@ -28,6 +28,7 @@ public class HUD implements Updateable, Renderable, Listener {
         PLAYER_INVENTORY,
         FURNACE_INVENTORY,
         CHEST_INVENTORY,
+        CREATIVE_INVENTORY,
         PAUSE_GAME
     }
 

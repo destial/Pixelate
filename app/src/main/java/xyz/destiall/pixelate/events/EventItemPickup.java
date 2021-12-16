@@ -2,6 +2,7 @@ package xyz.destiall.pixelate.events;
 
 import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Event;
+import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityItem;
 
 /**
@@ -9,8 +10,10 @@ import xyz.destiall.pixelate.entities.EntityItem;
  */
 public class EventItemPickup extends Event implements Cancellable {
     private final EntityItem item;
+    private final Entity entity;
     private boolean cancelled = false;
-    public EventItemPickup(EntityItem item) {
+    public EventItemPickup(Entity entity, EntityItem item) {
+        this.entity = entity;
         this.item = item;
     }
 
@@ -20,6 +23,14 @@ public class EventItemPickup extends Event implements Cancellable {
      */
     public EntityItem getItem() {
         return item;
+    }
+
+    /**
+     * Get the entity that picked this item up
+     * @return The picker
+     */
+    public Entity getPicker() {
+        return entity;
     }
 
     @Override

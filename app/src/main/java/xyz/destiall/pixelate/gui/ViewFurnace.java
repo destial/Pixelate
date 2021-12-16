@@ -91,7 +91,7 @@ public class ViewFurnace implements View {
 
         posY = 100 + (int) (image.getWidth() * 1.5);
         // Progress slot
-        screen.bar(posX + image.getWidth() * 0.1, posY - 40, Tile.SIZE, 3, Color.RED, Color.YELLOW, furnace.getSmeltProgress() / furnace.getTimeToSmelt());
+        screen.bar(posX + image.getWidth() * 0.1, posY - 40, Tile.SIZE, 25, Color.RED, Color.YELLOW, furnace.getSmeltProgress() / furnace.getTimeToSmelt());
 
         // Burner slot
         if (!positions.containsKey(99)) {

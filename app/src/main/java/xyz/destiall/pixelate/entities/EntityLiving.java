@@ -174,7 +174,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
                 if (location.getWorld().isForegroundTile(collision)) {
 
                     // Revert position
-                    location.subtract(velocity.getX(), 0 );
+                    location.subtract(velocity.getX(), 0);
                 }
 
                 // Check y direction

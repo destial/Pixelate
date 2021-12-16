@@ -95,7 +95,7 @@ public class Screen {
      */
     public void circle(double x, double y, double radius, int color) {
         paint.setColor(color);
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setStyle(Paint.Style.FILL);
         CANVAS.drawCircle((float) x, (float) y, (float) radius, paint);
     }
 
@@ -124,7 +124,7 @@ public class Screen {
      */
     public void quad(double x, double y, double width, double height, int color) {
         paint.setColor(color);
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setStyle(Paint.Style.FILL);
         CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
     }
 
@@ -140,6 +140,7 @@ public class Screen {
     public void quadRing(double x, double y, double width, double height, float thickness, int color) {
         paint.setColor(color);
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(thickness);
         CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
     }
 

@@ -77,8 +77,20 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         this.velocity = velocity.clone();
     }
 
+    /**
+     * Get this entity's facing direction
+     * @return The facing direction
+     */
     public Direction getFacing() {
         return facing;
+    }
+
+    /**
+     * Get this entity's target direction
+     * @return The target direction
+     */
+    public Direction getTarget() {
+        return target;
     }
 
     @Override
@@ -133,9 +145,8 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         Vector2 offset = Screen.convert(location.toVector());
         screen.draw(map, offset.getX(), offset.getY());
 
-        if (Settings.ENABLE_HITBOXES) {
-            screen.quadRing(offset.getX(), offset.getY(), map.getWidth(), map.getHeight(), 0.5f, Color.WHITE);
-        }
+        if (Settings.ENABLE_HITBOXES)
+            screen.quadRing(offset.getX(), offset.getY(), map.getWidth(), map.getHeight(), 5f, Color.WHITE);
     }
 
     public enum Type {

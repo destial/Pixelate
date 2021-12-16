@@ -80,6 +80,6 @@ public class EntityMonster extends EntityLiving {
     public void render(Screen screen) {
         super.render(screen);
         Vector2 loc = Screen.convert(location);
-        screen.bar(loc.getX(), loc.getY() - 10, Tile.SIZE, 2, Color.RED, Color.GREEN, health / maxHealth);
+        screen.bar(loc.getX(), loc.getY() - 10, Tile.SIZE, 10, Color.RED, Color.GREEN, health / maxHealth);
     }
 }

@@ -65,6 +65,7 @@ public class ViewHotbar implements View {
     @Override
     public void render(Screen screen) {
         int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
+        int y = Pixelate.HEIGHT - 200;
         for (int i = 0; i < 9; i++) {
             int a = 0;
             Bitmap image = this.image;
@@ -73,7 +74,6 @@ public class ViewHotbar implements View {
                 a = 5;
             }
             int x = starting + (i * this.image.getWidth());
-            int y = Pixelate.HEIGHT - 200;
             ItemStack item = playerInventory.getItem(i);
             screen.draw(image, x, y - a);
             if (item != null) {
@@ -83,7 +83,8 @@ public class ViewHotbar implements View {
                 } else {
                     itemImage = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
                     images.put(item.getType(), itemImage);
-                } screen.draw(itemImage, x + 15, y + 10);
+                }
+                screen.draw(itemImage, x + 15, y + 10);
                 if (item.getAmount() > 1) {
                     screen.text(
                         "" + item.getAmount(),
@@ -107,7 +108,6 @@ public class ViewHotbar implements View {
     public void update() {
         if (droppingSlot != -1) {
             dropTimer += Timer.getDeltaTime();
-            System.out.println("Dropping item");
         }
 
         if (dropTimer >= 1 && droppingSlot != -1) {
@@ -116,7 +116,7 @@ public class ViewHotbar implements View {
             EntityPlayer player = (EntityPlayer) playerInventory.getHolder();
             Location location = player.getLocation();
             if (location.getWorld() == null) return;
-            location.add(player.getFacing().getVector().multiply(Tile.SIZE));
+            location.add(player.getTarget().getVector().multiply(Tile.SIZE));
             playerInventory.removeItem(item);
             location.getWorld().dropItem(item, location);
             droppingSlot = -1;
@@ -154,12 +154,8 @@ public class ViewHotbar implements View {
             }
         } else if (e.getAction() == ControlEvent.Action.MOVE) {
             int slot = getSlot(e.getX(), e.getY());
-            if (slot == -1) return;
-            if (droppingSlot == -1) {
-                droppingSlot = slot;
-                dropTimer = 0f;
-            } else if (droppingSlot != slot) {
-                droppingSlot = slot;
+            if (slot == -1 || droppingSlot != -1) {
+                droppingSlot = -1;
                 dropTimer = 0f;
             }
         } else if (e.getAction() == ControlEvent.Action.UP) {

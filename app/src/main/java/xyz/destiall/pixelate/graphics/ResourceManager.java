@@ -14,12 +14,11 @@ public class ResourceManager {
     /**
      * Get the image from this drawable id
      * @param id The drawable id
-     * @return The image, or null if cannot be found
+     * @return The image
      */
     public static Bitmap getBitmap(int id) {
         if (RESOURCES.containsKey(id)) return RESOURCES.get(id);
         Bitmap bitmap = BitmapFactory.decodeResource(Pixelate.getResources(), id);
-        if (bitmap == null) return null;
         RESOURCES.put(id, bitmap);
         return bitmap;
     }
