@@ -2,39 +2,48 @@ package xyz.destiall.pixelate.environment.tiles;
 
 import android.graphics.Bitmap;
 
-import java.util.Objects;
+import com.google.gson.annotations.SerializedName;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
-import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
-public class Tile extends Imageable implements Updateable,Renderable {
+public class Tile implements Updateable, Renderable {
     public static final long SIZE = Pixelate.getTileMap().getWidth() / Material.getColumns();
 
-    protected Vector2 location;
+    protected Location location;
     protected Material material;
-    protected World world;
-    protected TileType tileType;
-
+    protected transient TileType tileType;
+    protected transient Bitmap image;
     protected float brokenProgression;
 
+    @SerializedName("type")
+    private final String typeName;
+
+    public Tile() {
+        typeName = getClass().getName();
+    }
+
     public Tile(int x, int y, Material material, World world, TileType type) {
-        super(Pixelate.getTileMap(), Material.getRows(), Material.getColumns());
-        this.material = material;
-        this.world = world;
-        location = new Vector2(x, y);
+        typeName = getClass().getName();
+        location = new Location(x, y, world);
+        location.setWorld(world);
         tileType = type;
+        this.material = material;
         if (!material.isBlock()) {
             this.material = Material.STONE;
         }
-        image = createSubImageAt(this.material.getRow(), this.material.getColumn());
+        image = material.getImage();
         brokenProgression = 0.f;
+    }
+
+    public void setWorld(World world) {
+        location.setWorld(world);
     }
 
     /**
@@ -42,7 +51,7 @@ public class Tile extends Imageable implements Updateable,Renderable {
      * @return An immutable vector
      */
     public Vector2 getVector() {
-        return location.clone();
+        return location.toVector().clone();
     }
 
     /**
@@ -50,7 +59,7 @@ public class Tile extends Imageable implements Updateable,Renderable {
      * @return An immutable location
      */
     public Location getLocation() {
-        return new Location(location.getX(), location.getY(), world);
+        return location.clone();
     }
 
     /**
@@ -76,8 +85,12 @@ public class Tile extends Imageable implements Updateable,Renderable {
      * @return The tile after being set
      */
     public Tile setMaterial(Material mat) {
+        if (!mat.isBlock()) return this;
         if (mat != material && mat.isContainer()) {
+            World world = location.getWorld();
+            if (world == null) return this;
             Tile t = TileFactory.createTile(mat, (int) location.getX(), (int) location.getY(), world);
+            System.out.println("replacing to container tile");
             world.replaceTile(this, t);
             material = mat;
             tileType = mat.getTileType();
@@ -85,7 +98,7 @@ public class Tile extends Imageable implements Updateable,Renderable {
             return t;
         }
         material = mat;
-        image = Bitmap.createBitmap(Pixelate.getTileMap(), material.getColumn() * (int) width, material.getRow() * (int) height, (int) Tile.SIZE, (int) Tile.SIZE);
+        image = mat.getImage();
         tileType = mat.getTileType();
         brokenProgression = 0;
         return this;
@@ -128,6 +141,7 @@ public class Tile extends Imageable implements Updateable,Renderable {
 
     @Override
     public void render(Screen screen) {
+        if (image == null) image = material.getImage();
         Vector2 offset = Screen.convert(location);
         if (offset.getX() + Tile.SIZE < 0 || offset.getX() > Pixelate.WIDTH || offset.getY() + Tile.SIZE < 0 || offset.getY() > Pixelate.HEIGHT) return;
         screen.draw(image, offset.getX(), offset.getY());
@@ -140,11 +154,6 @@ public class Tile extends Imageable implements Updateable,Renderable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tile tile = (Tile) o;
-        return location.equals(tile.getVector()) && material == tile.material && Objects.equals(world, tile.world) && tileType == tile.tileType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(location, material, world, tileType);
+        return location.equals(tile.getLocation()) && material == tile.material && tileType == tile.tileType;
     }
 }

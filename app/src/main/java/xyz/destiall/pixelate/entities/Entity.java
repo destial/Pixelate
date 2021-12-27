@@ -20,8 +20,8 @@ import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class Entity extends Imageable implements Updateable, Renderable, Modular {
-    protected final SpriteSheet spriteSheet;
-    protected final HashMap<Class<? extends Module>, Module> modules;
+    protected transient SpriteSheet spriteSheet;
+    protected HashMap<Class<? extends Module>, Module> modules;
     protected Location location;
     protected float scale;
     protected Vector2 velocity;
@@ -31,6 +31,18 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     protected Direction facing;
     protected Direction target;
     private boolean removed;
+
+    public Entity() {
+        spriteSheet = new SpriteSheet();
+        velocity = new Vector2();
+        scale = 1;
+        location = new Location(0, 0);
+        facing = Direction.RIGHT;
+        target = facing;
+        modules = new HashMap<>();
+        removed = false;
+        animationSpeed = 60;
+    }
 
     public Entity(Bitmap image, int rows, int columns) {
         super(image, rows, columns);

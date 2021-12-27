@@ -1,34 +1,41 @@
 package xyz.destiall.pixelate.items;
 
-import xyz.destiall.pixelate.Pixelate;
+import android.graphics.Bitmap;
+
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
-import xyz.destiall.pixelate.graphics.Imageable;
-import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 
 @SuppressWarnings("all")
-public class ItemStack extends Imageable {
-    private final Material material;
-    private Inventory inventory;
+public class ItemStack {
+    private Material material;
+    private transient Inventory inventory;
     private int amount;
+    public ItemStack() {}
 
     public ItemStack(Material material) {
         this(material, 1);
     }
 
     public ItemStack(Material material, int amount) {
-        super(Pixelate.getTileMap(), Material.getRows(), Material.getColumns());
-        this.material = material;
-        this.amount = amount;
-        if (!material.isBlock()) {
-            image = ResourceManager.getBitmap(material.getDrawable());
-        } else {
-            image = createSubImageAt(material.getRow(), material.getColumn());
-        }
-        height = image.getHeight();
-        width = image.getWidth();
+        setType(material);
         inventory = null;
+    }
+
+    /**
+     * Set the type of this item
+     * @param material The material to set
+     */
+    public void setType(Material material) {
+        this.material = material;
+    }
+
+    /**
+     * Get the image that this item represents
+     * @return The Bitmap image
+     */
+    public Bitmap getImage() {
+        return material.getImage();
     }
 
     /**
@@ -63,6 +70,7 @@ public class ItemStack extends Imageable {
     }
 
     private void removeFromInventory() {
+        System.out.println("Removing from inventory");
         this.amount = 0;
         if (inventory != null) {
             inventory.removeItem(this);

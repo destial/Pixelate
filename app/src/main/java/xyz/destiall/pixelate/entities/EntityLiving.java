@@ -7,6 +7,7 @@ import xyz.destiall.pixelate.events.EventEntityDamage;
 import xyz.destiall.pixelate.events.EventEntityDamageByEntity;
 import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.items.inventory.EntityInventory;
+import xyz.destiall.pixelate.items.inventory.Inventory;
 import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class EntityLiving extends Entity implements InventoryHolder {
@@ -15,7 +16,9 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected float speed;
     protected float armor;
     protected float damageDelay;
-    protected EntityInventory inventory;
+    protected Inventory inventory;
+    public EntityLiving() {}
+
     public EntityLiving(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
         health = maxHealth = 20f;
@@ -66,7 +69,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
 
     @Override
     public EntityInventory getInventory() {
-        return inventory;
+        return (EntityInventory) inventory;
     }
 
     /**

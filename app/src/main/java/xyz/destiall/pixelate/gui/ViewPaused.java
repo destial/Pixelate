@@ -61,7 +61,7 @@ public class ViewPaused implements View {
             if (isOnResume(x, y)) {
                 HUD.INSTANCE.returnToGame();
             } else if (isOnExit(x,y)) {
-                //RETURN MAIN MENU;
+                // RETURN MAIN MENU;
                 Pixelate.HANDLER.call(new EventGamePause());
                 HUD.INSTANCE.returnToGame();
             }

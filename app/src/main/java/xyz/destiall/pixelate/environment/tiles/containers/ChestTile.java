@@ -5,6 +5,8 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 
 public class ChestTile extends ContainerTile {
+    public ChestTile() {}
+
     public ChestTile(int x, int y, World world) {
         super(x, y, Material.CHEST, world, Material.CHEST.getTileType(), new ChestInventory(3 * 9));
     }

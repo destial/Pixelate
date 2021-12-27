@@ -1,24 +1,40 @@
 package xyz.destiall.pixelate.environment;
 
 import java.util.HashMap;
-import java.util.Set;
+import java.util.Map;
 
+import xyz.destiall.pixelate.entities.Entity;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.modular.Module;
 
 public class WorldManager implements Updateable, Renderable, Module {
-    private final HashMap<String, World> worlds;
+    private Map<String, World> worlds;
     private String activeWorld;
 
     public WorldManager() {
         worlds = new HashMap<>();
     }
 
+    public void load(WorldManager wm) {
+        worlds = wm.worlds;
+        for (World world : worlds.values()) {
+            for (Tile tile : world.getTiles()) {
+                tile.setWorld(world);
+            }
+            for (Entity entity : world.getEntities()) {
+                entity.teleport(entity.getLocation().setWorld(world));
+            }
+        }
+        activeWorld = wm.activeWorld;
+    }
+
     public boolean addWorld(String name, World world) {
         if (!worlds.containsKey(name)) {
             worlds.put(name, world);
+            world.setName(name);
             if (worlds.size() == 1) return setActive(name);
             return true;
         }
@@ -43,9 +59,8 @@ public class WorldManager implements Updateable, Renderable, Module {
         return activeWorld;
     }
 
-    public Set<String> getWorlds()
-    {
-        return worlds.keySet();
+    public Map<String, World> getWorlds() {
+        return worlds;
     }
 
     public boolean isWorldActive(String name) {

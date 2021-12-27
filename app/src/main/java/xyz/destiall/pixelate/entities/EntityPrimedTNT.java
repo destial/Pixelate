@@ -5,18 +5,20 @@ import java.util.List;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.effects.Effect;
-import xyz.destiall.pixelate.environment.effects.EffectsModule;
 import xyz.destiall.pixelate.environment.sounds.Sound;
-import xyz.destiall.pixelate.environment.sounds.SoundsModule;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.modules.EffectsModule;
+import xyz.destiall.pixelate.modules.SoundsModule;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class EntityPrimedTNT extends Entity {
     private float explosionTimer = 5f;
     private boolean sizzled;
+
+    public EntityPrimedTNT() {}
 
     public EntityPrimedTNT(double x, double y, World world) {
         super(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2);

@@ -6,7 +6,9 @@ import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class PlayerInventory extends EntityInventory {
-    private final ItemStack[] crafting;
+    private ItemStack[] crafting;
+
+    public PlayerInventory() {}
 
     public PlayerInventory(InventoryHolder holder, int size) {
         super(holder, size);

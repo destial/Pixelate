@@ -6,11 +6,19 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.modules.EffectsModule;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class Effect extends Entity {
-    private final EffectType type;
+    private EffectType type;
+    public Effect() {}
+
+    public void setType(EffectType type) {
+        this.type = type;
+        setImage(type.image, 1, type.columns);
+    }
+
     public Effect(EffectType type) {
         super(type.image, 1, type.columns);
         this.type = type;

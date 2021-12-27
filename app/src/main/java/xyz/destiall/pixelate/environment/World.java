@@ -15,12 +15,10 @@ import xyz.destiall.pixelate.entities.EntityMonster;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.entities.EntityPrimedTNT;
 import xyz.destiall.pixelate.environment.effects.Effect;
-import xyz.destiall.pixelate.environment.effects.EffectsModule;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
 import xyz.destiall.pixelate.environment.sounds.Sound;
-import xyz.destiall.pixelate.environment.sounds.SoundsModule;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.events.EventTileReplace;
@@ -31,16 +29,19 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
+import xyz.destiall.pixelate.modules.EffectsModule;
+import xyz.destiall.pixelate.modules.SoundsModule;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class World implements Updateable, Renderable, Module, Modular {
     private final List<Entity> entities;
+    private String name;
     protected final HashMap<Class<? extends Module>, Module> modules;
     // TODO: Maybe split tiles into chunks?
     private final List<Tile> tiles;
-    private final Generator generator;
+    private transient final Generator generator;
     private Environment environment;
 
     public World() {
@@ -56,6 +57,32 @@ public class World implements Updateable, Renderable, Module, Modular {
         if (generator instanceof GeneratorUnderground) {
             environment = Environment.CAVE;
         }
+        // addModule(new EffectsModule().setWorld(this));
+        // addModule(new SoundsModule().setWorld(this));
+    }
+
+    /**
+     * Get the tiles of this world
+     * @return The tiles
+     */
+    public List<Tile> getTiles() {
+        return tiles;
+    }
+
+    /**
+     * Set the name of this world
+     * @param name The world name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Get the name of this world
+     * @return The world name
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -89,8 +116,6 @@ public class World implements Updateable, Renderable, Module, Modular {
             if (force) tiles.clear();
             generator.generate(seed, this, tiles);
         }
-        addModule(new EffectsModule(this));
-        addModule(new SoundsModule(this));
     }
 
     /**

@@ -2,6 +2,7 @@ package xyz.destiall.pixelate.events;
 
 import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Event;
+import xyz.destiall.pixelate.entities.EntityLiving;
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 
@@ -11,11 +12,21 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 public class EventTilePlace extends Event implements Cancellable {
     private final Tile tile;
     private final Material material;
+    private final EntityLiving entity;
     private boolean cancelled = false;
 
-    public EventTilePlace(Tile tile, Material material) {
+    public EventTilePlace(EntityLiving entity, Tile tile, Material material) {
+        this.entity = entity;
         this.tile = tile;
         this.material = material;
+    }
+
+    /**
+     * Get the entity that will place this tile
+     * @return The entity
+     */
+    public EntityLiving getEntity() {
+        return entity;
     }
 
     /**

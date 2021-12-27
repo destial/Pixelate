@@ -1,21 +1,26 @@
-package xyz.destiall.pixelate.environment.effects;
+package xyz.destiall.pixelate.modules;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
 
 public class EffectsModule implements Renderable, Module {
-    private final World world;
+    private transient World world;
     private final List<Effect> effects;
 
-    public EffectsModule(World world) {
+    public EffectsModule() {
         effects = new LinkedList<>();
+    }
+
+    public EffectsModule setWorld(World world) {
         this.world = world;
+        return this;
     }
 
     /**

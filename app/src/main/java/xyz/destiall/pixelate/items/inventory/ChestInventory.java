@@ -5,7 +5,9 @@ import java.util.Arrays;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class ChestInventory extends Inventory {
-    private final int size;
+    private int size;
+    public ChestInventory() {}
+
     public ChestInventory(int size) {
         this.size = size;
         items = new ItemStack[size];

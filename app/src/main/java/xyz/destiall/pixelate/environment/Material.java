@@ -1,9 +1,14 @@
 package xyz.destiall.pixelate.environment;
 
+import android.graphics.Bitmap;
+
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.GenericModifierType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.graphics.Imageable;
+import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public enum Material {
@@ -80,6 +85,7 @@ public enum Material {
     private final float defaultBreakDuration;
     private final GenericModifierType genericModifierType;
     private final EfficiencyType efficiencyType;
+    private Bitmap image;
 
     private static int columns;
     private static int rows;
@@ -117,6 +123,7 @@ public enum Material {
         this.genericModifierType = genericModifierType;
         this.efficiencyType = efficiencyType;
         this.container = container;
+        this.image = null;
     }
 
     Material(int row, int column, Tile.TileType type, float defaultBreakDuration, GenericModifierType genericModifierType, boolean container) {
@@ -176,5 +183,17 @@ public enum Material {
 
     public boolean isBlock() {
         return block;
+    }
+
+    public Bitmap getImage() {
+        if (image == null) {
+            if (drawable != -1) {
+                image = ResourceManager.getBitmap(drawable);
+            } else {
+                image = Imageable.createSubImageAt(Pixelate.getTileMap(), rows, columns, row, column);
+
+            }
+        }
+        return image;
     }
 }

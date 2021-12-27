@@ -63,7 +63,7 @@ public class SpriteSheet {
         if (current != null) {
             return sprites.get(current);
         }
-        return sprites.values().stream().findFirst().orElse(new Bitmap[4]);
+        return null;
     }
 
     /**

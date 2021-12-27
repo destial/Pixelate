@@ -6,18 +6,29 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
-import xyz.destiall.pixelate.pathfinding.PathFindingAI;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class EntityMonster extends EntityLiving {
-    private final Type type;
-    private PathFindingAI pathFinding;
-    public EntityMonster(Entity.Type type) {
-        super(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
-        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
+    private Type type;
+
+    //private PathFindingModule pathFinding;
+    public EntityMonster() {
+
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+        refresh();
+    }
+
+    @Override
+    public void refresh() {
+        setImage(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
+        spriteSheet = new SpriteSheet();
         spriteSheet.addAnimation("LOOK RIGHT", createAnimation(0));
         spriteSheet.addAnimation("LOOK LEFT", createAnimation(1));
         switch (type) {
@@ -35,6 +46,13 @@ public class EntityMonster extends EntityLiving {
             default: break;
         }
         spriteSheet.setCurrentAnimation("LOOK RIGHT");
+    }
+
+    public EntityMonster(Entity.Type type) {
+        super(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
+        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
+        this.type = type;
+        refresh();
         scale = 0.5f;
         health = 20f;
         this.type = type;

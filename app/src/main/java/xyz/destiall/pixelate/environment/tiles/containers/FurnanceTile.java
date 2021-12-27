@@ -34,9 +34,9 @@ public class FurnanceTile extends ContainerTile {
     }
 
     //Main Functions
+    public FurnanceTile() {}
 
     //TODO: Add the ViewFurnance making sure things are of smeltable and burnable, and also make this update called when tiles update loop is ran.
-
     public FurnanceTile(int x, int y, World world) {
         super(x, y, Material.FURNACE, world, Material.FURNACE.getTileType(), new FurnaceInventory());
     }

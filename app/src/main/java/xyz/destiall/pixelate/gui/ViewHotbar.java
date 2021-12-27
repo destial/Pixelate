@@ -25,14 +25,15 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class ViewHotbar implements View {
-    private final HashMap<Integer, AABB> positions;
-    private final HashMap<Material, Bitmap> images;
-    private final Bitmap image;
-    private final Bitmap currentSlotImage;
+    private HashMap<Integer, AABB> positions;
+    private HashMap<Material, Bitmap> images;
+    private Bitmap image;
+    private Bitmap currentSlotImage;
     private PlayerInventory playerInventory;
     private int droppingSlot;
     private float dropTimer;
     private int currentSlot;
+    public ViewHotbar() {}
 
     public ViewHotbar(PlayerInventory playerInventory) {
         this.playerInventory = playerInventory;

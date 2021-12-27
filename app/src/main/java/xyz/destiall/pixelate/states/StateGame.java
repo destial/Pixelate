@@ -2,9 +2,11 @@ package xyz.destiall.pixelate.states;
 
 import android.graphics.Canvas;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 
 import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.Pixelate;
@@ -16,7 +18,6 @@ import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
@@ -27,27 +28,47 @@ import xyz.destiall.pixelate.position.Location;
 
 public class StateGame extends State implements Modular {
     private final HashMap<Class<? extends Module>, Module> modules;
-    private final EntityPlayer player;
-    private final List<Object> allObjects;
-    private final Screen screen;
+    private EntityPlayer player;
+    private WorldManager worldManager;
+    private Screen screen;
 
-    public StateGame(GameSurface gameSurface) {
-        super(gameSurface);
-        allObjects = new ArrayList<>();
+    public StateGame(GameSurface surface) {
         modules = new HashMap<>();
+        setSurface(surface);
+        setupRecipes();
+    }
 
+    @Override
+    public boolean load(String path) {
+        File level = new File(surface.getContext().getFilesDir().getPath() + File.separator + path);
+        if (!level.exists()) return false;
+        try {
+            worldManager = new WorldManager();
+            worldManager.load(Pixelate.GSON.fromJson(new FileReader(level), WorldManager.class));
+            player = (EntityPlayer) worldManager.getCurrentWorld().getEntities().stream().filter(e -> e instanceof EntityPlayer).findFirst().orElse(new EntityPlayer());
+            Pixelate.HANDLER.registerListener(player);
+            HUD.INSTANCE.setHotbar(player.getInventory());
+            initialize();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public void reset() {
         World world = new World();
-        world.generateWorld(0, true);
-
         World cave = new World(new GeneratorUnderground());
-        cave.generateWorld(0, true);
 
-        WorldManager worldManager = new WorldManager();
-
+        worldManager = new WorldManager();
         worldManager.addWorld("Overworld", world);
         worldManager.addWorld("Cave", cave);
+
+        world.generateWorld(0, true);
+        cave.generateWorld(0, true);
+
         worldManager.setActive("Overworld");
-        allObjects.add(worldManager);
 
         player = new EntityPlayer();
         Location location = new Location(0, 0, worldManager.getCurrentWorld());
@@ -70,13 +91,29 @@ public class StateGame extends State implements Modular {
         world.dropItem(chest, loc.add(Tile.SIZE, Tile.SIZE));
         player.teleport(loc.subtract(Tile.SIZE, Tile.SIZE));
         worldManager.getCurrentWorld().getEntities().add(player);
+        Pixelate.HANDLER.registerListener(player);
+        HUD.INSTANCE.setHotbar(player.getInventory());
 
-        // world.spawnEntity(EntityPrimedTNT.class, loc);
+        initialize();
+    }
 
-        allObjects.add(HUD.INSTANCE);
+    @Override
+    public void save(String path) {
+        String json = Pixelate.GSON.toJson(worldManager);
+        try {
+            File level = new File(surface.getContext().getFilesDir().getPath() + File.separator + path);
+            if (!level.exists()) level.createNewFile();
+            System.out.println(level.getAbsolutePath());
+            FileWriter writer = new FileWriter(level.getPath());
+            writer.write(json);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initialize() {
         screen = new Screen(null, player, Pixelate.WIDTH, Pixelate.HEIGHT);
-
-        setupRecipes();
     }
 
     public EntityPlayer getPlayer() {
@@ -85,11 +122,8 @@ public class StateGame extends State implements Modular {
 
     @Override
     public void update() {
-        for (Object o : allObjects) {
-            if (o instanceof Updateable) {
-                ((Updateable) o).update();
-            }
-        }
+        worldManager.update();
+        HUD.INSTANCE.update();
         for (Module m : modules.values()) {
             m.update();
         }
@@ -98,11 +132,8 @@ public class StateGame extends State implements Modular {
     @Override
     public void render(Canvas canvas) {
         screen.update(canvas, player, Pixelate.WIDTH, Pixelate.HEIGHT);
-        for (Object o : allObjects) {
-            if (o instanceof Renderable) {
-                ((Renderable) o).render(screen);
-            }
-        }
+        worldManager.render(screen);
+        HUD.INSTANCE.render(screen);
         for (Module m : modules.values()) {
             if (m instanceof Renderable) {
                 ((Renderable) m).render(screen);
@@ -112,20 +143,16 @@ public class StateGame extends State implements Modular {
 
     @Override
     public void destroy() {
-        for (Object o : allObjects) {
-            if (o instanceof Module) {
-                ((Module) o).destroy();
-            }
-        }
+        save("game.json");
+        worldManager.destroy();
         for (Module m : modules.values()) {
             m.destroy();
         }
-        allObjects.clear();
         modules.clear();
     }
 
-    public <N> N getObject(Class<N> clazz) {
-        return (N) allObjects.stream().filter(o -> o.getClass().isAssignableFrom(clazz)).findFirst().orElse(null);
+    public WorldManager getWorldManager() {
+        return worldManager;
     }
 
     @Override

@@ -214,6 +214,7 @@ public class ViewFurnace implements View {
             if (isOnExit(x, y)) {
                 HUD.INSTANCE.setFurnaceDisplay(null, null);
             }
+            return;
         }
         if (e.getAction() == ControlEvent.Action.MOVE) {
             if (dragging != null) {
@@ -228,6 +229,7 @@ public class ViewFurnace implements View {
                     draggingSlot = getSlot(x, y);
                 }
             }
+            return;
         }
         if (e.getAction() == ControlEvent.Action.UP) {
             if (dragging != null) {

@@ -1,19 +1,24 @@
-package xyz.destiall.pixelate.environment.sounds;
+package xyz.destiall.pixelate.modules;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
 
 public class SoundsModule implements Module {
-    private final World world;
+    private transient World world;
     private final List<Sound> soundsPlaying;
 
-    public SoundsModule(World world) {
+    public SoundsModule() {
         soundsPlaying = new ArrayList<>();
+    }
+
+    public SoundsModule setWorld(World world) {
         this.world = world;
+        return this;
     }
 
     /**

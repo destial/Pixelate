@@ -3,15 +3,28 @@ package xyz.destiall.pixelate.position;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.states.StateGame;
 
-public class Location implements Cloneable {
+public class Location {
     private double x;
     private double y;
-    private World world;
-    private final Vector2 vector;
+    private String world;
+    private final transient Vector2 vector;
+    public Location() {
+        vector = new Vector2(x, y);
+    }
+
     public Location(double x, double y, World world) {
+        this.x = x;
+        this.y = y;
+        this.world = world != null ? world.getName() : null;
+        vector = new Vector2(x, y);
+    }
+
+    public Location(double x, double y, String world) {
         this.x = x;
         this.y = y;
         this.world = world;
@@ -19,7 +32,9 @@ public class Location implements Cloneable {
     }
 
     public Location(double x, double y) {
-        this(x, y, null);
+        this.x = x;
+        this.y = y;
+        vector = new Vector2(x, y);
     }
 
     public Location add(Vector2 vector) {
@@ -65,13 +80,13 @@ public class Location implements Cloneable {
     }
 
     public Location setWorld(@Nullable World world) {
-        this.world = world;
+        this.world = world != null ? world.getName() : null;
         return this;
     }
 
     @Nullable
     public World getWorld() {
-        return world;
+        return ((StateGame) Pixelate.getGSM().getCurrentState()).getWorldManager().getWorlds().get(world);
     }
 
     public Vector2 toVector() {
@@ -81,7 +96,7 @@ public class Location implements Cloneable {
 
     public Tile getTile() {
         if (world == null) return null;
-        return world.findTile(this);
+        return getWorld().findTile(this);
     }
 
     public int getX() {
@@ -105,7 +120,7 @@ public class Location implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location location = (Location) o;
-        return location.x == x && location.y == y && location.world == world;
+        return location.x == x && location.y == y && location.world.equals(world);
     }
 
     @NonNull
@@ -118,7 +133,7 @@ public class Location implements Cloneable {
         return "Location{" +
                 "x=" + x +
                 ", y=" + y +
-                ", world=" + (world != null ? world.getEnvironment().name() : null) +
+                ", world=" + (world != null ? getWorld().getName() : null) +
                 '}';
     }
 }
