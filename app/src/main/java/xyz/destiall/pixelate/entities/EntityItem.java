@@ -13,19 +13,10 @@ public class EntityItem extends Entity {
     private transient float upAndDownTimer;
     private transient boolean down;
 
-    public EntityItem() {
+    protected EntityItem() {
         scale = 0.5f;
         upAndDownTimer = 0f;
         down = false;
-    }
-
-    @Override
-    public void refresh() {
-        setImage(drop.getImage(), 1, 1);
-        spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("DROP", createAnimation(0));
-        spriteSheet.setCurrentAnimation("DROP");
-        spriteSheet.setCurrentFrame(0);
     }
 
     public EntityItem(ItemStack itemStack) {
@@ -39,9 +30,13 @@ public class EntityItem extends Entity {
         down = false;
     }
 
-    public void setDrop(ItemStack drop) {
-        this.drop = drop;
+    @Override
+    public void refresh() {
         setImage(drop.getImage(), 1, 1);
+        spriteSheet = new SpriteSheet();
+        spriteSheet.addAnimation("DROP", createAnimation(0));
+        spriteSheet.setCurrentAnimation("DROP");
+        spriteSheet.setCurrentFrame(0);
     }
 
     @Override
@@ -69,6 +64,15 @@ public class EntityItem extends Entity {
         location.add(0, upAndDownTimer);
         super.render(screen);
         location.subtract(0, upAndDownTimer);
+    }
+
+    /**
+     * Set the item that this drop is representing
+     * @param drop The item to set
+     */
+    public void setDrop(ItemStack drop) {
+        this.drop = drop;
+        setImage(drop.getImage(), 1, 1);
     }
 
     /**

@@ -15,17 +15,17 @@ import xyz.destiall.pixelate.position.Vector2;
 
 public class Tile implements Updateable, Renderable {
     public static final long SIZE = Pixelate.getTileMap().getWidth() / Material.getColumns();
+    protected transient Bitmap image;
 
     protected Location location;
     protected Material material;
-    protected transient TileType tileType;
-    protected transient Bitmap image;
+    protected TileType tileType;
     protected float brokenProgression;
 
     @SerializedName("type")
     private final String typeName;
 
-    public Tile() {
+    protected Tile() {
         typeName = getClass().getName();
     }
 
@@ -42,6 +42,10 @@ public class Tile implements Updateable, Renderable {
         brokenProgression = 0.f;
     }
 
+    /**
+     * Set the world of this tile
+     * @param world The world
+     */
     public void setWorld(World world) {
         location.setWorld(world);
     }
@@ -89,8 +93,7 @@ public class Tile implements Updateable, Renderable {
         if (mat != material && mat.isContainer()) {
             World world = location.getWorld();
             if (world == null) return this;
-            Tile t = TileFactory.createTile(mat, (int) location.getX(), (int) location.getY(), world);
-            System.out.println("replacing to container tile");
+            Tile t = TileFactory.createTile(mat, location.getX(), location.getY(), world);
             world.replaceTile(this, t);
             material = mat;
             tileType = mat.getTileType();

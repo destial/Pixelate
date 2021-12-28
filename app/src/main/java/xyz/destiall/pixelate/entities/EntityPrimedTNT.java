@@ -17,8 +17,7 @@ import xyz.destiall.pixelate.timer.Timer;
 public class EntityPrimedTNT extends Entity {
     private float explosionTimer = 5f;
     private boolean sizzled;
-
-    public EntityPrimedTNT() {}
+    protected EntityPrimedTNT() {}
 
     public EntityPrimedTNT(double x, double y, World world) {
         super(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2);

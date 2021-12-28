@@ -11,7 +11,7 @@ public class ItemStack {
     private Material material;
     private transient Inventory inventory;
     private int amount;
-    public ItemStack() {}
+    private ItemStack() {}
 
     public ItemStack(Material material) {
         this(material, 1);
@@ -19,7 +19,7 @@ public class ItemStack {
 
     public ItemStack(Material material, int amount) {
         setType(material);
-        inventory = null;
+        setAmount(amount);
     }
 
     /**
@@ -70,7 +70,6 @@ public class ItemStack {
     }
 
     private void removeFromInventory() {
-        System.out.println("Removing from inventory");
         this.amount = 0;
         if (inventory != null) {
             inventory.removeItem(this);

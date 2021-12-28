@@ -59,7 +59,6 @@ public class GeneratorBasic implements Generator {
 
                 //if (Math.random() > 0.98 && tile.getTileType() == Tile.TileType.BACKGROUND) world.spawnMonster(new Location(x, y, world), Entity.Type.ZOMBIE);
                 tiles.add(tile);
-                System.out.println("Generated tile in " + world.getName());
             }
         }
 

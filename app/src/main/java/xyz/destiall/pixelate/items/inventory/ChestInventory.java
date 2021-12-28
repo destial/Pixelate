@@ -6,7 +6,7 @@ import xyz.destiall.pixelate.items.ItemStack;
 
 public class ChestInventory extends Inventory {
     private int size;
-    public ChestInventory() {}
+    protected ChestInventory() {}
 
     public ChestInventory(int size) {
         this.size = size;

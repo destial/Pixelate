@@ -18,6 +18,11 @@ public class WorldManager implements Updateable, Renderable, Module {
         worlds = new HashMap<>();
     }
 
+    /**
+     * Load this world manager from another instance.
+     * Used when loading from a save file
+     * @param wm The loaded world manager
+     */
     public void load(WorldManager wm) {
         worlds = wm.worlds;
         for (World world : worlds.values()) {
@@ -31,6 +36,12 @@ public class WorldManager implements Updateable, Renderable, Module {
         activeWorld = wm.activeWorld;
     }
 
+    /**
+     * Add a world to this manager
+     * @param name The name of the world
+     * @param world The world
+     * @return true if successfully added, otherwise false
+     */
     public boolean addWorld(String name, World world) {
         if (!worlds.containsKey(name)) {
             worlds.put(name, world);
@@ -41,6 +52,11 @@ public class WorldManager implements Updateable, Renderable, Module {
         return false;
     }
 
+    /**
+     * Set the current active world to use
+     * @param name The name of the world
+     * @return true if successfully activated, otherwise false
+     */
     public boolean setActive(String name) {
         if (worlds.containsKey(name)) {
             activeWorld = name;
@@ -49,24 +65,46 @@ public class WorldManager implements Updateable, Renderable, Module {
         return false;
     }
 
+    /**
+     * Get the current active world
+     * @return The active world
+     */
     public World getCurrentWorld()
     {
         return worlds.get(activeWorld);
     }
 
+    /**
+     * Get the name of the current active world
+     * @return The active world name
+     */
     public String getCurrentWorldName()
     {
         return activeWorld;
     }
 
+    /**
+     * Get all the worlds in this manager
+     * @return The worlds mapped by their name
+     */
     public Map<String, World> getWorlds() {
         return worlds;
     }
 
+    /**
+     * Check if this world is active
+     * @param name The name of the world
+     * @return true if active, otherwise false
+     */
     public boolean isWorldActive(String name) {
         return worlds.containsKey(name) && activeWorld.equals(name);
     }
 
+    /**
+     * Check if this world name is a world
+     * @param name The name of the world
+     * @return true if is registered, otherwise false
+     */
     public boolean isAWorld(String name)
     {
         return worlds.containsKey(name);

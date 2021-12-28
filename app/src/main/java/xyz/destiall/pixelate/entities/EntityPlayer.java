@@ -10,11 +10,13 @@ import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
+import xyz.destiall.pixelate.events.EventIgniteTNT;
 import xyz.destiall.pixelate.events.EventItemPickup;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
@@ -261,6 +263,14 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 ChestInventory chestInventory = (ChestInventory) container.getInventory();
                 HUD.INSTANCE.setChestDisplay(getInventory(), chestInventory);
             }
+        } else if (tile.getMaterial() == Material.TNT) {
+            tile.setMaterial(Material.STONE);
+            Location location = tile.getLocation();
+            World world = location.getWorld();
+            EventIgniteTNT ev = new EventIgniteTNT(location);
+            Pixelate.HANDLER.call(ev);
+            if (ev.isCancelled()) return;
+            world.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
         } else if (current != null && current.getType().isBlock()) {
             if (tile.getTileType() != Tile.TileType.FOREGROUND && !location.getWorld().findTiles(collision).contains(tile)) {
                 EventTilePlace ev = new EventTilePlace(this, tile, current.getType());

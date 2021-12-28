@@ -16,9 +16,7 @@ public class EntityMonster extends EntityLiving {
     private Type type;
 
     //private PathFindingModule pathFinding;
-    public EntityMonster() {
-
-    }
+    protected EntityMonster() {}
 
     public void setType(Type type) {
         this.type = type;

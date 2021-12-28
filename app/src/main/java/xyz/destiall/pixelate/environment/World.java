@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
@@ -21,6 +22,7 @@ import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
+import xyz.destiall.pixelate.events.EventSpawnEntity;
 import xyz.destiall.pixelate.events.EventTileReplace;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -38,7 +40,7 @@ import xyz.destiall.pixelate.position.Vector2;
 public class World implements Updateable, Renderable, Module, Modular {
     private final List<Entity> entities;
     private String name;
-    protected final HashMap<Class<? extends Module>, Module> modules;
+    protected transient final HashMap<Class<? extends Module>, Module> modules;
     // TODO: Maybe split tiles into chunks?
     private final List<Tile> tiles;
     private transient final Generator generator;
@@ -57,8 +59,8 @@ public class World implements Updateable, Renderable, Module, Modular {
         if (generator instanceof GeneratorUnderground) {
             environment = Environment.CAVE;
         }
-        // addModule(new EffectsModule().setWorld(this));
-        // addModule(new SoundsModule().setWorld(this));
+        addModule(new EffectsModule().setWorld(this));
+        addModule(new SoundsModule().setWorld(this));
     }
 
     /**
@@ -186,6 +188,8 @@ public class World implements Updateable, Renderable, Module, Modular {
     public EntityMonster spawnMonster(Location location, Entity.Type type) {
         EntityMonster monster = new EntityMonster(type);
         monster.teleport(location);
+        Cancellable cancel = (Cancellable) Pixelate.HANDLER.call(new EventSpawnEntity(monster, this));
+        if (cancel.isCancelled()) return null;
         entities.add(monster);
         return monster;
     }
@@ -196,20 +200,26 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @param location The requested location
      * @return The spawned entity, or null if invalid entity class
      */
-    public <E> E spawnEntity(Class<? extends Entity> clazz, Location location) {
+    public <E extends Entity> E spawnEntity(Class<E> clazz, Location location) {
         if (clazz == EntityPrimedTNT.class) {
             Entity e = new EntityPrimedTNT(location.getX(), location.getY(), this);
+            Cancellable cancel = (Cancellable) Pixelate.HANDLER.call(new EventSpawnEntity(e, this));
+            if (cancel.isCancelled()) return null;
             entities.add(e);
-            return (E) e;
+            return clazz.cast(e);
         } else if (clazz == EntityMonster.class) {
-            return (E) spawnMonster(location, Entity.Type.ZOMBIE);
+            return clazz.cast(spawnMonster(location, Entity.Type.ZOMBIE));
         } else if (clazz == EntityPlayer.class) {
             if (entities.stream().anyMatch(e -> e instanceof EntityPlayer)) {
                 return null;
             }
             Entity e = new EntityPlayer();
+            Cancellable cancel = (Cancellable) Pixelate.HANDLER.call(new EventSpawnEntity(e, this));
+            if (cancel.isCancelled()) return null;
             entities.add(e);
-            return (E) e;
+            return clazz.cast(e);
+        } else if (clazz == EntityItem.class) {
+            return clazz.cast(dropItem(new ItemStack(Material.STONE), location));
         }
         return null;
     }
@@ -355,7 +365,7 @@ public class World implements Updateable, Renderable, Module, Modular {
     @Override
     public <N extends Module> N getModule(Class<N> clazz) {
         if (!hasModule(clazz)) return null;
-        return (N) modules.get(clazz);
+        return clazz.cast(modules.get(clazz));
     }
 
     @Override

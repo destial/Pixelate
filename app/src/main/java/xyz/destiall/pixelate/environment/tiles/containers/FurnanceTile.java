@@ -1,7 +1,6 @@
 package xyz.destiall.pixelate.environment.tiles.containers;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
@@ -14,18 +13,18 @@ public class FurnanceTile extends ContainerTile {
     private float burnerRemainingTime = 0.f;
     private float timeToSmelt = 4.f;
 
-    static HashSet<Material> smeltable = new HashSet<>();
+    static HashMap<Material, Material> smeltable = new HashMap<>();
     static HashMap<Material, Float> burnRate = new HashMap<>();
     static {
         //Smeltable List
-        smeltable.add(Material.COAL_ORE);
+        smeltable.put(Material.COAL_ORE, Material.COAL);
 
         //Burn Rate
         burnRate.put(Material.COAL, 8.f);
     }
 
     public static boolean isASmeltable(ItemStack item)  {
-        return smeltable.contains(item.getType());
+        return smeltable.containsKey(item.getType());
     }
 
     public static boolean isABurner(ItemStack item)
@@ -34,7 +33,7 @@ public class FurnanceTile extends ContainerTile {
     }
 
     //Main Functions
-    public FurnanceTile() {}
+    protected FurnanceTile() {}
 
     //TODO: Add the ViewFurnance making sure things are of smeltable and burnable, and also make this update called when tiles update loop is ran.
     public FurnanceTile(int x, int y, World world) {
@@ -52,7 +51,6 @@ public class FurnanceTile extends ContainerTile {
     }
     public void setTimeToSmelt(float newTime) {
         timeToSmelt = newTime;
-        if (newTime < 4.0) timeToSmelt = 4.0f;
     }
 
     public float getSmeltProgress() {
@@ -68,7 +66,7 @@ public class FurnanceTile extends ContainerTile {
         ItemStack burner = inventory.getBurnerSlot();
         if (burner != null && isABurner(burner)) {
             if (burnerRemainingTime <= 0) {
-                burner.setAmount(burner.getAmount() - 1);
+                burner.removeAmount(1);
                 burnerRemainingTime += burnRate.get(burner.getType());
                 if (burner.getAmount() == 0) inventory.setBurnerSlot(null);
             }
@@ -78,13 +76,18 @@ public class FurnanceTile extends ContainerTile {
             ItemStack toSmelt = inventory.getToSmeltSlot();
             if (toSmelt != null && isASmeltable(toSmelt)) {
                 ItemStack processed = inventory.getProcessedSlot();
-                if (processed != null) {
-                    smeltProgress -= Timer.getDeltaTime();
-                    if (smeltProgress <= 0) {
-                        smeltProgress = timeToSmelt;
-                        processed.setAmount(processed.getAmount() + 1); //Add to processed slot
-                        toSmelt.setAmount(toSmelt.getAmount() - 1);
+                if (processed != null && smeltable.get(toSmelt.getType()) != processed.getType()) return;
+                smeltProgress -= Timer.getDeltaTime();
+                if (smeltProgress <= 0) {
+                    smeltProgress = timeToSmelt;
+                    if (processed != null && smeltable.get(toSmelt.getType()) == processed.getType()) {
+                        processed.addAmount(1);
+                    } else {
+                        processed = new ItemStack(smeltable.get(toSmelt.getType()));
+                        inventory.setProcessedSlot(processed);
                     }
+                    toSmelt.removeAmount(1);
+                    if (toSmelt.getAmount() == 0) inventory.setToSmeltSlot(null);
                 }
             }
         }

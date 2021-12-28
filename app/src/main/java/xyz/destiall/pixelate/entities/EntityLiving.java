@@ -17,7 +17,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected float armor;
     protected float damageDelay;
     protected Inventory inventory;
-    public EntityLiving() {}
+    protected EntityLiving() {}
 
     public EntityLiving(Bitmap image, int rows, int columns) {
         super(image, rows, columns);
@@ -25,6 +25,12 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         speed = 1f;
         armor = 0f;
         damageDelay = 0f;
+    }
+
+    @Override
+    public void refresh() {
+        super.refresh();
+        getInventory().setHolder(this);
     }
 
     /**

@@ -12,7 +12,7 @@ import xyz.destiall.pixelate.position.Location;
 
 public class EffectsModule implements Renderable, Module {
     private transient World world;
-    private final List<Effect> effects;
+    private transient final List<Effect> effects;
 
     public EffectsModule() {
         effects = new LinkedList<>();
@@ -34,8 +34,12 @@ public class EffectsModule implements Renderable, Module {
         effects.add(effect);
     }
 
-    public void removeEffect(Effect e) {
-        effects.remove(e);
+    /**
+     * Remove this effect from this module
+     * @param effect The effect to remove
+     */
+    public void removeEffect(Effect effect) {
+        effects.remove(effect);
     }
 
     @Override

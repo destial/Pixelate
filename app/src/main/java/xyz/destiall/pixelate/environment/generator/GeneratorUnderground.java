@@ -64,7 +64,7 @@ public class GeneratorUnderground implements Generator {
                 if(tile == null)
                     tile = TileFactory.createTile(Material.STONE, x,y,world);
 
-                if (Math.random() > 0.98) world.spawnMonster(new Location(x, y, world), Entity.Type.ZOMBIE);
+                if (Math.random() > 0.98 && tile.getTileType() == Tile.TileType.BACKGROUND) world.spawnMonster(new Location(x, y, world), Entity.Type.ZOMBIE);
                 tiles.add(tile);
             }
         }

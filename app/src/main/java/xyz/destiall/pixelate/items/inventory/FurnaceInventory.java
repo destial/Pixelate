@@ -3,14 +3,12 @@ package xyz.destiall.pixelate.items.inventory;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class FurnaceInventory extends Inventory {
-    ItemStack toSmelt, burner, processed;
+    private ItemStack toSmelt, burner, processed;
 
     public FurnaceInventory() {}
 
     @Override
-    public void removeItem(ItemStack item) {
-
-    }
+    public void removeItem(ItemStack item) {}
 
     @Override
     public boolean addItem(ItemStack item) {
@@ -19,7 +17,14 @@ public class FurnaceInventory extends Inventory {
 
     @Override
     public void clear() {
+        toSmelt = null;
+        burner = null;
+        processed = null;
+    }
 
+    @Override
+    public ItemStack[] getItems() {
+        return new ItemStack[] { toSmelt, burner, processed };
     }
 
     public ItemStack getBurnerSlot() { return burner; }

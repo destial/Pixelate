@@ -9,12 +9,20 @@ public class EntityInventory extends Inventory {
     protected transient InventoryHolder holder;
     protected int size;
 
-    public EntityInventory() {}
+    protected EntityInventory() {}
 
     public EntityInventory(InventoryHolder holder, int size) {
         this.holder = holder;
         this.size = size;
         items = new ItemStack[size];
+    }
+
+    /**
+     * Set the holder of this inventory
+     * @param holder The holder
+     */
+    public void setHolder(InventoryHolder holder) {
+        this.holder = holder;
     }
 
     /**

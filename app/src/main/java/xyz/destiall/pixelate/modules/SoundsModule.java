@@ -10,7 +10,7 @@ import xyz.destiall.pixelate.position.Location;
 
 public class SoundsModule implements Module {
     private transient World world;
-    private final List<Sound> soundsPlaying;
+    private transient final List<Sound> soundsPlaying;
 
     public SoundsModule() {
         soundsPlaying = new ArrayList<>();

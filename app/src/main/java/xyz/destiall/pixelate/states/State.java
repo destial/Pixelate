@@ -14,9 +14,32 @@ public abstract class State implements Updateable, Module {
         this.surface = surface;
     }
 
+    /**
+     * Render this state to the canvas
+     * @param canvas The canvas
+     */
     public abstract void render(Canvas canvas);
-    public abstract void reset();
-    public abstract boolean load(String path);
-    public abstract void save(String path);
+
+    /**
+     * Clean up this state
+     */
     public abstract void destroy();
+
+    /**
+     * Reset this state
+     */
+    public abstract void reset();
+
+    /**
+     * Load this state from a file
+     * @param path The simple path (e.g. "game.json")
+     * @return true if loaded successfully, otherwise false
+     */
+    public abstract boolean load(String path);
+
+    /**
+     * Save this state to a file
+     * @param path The simple path (e.g. "game.json)
+     */
+    public abstract void save(String path);
 }

@@ -13,7 +13,6 @@ import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.environment.tiles.Tile;
-import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.inventory.Inventory;
@@ -69,8 +68,10 @@ public class Pixelate extends Thread {
 
     @Override
     public void run() {
+        String savePath = "game.json";
+
         stateManager.setState("Game");
-        if (!stateManager.getCurrentState().load("game.json")) {
+        if (!stateManager.getCurrentState().load(savePath)) {
             stateManager.getCurrentState().reset();
         }
         while (running)  {
@@ -90,6 +91,7 @@ public class Pixelate extends Thread {
                 }
             }
         }
+        stateManager.getState("Game").save(savePath);
         stateManager.destroy();
     }
 

@@ -105,7 +105,7 @@ public enum Material {
 
     //Items
     Material(int drawable, GenericModifierType genericModifierType, EfficiencyType efficiencyType) {
-        this(0, 0, false, drawable, Tile.TileType.UNKNOWN, -1, genericModifierType, efficiencyType, false);
+        this(-1, -1, false, drawable, Tile.TileType.UNKNOWN, -1, genericModifierType, efficiencyType, false);
     }
 
     //For materials
@@ -130,69 +130,120 @@ public enum Material {
         this(row, column, true, -1, type, defaultBreakDuration, genericModifierType, EfficiencyType.NONE, container);
     }
 
+    /**
+     * Get the amount of columns used in the tile map
+     * @return The columns
+     */
     public static int getColumns() {
         return columns;
     }
 
+    /**
+     * Get the amount of rows used in the tile map
+     * @return  The rows
+     */
     public static int getRows() {
         return rows;
     }
 
+    /**
+     * Get the generic modifier of this material. Used in checking tool efficiency when breaking blocks.
+     * @return The generic modifier
+     */
     public GenericModifierType getGenericModifierType()
     {
         return genericModifierType;
     }
 
+    /**
+     * Get the level of efficiency of this tool.
+     * @return The efficiency tier
+     */
     public EfficiencyType getEfficiencyTier()
     {
         return efficiencyType;
     }
 
+    /**
+     * Get the drawable id of this material.
+     * @return The drawable id or -1 if from the tile map
+     */
     public int getDrawable() {
         return drawable;
     }
 
+    /**
+     * Get the column of this material in the tile map
+     * @return The column or -1 if it has a drawable
+     */
     public int getColumn() {
         return column;
     }
 
+    /**
+     * Get the row of this material in the tile map
+     * @return The row or -1 if it has a drawable
+     */
     public int getRow() {
         return row;
     }
 
+    /**
+     * Get the tile type of this material
+     * @return Foreground or background
+     */
     public Tile.TileType getTileType() {
         return tileType;
     }
 
+    /**
+     * Get the required mining duration of this material
+     * @param itemMaterial The material to check against
+     * @return The duration to mine
+     */
     public float getRequiredMineDuration(Material itemMaterial) {
-        // Can speed up mining since this tool is for the right type of block
         if (itemMaterial.getGenericModifierType() == genericModifierType) {
             return defaultBreakDuration / itemMaterial.getEfficiencyTier().getMultiplier();
         }
         return defaultBreakDuration;
     }
 
+    /**
+     * Get the required mining duration of this material
+     * @param item The item to check against
+     * @return The duration to mine
+     */
     public float getRequiredMineDuration(ItemStack item) {
         if (item == null) return defaultBreakDuration;
         return getRequiredMineDuration(item.getType());
     }
 
+    /**
+     * If this material is a container
+     * @return true or false
+     */
     public boolean isContainer() {
         return container;
     }
 
+    /**
+     * If this material is a block
+     * @return true or false
+     */
     public boolean isBlock() {
         return block;
     }
 
+    /**
+     * Get the image represented by this material
+     * @return The bitmap image
+     */
     public Bitmap getImage() {
         if (image == null) {
-            if (drawable != -1) {
+            if (drawable != -1)
                 image = ResourceManager.getBitmap(drawable);
-            } else {
+            else
                 image = Imageable.createSubImageAt(Pixelate.getTileMap(), rows, columns, row, column);
-
-            }
         }
         return image;
     }

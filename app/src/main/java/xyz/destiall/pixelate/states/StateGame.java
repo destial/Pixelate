@@ -112,12 +112,24 @@ public class StateGame extends State implements Modular {
         }
     }
 
-    public void initialize() {
+    private void initialize() {
         screen = new Screen(null, player, Pixelate.WIDTH, Pixelate.HEIGHT);
     }
 
+    /**
+     * Get the main player of this state
+     * @return The player
+     */
     public EntityPlayer getPlayer() {
         return player;
+    }
+
+    /**
+     * Get the WorldManager of this state
+     * @return The world manager
+     */
+    public WorldManager getWorldManager() {
+        return worldManager;
     }
 
     @Override
@@ -143,16 +155,11 @@ public class StateGame extends State implements Modular {
 
     @Override
     public void destroy() {
-        save("game.json");
         worldManager.destroy();
         for (Module m : modules.values()) {
             m.destroy();
         }
         modules.clear();
-    }
-
-    public WorldManager getWorldManager() {
-        return worldManager;
     }
 
     @Override

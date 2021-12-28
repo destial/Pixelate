@@ -32,7 +32,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     protected Direction target;
     private boolean removed;
 
-    public Entity() {
+    protected Entity() {
         spriteSheet = new SpriteSheet();
         velocity = new Vector2();
         scale = 1;
