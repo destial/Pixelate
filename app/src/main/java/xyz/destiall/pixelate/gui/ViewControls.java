@@ -95,7 +95,7 @@ public class ViewControls implements View {
         Button world = new CircleButton(new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.1), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9)), 25, Color.MAGENTA);
         world.onTap(() -> {
             StateGame gameState = (StateGame) Pixelate.getGSM().getState("Game");
-            WorldManager wm = gameState.getObject(WorldManager.class);
+            WorldManager wm = gameState.getWorldManager();
             String currentworld = wm.getCurrentWorldName();
             if (currentworld.equals("Cave"))
                 Pixelate.setWorld("Overworld");

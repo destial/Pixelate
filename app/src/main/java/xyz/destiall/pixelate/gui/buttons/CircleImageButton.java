@@ -7,14 +7,16 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class CircleImageButton implements Button {
-    private final Vector2 center;
-    private final Bitmap image;
-    private final float radius;
+    private Vector2 center;
+    private Bitmap image;
+    private float radius;
     private boolean pressed;
 
     private Runnable tap;
     private Runnable hold;
     private Runnable release;
+    public CircleImageButton() {}
+
     public CircleImageButton(int id, Vector2 center) {
         this.image = ResourceManager.getBitmap(id);
         this.center = center;

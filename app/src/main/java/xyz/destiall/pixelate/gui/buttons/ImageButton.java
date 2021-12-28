@@ -7,13 +7,15 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class ImageButton extends Imageable implements Button {
-    private final Vector2 topleft;
-    private final AABB aabb;
+    private Vector2 topleft;
+    private AABB aabb;
     private boolean pressed;
 
     private Runnable tap;
     private Runnable hold;
     private Runnable release;
+    public ImageButton() {}
+
     public ImageButton(int id, Vector2 topleft) {
         super(ResourceManager.getBitmap(id), 1, 1);
         this.topleft = topleft;

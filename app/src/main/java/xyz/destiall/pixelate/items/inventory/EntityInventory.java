@@ -6,13 +6,23 @@ import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class EntityInventory extends Inventory {
-    protected final InventoryHolder holder;
-    protected final int size;
+    protected transient InventoryHolder holder;
+    protected int size;
+
+    protected EntityInventory() {}
 
     public EntityInventory(InventoryHolder holder, int size) {
         this.holder = holder;
         this.size = size;
         items = new ItemStack[size];
+    }
+
+    /**
+     * Set the holder of this inventory
+     * @param holder The holder
+     */
+    public void setHolder(InventoryHolder holder) {
+        this.holder = holder;
     }
 
     /**

@@ -4,14 +4,16 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class CircleButton implements Button {
-    private final Vector2 center;
-    private final float radius;
-    private final int color;
+    private Vector2 center;
+    private float radius;
+    private int color;
     private boolean pressed;
 
     private Runnable tap;
     private Runnable hold;
     private Runnable release;
+    public CircleButton() {}
+
     public CircleButton(Vector2 center, float radius, int color) {
         this.center = center;
         this.radius = radius;

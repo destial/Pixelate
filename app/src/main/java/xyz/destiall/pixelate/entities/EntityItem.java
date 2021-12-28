@@ -4,13 +4,21 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventItemPickup;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class EntityItem extends Entity {
-    private final ItemStack drop;
-    private float upAndDownTimer;
-    private boolean down;
+    private ItemStack drop;
+    private transient float upAndDownTimer;
+    private transient boolean down;
+
+    protected EntityItem() {
+        scale = 0.5f;
+        upAndDownTimer = 0f;
+        down = false;
+    }
+
     public EntityItem(ItemStack itemStack) {
         super(itemStack.getImage(), 1, 1);
         scale = 0.5f;
@@ -20,6 +28,15 @@ public class EntityItem extends Entity {
         spriteSheet.setCurrentFrame(0);
         upAndDownTimer = 0f;
         down = false;
+    }
+
+    @Override
+    public void refresh() {
+        setImage(drop.getImage(), 1, 1);
+        spriteSheet = new SpriteSheet();
+        spriteSheet.addAnimation("DROP", createAnimation(0));
+        spriteSheet.setCurrentAnimation("DROP");
+        spriteSheet.setCurrentFrame(0);
     }
 
     @Override
@@ -47,6 +64,15 @@ public class EntityItem extends Entity {
         location.add(0, upAndDownTimer);
         super.render(screen);
         location.subtract(0, upAndDownTimer);
+    }
+
+    /**
+     * Set the item that this drop is representing
+     * @param drop The item to set
+     */
+    public void setDrop(ItemStack drop) {
+        this.drop = drop;
+        setImage(drop.getImage(), 1, 1);
     }
 
     /**

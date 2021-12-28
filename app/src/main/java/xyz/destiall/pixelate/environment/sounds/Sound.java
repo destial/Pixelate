@@ -8,12 +8,20 @@ import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.Location;
 
 public class Sound implements Updateable {
-    private final MediaPlayer player;
+    private MediaPlayer player;
     private boolean released;
 
-    public Sound(SoundType effect) {
+    public Sound() {
+
+    }
+
+    public void setType(SoundType effect) {
         player = MediaPlayer.create(Pixelate.getGameSurface().getContext(), effect.getId());
         released = false;
+    }
+
+    public Sound(SoundType effect) {
+        setType(effect);
     }
 
     public void play() {

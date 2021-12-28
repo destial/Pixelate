@@ -16,11 +16,18 @@ public class TileFactory {
      * @return The newly created tile
      */
     public static Tile createTile(Material mat, int x, int y, World world) {
+        Tile t;
         if (mat == Material.FURNACE) {
-            return new FurnanceTile(x, y, world);
+            t = new FurnanceTile(x, y, world);
+            t.setWorld(world);
+            return t;
         } else if (mat == Material.CHEST) {
-            return new ChestTile(x, y, world);
+            t = new ChestTile(x, y, world);
+            t.setWorld(world);
+            return t;
         }
-        return new Tile(x, y, mat, world, mat.getTileType());
+        t = new Tile(x, y, mat, world, mat.getTileType());
+        t.setWorld(world);
+        return t;
     }
 }

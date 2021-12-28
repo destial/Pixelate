@@ -1,19 +1,44 @@
 package xyz.destiall.pixelate.graphics;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.ByteArrayOutputStream;
 
 public abstract class Imageable {
-    protected Bitmap image;
+    protected transient Bitmap image;
     protected float height;
     protected float width;
     protected int rows;
     protected int columns;
+    private byte[] bytes;
+
+    public Imageable() {}
+
+    public void refresh() {
+        image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        setImage(image, rows, columns);
+    }
+
     public Imageable(Bitmap image, int rows, int columns) {
+        setImage(image, rows, columns);
+        saveBytes();
+    }
+
+    public void setImage(Bitmap image, int rows, int columns) {
+        boolean saveBytes = image != this.image;
         this.image = image;
         this.rows = rows;
         this.columns = columns;
         height = image.getHeight() / (float) rows;
         width = image.getWidth() / (float) columns;
+        if (saveBytes) saveBytes();
+    }
+
+    private void saveBytes() {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 0, byteStream);
+        bytes = byteStream.toByteArray();
     }
 
     /**

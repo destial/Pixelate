@@ -1,4 +1,4 @@
-package xyz.destiall.pixelate.pathfinding;
+package xyz.destiall.pixelate.modules;
 
 import java.util.LinkedList;
 
@@ -6,13 +6,15 @@ import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.pathfinding.algorithms.Algorithm;
 import xyz.destiall.pixelate.position.Location;
 
-public class PathFindingAI implements Module {
+public class PathFindingModule implements Module {
 
     Long previousUpdate = System.currentTimeMillis();
     double pathUpdateFrequency;
     Algorithm algo;
 
-    public PathFindingAI(Algorithm algo, double pathUpdateFrequency) {
+    public PathFindingModule() {}
+
+    public PathFindingModule(Algorithm algo, double pathUpdateFrequency) {
         this.pathUpdateFrequency = pathUpdateFrequency;
         previousUpdate -= (long) (this.pathUpdateFrequency * 1000);
         this.algo = algo;

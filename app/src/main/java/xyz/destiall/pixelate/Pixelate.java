@@ -5,17 +5,39 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import xyz.destiall.java.events.EventHandling;
+import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
+import xyz.destiall.pixelate.items.inventory.Inventory;
+import xyz.destiall.pixelate.modular.Module;
+import xyz.destiall.pixelate.serialize.EntitySerializer;
+import xyz.destiall.pixelate.serialize.InventorySerializer;
+import xyz.destiall.pixelate.serialize.ModuleSerializer;
+import xyz.destiall.pixelate.serialize.TileSerializer;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class Pixelate extends Thread {
     public static final EventHandling HANDLER = new EventHandling();
+    public static final Gson GSON = new GsonBuilder()
+            .serializeNulls()
+            .setLenient()
+            .setPrettyPrinting()
+            .enableComplexMapKeySerialization()
+            .registerTypeAdapter(Entity.class, new EntitySerializer())
+            .registerTypeAdapter(Module.class, new ModuleSerializer())
+            .registerTypeAdapter(Inventory.class, new InventorySerializer())
+            .registerTypeAdapter(Tile.class, new TileSerializer())
+            .create();
+
     public static int HEIGHT;
     public static int WIDTH;
 
@@ -33,23 +55,29 @@ public class Pixelate extends Thread {
         super();
         Pixelate.gameSurface = gameSurface;
         Pixelate.surfaceHolder = surfaceHolder;
-        tileMap = ResourceManager.getBitmap(R.drawable.tilemap);
-        tileMap = Imageable.resizeImage(tileMap, 1.52f);
-        blockBreakAnimationMap = ResourceManager.getBitmap(R.drawable.blockbreakanimation);
-        blockBreakAnimationMap = Imageable.resizeImage(blockBreakAnimationMap, 2.12f);
-        HEIGHT = gameSurface.getHeight();
-        WIDTH = gameSurface.getWidth();
+        Pixelate.tileMap = ResourceManager.getBitmap(R.drawable.tilemap);
+        Pixelate.tileMap = Imageable.resizeImage(tileMap, 1.52f);
+        Pixelate.blockBreakAnimationMap = ResourceManager.getBitmap(R.drawable.blockbreakanimation);
+        Pixelate.blockBreakAnimationMap = Imageable.resizeImage(blockBreakAnimationMap, 2.12f);
+        Pixelate.HEIGHT = gameSurface.getHeight();
+        Pixelate.WIDTH = gameSurface.getWidth();
         timer = new Timer();
-        stateManager = new GSM();
-        stateManager.addState("Game", new StateGame(gameSurface));
-        stateManager.setState("Game");
+        Pixelate.stateManager = new GSM();
+        Pixelate.stateManager.addState("Game", new StateGame(gameSurface));
     }
 
     @Override
     public void run() {
+        String savePath = "game.json";
+
+        stateManager.setState("Game");
+        if (!stateManager.getCurrentState().load(savePath)) {
+            stateManager.getCurrentState().reset();
+        }
         while (running)  {
             try {
                 canvas = surfaceHolder.lockCanvas();
+                if (canvas == null) continue;
                 HEIGHT = canvas.getHeight();
                 WIDTH = canvas.getWidth();
                 update();
@@ -63,6 +91,7 @@ public class Pixelate extends Thread {
                 }
             }
         }
+        stateManager.getState("Game").save(savePath);
         stateManager.destroy();
     }
 
@@ -82,7 +111,7 @@ public class Pixelate extends Thread {
 
     public static boolean setWorld(String world) {
         StateGame gameState = ((StateGame) stateManager.getState("Game"));
-        WorldManager wm = gameState.getObject(WorldManager.class);
+        WorldManager wm = gameState.getWorldManager();
         if (wm.isAWorld(world) && !wm.isWorldActive(world)) {
             // Remove player from current world
             World current = wm.getCurrentWorld();

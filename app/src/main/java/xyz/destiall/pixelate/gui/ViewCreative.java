@@ -15,15 +15,15 @@ import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.items.inventory.ChestInventory;
+import xyz.destiall.pixelate.items.inventory.CreativeInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
-public class ViewChest implements View {
+public class ViewCreative implements View {
     private final Map<Integer, AABB> positions;
     private final HashMap<Material, Bitmap> images;
-    private final ChestInventory inventory;
+    private final CreativeInventory inventory;
     private final PlayerInventory playerInventory;
     private final Bitmap image;
     private final Vector2 exitButton;
@@ -35,8 +35,10 @@ public class ViewChest implements View {
     private int draggingX;
     private int draggingY;
 
-    public ViewChest(PlayerInventory playerInventory, ChestInventory inventory) {
-        this.inventory = inventory;
+    private int page;
+
+    public ViewCreative(PlayerInventory playerInventory) {
+        this.inventory = new CreativeInventory();
         this.playerInventory = playerInventory;
         exitButton = new Vector2(Pixelate.WIDTH - 100, 100);
         exitButtonRadius = 40;
@@ -44,6 +46,7 @@ public class ViewChest implements View {
         scale = (int) (image.getWidth() * 0.8);
         positions = new HashMap<>();
         images = new HashMap<>();
+        page = 0;
         Pixelate.HANDLER.registerListener(this);
     }
 
@@ -52,10 +55,10 @@ public class ViewChest implements View {
         // Exit button
         screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
 
-        // Chest inventory (top)
+        // Creative inventory (top)
         int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
-        int i = 0;
-        for (int y = 0; y < (inventory.getSize() / 9); y++) {
+        int i = page * 3 * 9;
+        for (int y = 0; y < ((inventory.getSize() - i) / 9); y++) {
             for (int x = 0; x < 9; x++) {
                 int posX = starting + (x * image.getWidth());
                 int posY = 100 + y * image.getHeight();
@@ -133,7 +136,7 @@ public class ViewChest implements View {
         float y = e.getY();
         if (e.getAction() == ControlEvent.Action.DOWN) {
             if (isOnExit(x, y)) {
-                HUD.INSTANCE.setChestDisplay(null, null);
+                HUD.INSTANCE.setCreative(null);
             }
             return;
         }
@@ -169,20 +172,16 @@ public class ViewChest implements View {
                 }
                 if (itemStack == null) {
                     if (slot >= inventory.getSize()) {
-                        playerInventory.setItem(slot - inventory.getSize(), dragging);
+                        playerInventory.setItem(slot - inventory.getSize(), dragging.cloneItem());
                     } else {
                         inventory.setItem(slot, dragging);
                     }
                     if (draggingSlot >= inventory.getSize()) {
                         playerInventory.setItem(draggingSlot - inventory.getSize(), null);
-                    } else {
-                        inventory.setItem(draggingSlot, null);
                     }
                 } else if (itemStack.similar(dragging)) {
                     if (draggingSlot >= inventory.getSize()) {
                         playerInventory.setItem(draggingSlot - inventory.getSize(), null);
-                    } else {
-                        inventory.setItem(draggingSlot, null);
                     }
                     itemStack.addAmount(dragging.getAmount());
                 }

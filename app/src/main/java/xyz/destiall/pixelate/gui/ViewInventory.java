@@ -173,6 +173,7 @@ public class ViewInventory implements View {
                 playerInventory.clearCrafting();
                 HUD.INSTANCE.setInventory(null);
             }
+            return;
         }
         if (e.getAction() == ControlEvent.Action.MOVE) {
             if (dragging != null) {
@@ -190,6 +191,7 @@ public class ViewInventory implements View {
                     }
                 }
             }
+            return;
         }
         if (e.getAction() == ControlEvent.Action.UP) {
             if (dragging != null) {

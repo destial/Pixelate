@@ -1,7 +1,6 @@
 package xyz.destiall.pixelate;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -21,11 +20,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback, 
     }
 
     @Override
-    public void draw(Canvas canvas)  {
-        super.draw(canvas);
-    }
-
-    @Override
     public void surfaceCreated(SurfaceHolder holder) {
         gameThread = new Pixelate(this, holder);
         Pixelate.HANDLER.registerListener(this);
@@ -39,9 +33,9 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback, 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
+        gameThread.setRunning(false);
         while (retry) {
             try {
-                gameThread.setRunning(false);
                 gameThread.join();
                 retry = false;
             } catch(InterruptedException e)  {
@@ -50,6 +44,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback, 
             }
         }
         Pixelate.HANDLER.unregisterListener(this);
+        getHolder().removeCallback(this);
     }
 
     @Override

@@ -13,7 +13,7 @@ import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class HUD implements Updateable, Renderable, Listener {
-    public static final HUD INSTANCE = new HUD();
+    public static HUD INSTANCE = get();
 
     private final ViewHotbar hotbar;
     private final ViewControls buttons;
@@ -21,6 +21,7 @@ public class HUD implements Updateable, Renderable, Listener {
     private ViewFurnace furnace;
     private ViewChest chest;
     private ViewPaused pauseMenu;
+    private ViewCreative creative;
     private DisplayType displayType;
 
     public enum DisplayType {
@@ -32,7 +33,15 @@ public class HUD implements Updateable, Renderable, Listener {
         PAUSE_GAME
     }
 
+    private static HUD get() {
+        if (INSTANCE == null) {
+            new HUD();
+        }
+        return INSTANCE;
+    }
+
     private HUD() {
+        INSTANCE = this;
         buttons = new ViewControls();
         hotbar = new ViewHotbar(null);
         inventory = null;
@@ -48,12 +57,27 @@ public class HUD implements Updateable, Renderable, Listener {
         hotbar.setInventory(playerInventory);
     }
 
+    public void setCreative(PlayerInventory playerInventory) {
+        if (playerInventory == null) {
+            if (creative != null) {
+                creative.destroy();
+                creative = null;
+            }
+            displayType = DisplayType.GAME_VIEW;
+            return;
+        }
+        displayType = DisplayType.CREATIVE_INVENTORY;
+        creative = new ViewCreative(playerInventory);
+    }
+
     public void returnToGame() {
         if (displayType == DisplayType.PAUSE_GAME) {
             Pixelate.PAUSED = false;
             displayType = DisplayType.GAME_VIEW;
-            pauseMenu.destroy();
-            pauseMenu = null;
+            if (pauseMenu != null) {
+                pauseMenu.destroy();
+                pauseMenu = null;
+            }
         }
     }
 
@@ -63,47 +87,47 @@ public class HUD implements Updateable, Renderable, Listener {
     }
 
     public void setInventory(PlayerInventory playerInventory) {
-        displayType = DisplayType.PLAYER_INVENTORY;
         if (playerInventory == null) {
-            if (this.inventory != null) {
-                this.inventory.destroy();
+            if (inventory != null) {
+                inventory.destroy();
             }
-            this.inventory = null;
-            this.displayType = DisplayType.GAME_VIEW;
+            inventory = null;
+            displayType = DisplayType.GAME_VIEW;
             return;
         }
+        displayType = DisplayType.PLAYER_INVENTORY;
         buttons.setJoystick(false);
         buttons.setActuator(0, 0);
         setHotbar(playerInventory);
-        this.inventory = new ViewInventory(playerInventory);
+        inventory = new ViewInventory(playerInventory);
     }
 
     public void setFurnaceDisplay(PlayerInventory playerInventory, FurnanceTile tile) {
-        displayType = DisplayType.FURNACE_INVENTORY;
         if (playerInventory == null || tile == null) {
-            if (this.furnace != null) furnace.destroy();
-            this.furnace = null;
-            this.displayType = DisplayType.GAME_VIEW;
+            if (furnace != null) furnace.destroy();
+            furnace = null;
+            displayType = DisplayType.GAME_VIEW;
             return;
         }
+        displayType = DisplayType.FURNACE_INVENTORY;
         buttons.setJoystick(false);
         buttons.setActuator(0, 0);
         setHotbar(playerInventory);
-        this.furnace = new ViewFurnace(playerInventory, tile);
+        furnace = new ViewFurnace(playerInventory, tile);
     }
 
     public void setChestDisplay(PlayerInventory playerInventory, ChestInventory chestInventory) {
         displayType = DisplayType.CHEST_INVENTORY;
         if (playerInventory == null || chestInventory == null) {
-            if (this.chest != null) chest.destroy();
-            this.chest = null;
-            this.displayType = DisplayType.GAME_VIEW;
+            if (chest != null) chest.destroy();
+            chest = null;
+            displayType = DisplayType.GAME_VIEW;
             return;
         }
         buttons.setJoystick(false);
         buttons.setActuator(0, 0);
         setHotbar(playerInventory);
-        this.chest = new ViewChest(playerInventory, chestInventory);
+        chest = new ViewChest(playerInventory, chestInventory);
     }
 
     @Override
@@ -120,6 +144,10 @@ public class HUD implements Updateable, Renderable, Listener {
             case CHEST_INVENTORY:
                 if (chest != null)
                     chest.render(screen);
+                break;
+            case CREATIVE_INVENTORY:
+                if (creative != null)
+                    creative.render(screen);
                 break;
             case PAUSE_GAME:
                 if (pauseMenu != null)
@@ -147,6 +175,10 @@ public class HUD implements Updateable, Renderable, Listener {
             case CHEST_INVENTORY:
                 if (chest != null)
                     chest.update();
+                break;
+            case CREATIVE_INVENTORY:
+                if (creative != null)
+                    creative.update();
                 break;
             case PAUSE_GAME:
                 if (pauseMenu != null)

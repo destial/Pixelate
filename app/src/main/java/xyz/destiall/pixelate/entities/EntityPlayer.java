@@ -10,11 +10,13 @@ import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
+import xyz.destiall.pixelate.events.EventIgniteTNT;
 import xyz.destiall.pixelate.events.EventItemPickup;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
@@ -40,11 +42,11 @@ import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class EntityPlayer extends EntityLiving implements Listener {
-    private final SpriteSheet slash;
-    private final Bitmap crosshair;
-    private boolean playSwingAnimation;
-    private boolean playPunchAnimation;
-    private double swingAnimationTimer;
+    private transient final SpriteSheet slash;
+    private transient final Bitmap crosshair;
+    private transient boolean playSwingAnimation;
+    private transient boolean playPunchAnimation;
+    private transient double swingAnimationTimer;
     private final float originalAnimSpeed;
 
     public EntityPlayer() {
@@ -60,7 +62,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         scale = 0.5f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
         inventory = new PlayerInventory(this, 27);
-        HUD.INSTANCE.setHotbar(getInventory());
         playSwingAnimation = false;
         playPunchAnimation = false;
         slash = new SpriteSheet();
@@ -71,7 +72,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addAnimation("DOWN" , createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
-        Pixelate.HANDLER.registerListener(this);
     }
 
     @Override
@@ -107,13 +107,14 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @Override
     public void render(Screen screen) {
         super.render(screen);
-        Vector2 vector = Screen.convert(location);
-        Vector2 dir = target.getVector().multiply(Tile.SIZE);
-        dir.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25);
-        vector.add(dir);
+        Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
+        Vector2 vector = Screen.convert(newLoc);
+        // Vector2 dir = target.getVector();
+        // dir.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25);
+        // vector.add(dir);
 
         if (Settings.ENABLE_BLOCK_TRACE) {
-            Tile t = location.clone().add(dir).getTile();
+            Tile t = newLoc.getTile();
             if (t != null) {
                 Vector2 tile = Screen.convert(t.getVector());
                 screen.quad(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, Color.argb(60, 0, 0, 255));
@@ -154,7 +155,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
      * @return The item in hand, or null if none
      */
     public ItemStack getItemInHand() {
-        return inventory.getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
+        return getInventory().getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
     }
 
     @EventHandler
@@ -262,30 +263,28 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 ChestInventory chestInventory = (ChestInventory) container.getInventory();
                 HUD.INSTANCE.setChestDisplay(getInventory(), chestInventory);
             }
+        } else if (tile.getMaterial() == Material.TNT) {
+            tile.setMaterial(Material.STONE);
+            Location location = tile.getLocation();
+            World world = location.getWorld();
+            EventIgniteTNT ev = new EventIgniteTNT(location);
+            Pixelate.HANDLER.call(ev);
+            if (ev.isCancelled()) return;
+            world.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
         } else if (current != null && current.getType().isBlock()) {
             if (tile.getTileType() != Tile.TileType.FOREGROUND && !location.getWorld().findTiles(collision).contains(tile)) {
-                EventTilePlace ev = new EventTilePlace(tile, current.getType());
+                EventTilePlace ev = new EventTilePlace(this, tile, current.getType());
                 Pixelate.HANDLER.call(ev);
                 if (ev.isCancelled()) return;
                 tile.setMaterial(ev.getReplaced());
-                current.setAmount(current.getAmount() - 1);
+                current.removeAmount(1);
             }
         }
     }
 
     @EventHandler(priority = EventHandler.Priority.HIGHEST)
     private void onOpenInventory(EventOpenInventory e) {
+        // HUD.INSTANCE.setCreative(getInventory());
         HUD.INSTANCE.setInventory(getInventory());
-    }
-
-    @EventHandler
-    private void onPlace(EventTilePlace e) {
-        if (e.getReplaced() == Material.TNT) {
-            e.setCancelled(true);
-            Location location = e.getTile().getLocation();
-            location.getWorld().spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
-            ItemStack current = getItemInHand();
-            current.setAmount(current.getAmount() - 1);
-        }
     }
 }
