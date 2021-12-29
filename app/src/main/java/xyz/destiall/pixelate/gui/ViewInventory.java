@@ -9,15 +9,18 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
+import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.meta.ItemFlag;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
@@ -40,7 +43,7 @@ public class ViewInventory implements View {
         exitButton = new Vector2(Pixelate.WIDTH - 100, 100);
         exitButtonRadius = 40;
         image = ResourceManager.getBitmap(R.drawable.hotbar);
-        scale = (int) (image.getWidth() * 0.8);
+        scale = (int) (image.getWidth() * 0.7);
         positions = new HashMap<>();
         images = new HashMap<>();
         Pixelate.HANDLER.registerListener(this);
@@ -65,16 +68,24 @@ public class ViewInventory implements View {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getType(), image);
                     }
+                    int drawX, drawY;
                     if (item == dragging) {
-                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                        drawX = (int) (draggingX - image.getWidth() / 2f);
+                        drawY = (int) (draggingY - image.getHeight() / 2f);
                     } else {
-                        screen.draw(image, posX + 15, posY + 5);
-                        if (item.getAmount() > 1) {
-                            screen.text("" + item.getAmount(),
-                                    posX + this.image.getWidth() / 2f,
-                                    posY + this.image.getHeight() / 2f,
-                                    40, Color.WHITE);
-                        }
+                        drawX = posX + 15;
+                        drawY = posY + 15;
+                    }
+                    screen.draw(image, drawX, drawY);
+                    if (item.getAmount() > 1) {
+                        screen.text("" + item.getAmount(),
+                                drawX + this.image.getWidth() / 2f,
+                                drawY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
+                        Glint.INSTANCE.render(screen, drawX, drawY, 1);
                     }
                 }
                 if (!positions.containsKey(playerInventory.getSize() + a)) {
@@ -99,7 +110,11 @@ public class ViewInventory implements View {
                     image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                     images.put(item.getType(), image);
                 }
-                screen.draw(image, cOutX + 15, cOutY + 5);
+                screen.draw(image, cOutX + 15, cOutY + 15);
+                ItemMeta meta = item.getItemMeta();
+                if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
+                    Glint.INSTANCE.render(screen, cOutX + 15, cOutY + 15, 1);
+                }
                 break;
             }
         }
@@ -119,16 +134,24 @@ public class ViewInventory implements View {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getType(), image);
                     }
+                    int drawX, drawY;
                     if (item != dragging) {
-                        screen.draw(image, posX + 15, posY + 5);
-                        if (item.getAmount() > 1) {
-                            screen.text(""+item.getAmount(),
-                                posX + this.image.getWidth() / 2f,
-                                posY + this.image.getHeight() / 2f,
-                                40, Color.WHITE);
-                        }
+                        drawX = posX + 15;
+                        drawY = posY + 15;
                     } else {
-                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                        drawX = (int) (draggingX - image.getWidth() / 2f);
+                        drawY = (int) (draggingY - image.getHeight() / 2f);
+                    }
+                    screen.draw(image, drawX, drawY);
+                    if (item.getAmount() > 1) {
+                        screen.text(""+item.getAmount(),
+                                drawX + this.image.getWidth() / 2f,
+                                drawY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
+                        Glint.INSTANCE.render(screen, drawX, drawY, 1);
                     }
                 }
                 if (!positions.containsKey(i)) {
@@ -140,7 +163,9 @@ public class ViewInventory implements View {
     }
 
     @Override
-    public void update() {}
+    public void update() {
+        Glint.INSTANCE.update();
+    }
 
     @EventHandler
     private void onTouch(EventTouch e) {

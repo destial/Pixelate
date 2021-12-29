@@ -7,10 +7,9 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.modules.EffectsModule;
-import xyz.destiall.pixelate.modules.SoundsModule;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.timer.Timer;
 
@@ -20,11 +19,10 @@ public class EntityPrimedTNT extends Entity {
     protected EntityPrimedTNT() {}
 
     public EntityPrimedTNT(double x, double y, World world) {
-        super(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2);
         location.set(x, y);
         location.setWorld(world);
         scale = 0.8f;
-        spriteSheet.addAnimation("TNT", createAnimation(0));
+        spriteSheet.addAnimation("TNT", Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2,0));
         spriteSheet.setCurrentAnimation("TNT");
         spriteSheet.setCurrentFrame(0);
         animationSpeed = 5;

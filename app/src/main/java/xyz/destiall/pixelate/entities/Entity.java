@@ -20,18 +20,21 @@ import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
-public abstract class Entity extends Imageable implements Updateable, Renderable, Modular {
+public abstract class Entity implements Updateable, Renderable, Modular {
+    private final HashMap<Class<? extends Module>, Module> modules;
+    private transient boolean removed;
+
     protected transient SpriteSheet spriteSheet;
-    protected HashMap<Class<? extends Module>, Module> modules;
+    protected transient float currentAnimation;
+
     protected Location location;
-    protected float scale;
     protected Vector2 velocity;
-    protected float currentAnimation;
-    protected float animationSpeed;
     protected AABB collision;
     protected Direction facing;
     protected Direction target;
-    private boolean removed;
+
+    protected float animationSpeed;
+    protected float scale;
 
     protected Entity() {
         spriteSheet = new SpriteSheet();
@@ -45,18 +48,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         animationSpeed = 60;
     }
 
-    public Entity(Bitmap image, int rows, int columns) {
-        super(image, rows, columns);
-        spriteSheet = new SpriteSheet();
-        velocity = new Vector2();
-        scale = 1;
-        location = new Location(0, 0);
-        facing = Direction.RIGHT;
-        target = facing;
-        modules = new HashMap<>();
-        removed = false;
-        animationSpeed = 60;
-    }
+    public void refresh() {}
 
     /**
      * Get this entity's location
@@ -130,7 +122,7 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
     protected void updateSpriteAnimation() {
         // Update sprite animation
         currentAnimation += Timer.getDeltaTime() * animationSpeed;
-        if (currentAnimation >= columns)  {
+        if (currentAnimation >= spriteSheet.getColumns())  {
             currentAnimation = 0;
         }
         spriteSheet.setCurrentFrame((int) currentAnimation);

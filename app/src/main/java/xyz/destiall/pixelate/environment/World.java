@@ -19,6 +19,7 @@ import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;

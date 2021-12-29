@@ -81,4 +81,8 @@ public class SpriteSheet {
     public Bitmap getCurrentSprite() {
         return getCurrentAnimation()[animationFrame];
     }
+
+    public int getColumns() {
+        return getCurrentAnimation().length;
+    }
 }

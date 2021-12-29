@@ -11,33 +11,36 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventKeyboard;
 import xyz.destiall.pixelate.events.EventTouch;
+import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.meta.ItemFlag;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class ViewHotbar implements View {
-    private HashMap<Integer, AABB> positions;
-    private HashMap<Material, Bitmap> images;
-    private Bitmap image;
-    private Bitmap currentSlotImage;
+    private final HashMap<Integer, AABB> positions;
+    private final HashMap<Material, Bitmap> images;
+    private final Bitmap image;
+    private final Bitmap currentSlotImage;
     private PlayerInventory playerInventory;
     private int droppingSlot;
     private float dropTimer;
     private int currentSlot;
-    public ViewHotbar() {}
 
     public ViewHotbar(PlayerInventory playerInventory) {
         this.playerInventory = playerInventory;
+        Bitmap glint = ResourceManager.getBitmap(R.drawable.glint);
         Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
         currentSlotImage = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.85), (int) (image.getHeight() * 0.85), false);
         this.image = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * 0.8), (int) (image.getHeight() * 0.8), false);
@@ -86,13 +89,17 @@ public class ViewHotbar implements View {
                     itemImage = Bitmap.createScaledBitmap(item.getImage(), (int) (this.image.getWidth() * 0.8), (int) (this.image.getWidth() * 0.8), true);
                     images.put(item.getType(), itemImage);
                 }
-                screen.draw(itemImage, x + 15, y + 10);
+                screen.draw(itemImage, x + 10, y + 10);
                 if (item.getAmount() > 1) {
                     screen.text(
                         "" + item.getAmount(),
                         x + this.image.getWidth() / 2f,
                         y + this.image.getHeight() / 2f,
                         40, Color.WHITE);
+                }
+                ItemMeta meta = item.getItemMeta();
+                if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
+                    Glint.INSTANCE.render(screen, x + 10, y + 10);
                 }
             }
             if (!positions.containsKey(i)) {
@@ -103,6 +110,13 @@ public class ViewHotbar implements View {
             AABB aabb = positions.get(droppingSlot);
             if (aabb == null) return;
             screen.bar(aabb.getMin().getX(), aabb.getMin().getY(), aabb.getWidth(), aabb.getHeight(), Color.alpha(Color.WHITE), Color.argb(100, 255, 255, 255), dropTimer);
+        }
+
+        ItemStack current = playerInventory.getItem(currentSlot);
+        if (current != null) {
+            ItemMeta meta = current.getItemMeta();
+            String name = meta.hasDisplayName() ? meta.getDisplayName() : current.getType().getName();
+            screen.text(name, Pixelate.WIDTH * 0.5f - (name.length() * 10), y - 10, 40, Color.WHITE);
         }
     }
 
@@ -125,6 +139,8 @@ public class ViewHotbar implements View {
             droppingSlot = -1;
             dropTimer = 0f;
         }
+
+        Glint.INSTANCE.update();
     }
 
     @Override

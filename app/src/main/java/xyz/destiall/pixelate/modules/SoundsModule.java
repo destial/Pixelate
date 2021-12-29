@@ -3,7 +3,6 @@ package xyz.destiall.pixelate.modules;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.destiall.java.timer.Scheduler;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.modular.Module;

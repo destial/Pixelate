@@ -9,7 +9,7 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.ResourceManager;

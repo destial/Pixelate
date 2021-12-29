@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.items.crafting;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class Recipe {

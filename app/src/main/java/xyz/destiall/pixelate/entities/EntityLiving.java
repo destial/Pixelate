@@ -12,16 +12,16 @@ import xyz.destiall.pixelate.items.inventory.Inventory;
 import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class EntityLiving extends Entity implements InventoryHolder {
+    protected transient float damageDelay;
+
+    protected Inventory inventory;
     protected float health;
     protected float maxHealth;
     protected float speed;
     protected float armor;
-    protected float damageDelay;
-    protected Inventory inventory;
-    protected EntityLiving() {}
 
-    public EntityLiving(Bitmap image, int rows, int columns) {
-        super(image, rows, columns);
+    public EntityLiving() {
+        //super(image, rows, columns);
         health = maxHealth = 20f;
         speed = 1f;
         armor = 0f;

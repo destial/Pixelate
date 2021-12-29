@@ -8,10 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import xyz.destiall.pixelate.activities.GameActivity;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.activities.MainMenu;
 
 public class PauseMenu extends Activity implements View.OnClickListener {
     private Button btn_start, btn_quit;

@@ -9,10 +9,10 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.EfficiencyTier;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
-import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
@@ -27,6 +27,7 @@ import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventRightTapButton;
 import xyz.destiall.pixelate.events.EventTileBreak;
 import xyz.destiall.pixelate.events.EventTilePlace;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
@@ -47,17 +48,17 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient boolean playSwingAnimation;
     private transient boolean playPunchAnimation;
     private transient double swingAnimationTimer;
-    private final float originalAnimSpeed;
+    private transient final float originalAnimSpeed;
 
     public EntityPlayer() {
-        super(ResourceManager.getBitmap(R.drawable.player), 6, 3);
+        Bitmap image = ResourceManager.getBitmap(R.drawable.player);
         location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
-        spriteSheet.addAnimation("LOOK RIGHT" , createAnimation(0));
-        spriteSheet.addAnimation("LOOK LEFT"  , createAnimation(1));
-        spriteSheet.addAnimation("WALK RIGHT" , createAnimation(2));
-        spriteSheet.addAnimation("WALK LEFT"  , createAnimation(3));
-        spriteSheet.addAnimation("PUNCH RIGHT", createAnimation(4));
-        spriteSheet.addAnimation("PUNCH LEFT" , createAnimation(5));
+        spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0));
+        spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1));
+        spriteSheet.addAnimation("WALK RIGHT" , Imageable.createAnimation(image, 6, 3,2));
+        spriteSheet.addAnimation("WALK LEFT"  , Imageable.createAnimation(image, 6, 3,3));
+        spriteSheet.addAnimation("PUNCH RIGHT", Imageable.createAnimation(image, 6, 3,4));
+        spriteSheet.addAnimation("PUNCH LEFT" , Imageable.createAnimation(image, 6, 3,5));
         spriteSheet.setCurrentAnimation("LOOK RIGHT");
         scale = 0.5f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
@@ -66,10 +67,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
         playPunchAnimation = false;
         slash = new SpriteSheet();
         Bitmap slashSheet = ResourceManager.getBitmap(R.drawable.slashanimation);
-        slash.addAnimation("RIGHT", createAnimation(slashSheet, 4, 4, 0));
-        slash.addAnimation("UP"   , createAnimation(slashSheet, 4, 4, 1));
-        slash.addAnimation("LEFT" , createAnimation(slashSheet, 4, 4, 2));
-        slash.addAnimation("DOWN" , createAnimation(slashSheet, 4, 4, 3));
+        slash.addAnimation("RIGHT", Imageable.createAnimation(slashSheet, 4, 4, 0));
+        slash.addAnimation("UP"   , Imageable.createAnimation(slashSheet, 4, 4, 1));
+        slash.addAnimation("LEFT" , Imageable.createAnimation(slashSheet, 4, 4, 2));
+        slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
     }
@@ -140,7 +141,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (swingAnimationTimer != 0) {
             slash.setCurrentFrame((int) swingAnimationTimer);
             Bitmap map = slash.getCurrentSprite();
-            map = resizeImage(map, 0.3f);
+            map = Imageable.resizeImage(map, 0.3f);
             Vector2 offset = vector.subtract(Tile.SIZE * 0.5, Tile.SIZE * 0.5);
             screen.draw(map, offset.getX(), offset.getY());
         }
@@ -195,7 +196,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
             ItemStack hand = getItemInHand();
             float damage = 1;
             if (hand != null) {
-                if (hand.getType().getEfficiencyTier() != EfficiencyType.NONE) {
+                if (hand.getType().getEfficiencyTier() != EfficiencyTier.NONE) {
                     damage = hand.getType().getEfficiencyTier().getMultiplier();
                 }
             }

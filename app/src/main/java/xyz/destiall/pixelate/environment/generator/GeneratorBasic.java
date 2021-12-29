@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.noise.PerlinNoise;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.TileFactory;

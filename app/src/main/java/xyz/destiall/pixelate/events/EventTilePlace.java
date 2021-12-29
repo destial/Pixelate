@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.events;
 import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Event;
 import xyz.destiall.pixelate.entities.EntityLiving;
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 
 /**

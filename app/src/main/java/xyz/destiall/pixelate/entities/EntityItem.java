@@ -4,6 +4,7 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventItemPickup;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -21,10 +22,9 @@ public class EntityItem extends Entity {
     }
 
     public EntityItem(ItemStack itemStack) {
-        super(itemStack.getImage(), 1, 1);
         scale = 0.5f;
         this.drop = itemStack;
-        spriteSheet.addAnimation("DROP", createAnimation(0));
+        spriteSheet.addAnimation("DROP", Imageable.createAnimation(itemStack.getImage(), 1, 1, 0));
         spriteSheet.setCurrentAnimation("DROP");
         spriteSheet.setCurrentFrame(0);
         upAndDownTimer = 0f;
@@ -33,9 +33,9 @@ public class EntityItem extends Entity {
 
     @Override
     public void refresh() {
-        setImage(drop.getImage(), 1, 1);
+        //setImage(drop.getImage(), 1, 1);
         spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("DROP", createAnimation(0));
+        spriteSheet.addAnimation("DROP", Imageable.createAnimation(drop.getImage(), 1, 1, 0));
         spriteSheet.setCurrentAnimation("DROP");
         spriteSheet.setCurrentFrame(0);
     }
@@ -74,7 +74,7 @@ public class EntityItem extends Entity {
      */
     public void setDrop(ItemStack drop) {
         this.drop = drop;
-        setImage(drop.getImage(), 1, 1);
+        refresh();
     }
 
     /**

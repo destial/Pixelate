@@ -5,27 +5,34 @@ import android.graphics.Bitmap;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.modules.EffectsModule;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class Effect extends Entity {
     private EffectType type;
-    public Effect() {}
+    protected Effect() {}
 
     public void setType(EffectType type) {
         this.type = type;
-        setImage(type.image, 1, type.columns);
+        refresh();
     }
 
     public Effect(EffectType type) {
-        super(type.image, 1, type.columns);
         this.type = type;
-        spriteSheet.addAnimation("EFFECT", createAnimation(0));
+        spriteSheet.addAnimation("EFFECT", Imageable.createAnimation(type.image, 1, type.columns, 0));
         spriteSheet.setCurrentAnimation("EFFECT");
         animationSpeed *= 0.2f;
+    }
+
+    public void refresh() {
+        spriteSheet = new SpriteSheet();
+        spriteSheet.addAnimation("EFFECT", Imageable.createAnimation(type.image, 1, type.columns, 0));
+        spriteSheet.setCurrentAnimation("EFFECT");
     }
 
     public void teleport(Location location) {
@@ -35,7 +42,7 @@ public class Effect extends Entity {
 
     protected void updateSpriteAnimation() {
         currentAnimation += Timer.getDeltaTime() * animationSpeed;
-        if (currentAnimation >= columns)  {
+        if (currentAnimation >= spriteSheet.getColumns())  {
             remove();
             return;
         }
@@ -46,7 +53,7 @@ public class Effect extends Entity {
     public void remove() {
         World w;
         if (isRemoved() || (w = location.getWorld()) == null) return;
-        w.getModule(EffectsModule.class).removeEffect((Effect) this);
+        w.getModule(EffectsModule.class).removeEffect(this);
     }
 
     @Override

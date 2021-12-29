@@ -1,14 +1,16 @@
 package xyz.destiall.pixelate.entities;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
-import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.inventory.EntityInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
@@ -26,21 +28,22 @@ public class EntityMonster extends EntityLiving {
 
     @Override
     public void refresh() {
-        setImage(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
+        //setImage(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
+        Bitmap image = ResourceManager.getBitmap(type.getDrawable());
         spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("LOOK RIGHT", createAnimation(0));
-        spriteSheet.addAnimation("LOOK LEFT", createAnimation(1));
+        spriteSheet.addAnimation("LOOK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(), 0));
+        spriteSheet.addAnimation("LOOK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),1));
         switch (type) {
             case CREEPER:
-                spriteSheet.addAnimation("BLOW RIGHT", createAnimation(4));
-                spriteSheet.addAnimation("BLOW LEFT", createAnimation(5));
+                spriteSheet.addAnimation("BLOW RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),4));
+                spriteSheet.addAnimation("BLOW LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(), 5));
             case ZOMBIE:
-                spriteSheet.addAnimation("WALK RIGHT", createAnimation(2));
-                spriteSheet.addAnimation("WALK LEFT", createAnimation(3));
+                spriteSheet.addAnimation("WALK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),2));
+                spriteSheet.addAnimation("WALK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),3));
                 break;
             case SKELETON:
-                spriteSheet.addAnimation("WALK RIGHT", createAnimation(0));
-                spriteSheet.addAnimation("WALK LEFT", createAnimation(1));
+                spriteSheet.addAnimation("WALK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),0));
+                spriteSheet.addAnimation("WALK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),1));
                 break;
             default: break;
         }
@@ -48,7 +51,6 @@ public class EntityMonster extends EntityLiving {
     }
 
     public EntityMonster(Entity.Type type) {
-        super(ResourceManager.getBitmap(type.getDrawable()), type.getRows(), type.getColumns());
         location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
         this.type = type;
         refresh();
@@ -56,7 +58,7 @@ public class EntityMonster extends EntityLiving {
         health = 20f;
         this.type = type;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
-        inventory = new PlayerInventory(this, 9);
+        inventory = new EntityInventory(this, 9);
         updateAABB();
     }
 

@@ -1,6 +1,6 @@
 package xyz.destiall.pixelate.items.inventory;
 
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class CreativeInventory extends EntityInventory {

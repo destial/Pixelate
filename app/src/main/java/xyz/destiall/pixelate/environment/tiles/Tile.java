@@ -5,8 +5,8 @@ import android.graphics.Bitmap;
 import com.google.gson.annotations.SerializedName;
 
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;

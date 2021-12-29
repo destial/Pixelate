@@ -5,10 +5,8 @@ import android.media.MediaPlayer;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.Location;
-import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.states.StateGame;
 
 public class Sound implements Updateable {
