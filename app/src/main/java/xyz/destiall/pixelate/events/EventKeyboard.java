@@ -20,12 +20,10 @@ public class EventKeyboard extends ControlEvent {
         if (e.getAction() == KeyEvent.ACTION_UP) {
             if (keysPressed.contains(keyCode)) {
                 keysPressed.remove((Object) keyCode);
-                System.out.println("Up");
             }
         } else {
             if (!keysPressed.contains(keyCode)) {
                 keysPressed.add(keyCode);
-                System.out.println("Down");
             }
         }
     }
@@ -47,11 +45,10 @@ public class EventKeyboard extends ControlEvent {
     }
 
     private static Action convert(int action) {
-        switch (action) {
-            case KeyEvent.ACTION_UP:
-                return Action.UP;
-            default: return Action.DOWN;
+        if (action == KeyEvent.ACTION_UP) {
+            return Action.UP;
         }
+        return Action.DOWN;
     }
 
     public static boolean isKeyPressed(int keyCode) {

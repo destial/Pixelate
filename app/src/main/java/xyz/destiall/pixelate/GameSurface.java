@@ -56,14 +56,12 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback, 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Pixelate.HANDLER.call(new EventKeyboard(keyCode, event));
-        System.out.println("KeyDown");
         return true;
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         Pixelate.HANDLER.call(new EventKeyboard(keyCode, event));
-        System.out.println("KeyUp");
         return true;
     }
 }

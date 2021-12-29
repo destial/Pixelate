@@ -6,6 +6,7 @@ import android.graphics.Color;
 import java.util.HashMap;
 
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -62,7 +63,16 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
      * @return An immutable location
      */
     public Location getLocation() {
-        return location.clone();
+        return getLocation(false);
+    }
+
+    /**
+     * Get this entity's location
+     * @param mutable Get a mutable reference or an immutable clone
+     * @return The location
+     */
+    public Location getLocation(boolean mutable) {
+        return mutable ? location : location.clone();
     }
 
     /**
@@ -139,8 +149,9 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
      */
     @SuppressWarnings("all")
     public void remove() {
-        if (isRemoved() || location.getWorld() == null) return;
-        location.getWorld().removeEntity(this);
+        World w;
+        if (isRemoved() || (w = location.getWorld()) == null) return;
+        w.removeEntity(this);
         removed = true;
     }
 

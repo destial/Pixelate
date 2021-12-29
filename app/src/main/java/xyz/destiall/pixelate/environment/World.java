@@ -230,7 +230,9 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @return The tile, or null if not found or if not same the world
      */
     public Tile findTile(Location location) {
-        if (location.getWorld() != this) return null;
+        World w;
+        if ((w = location.getWorld()) == null) return null;
+        if (w != this) return null;
         return tiles.stream()
                 .filter(t -> AABB.isOverlap(location, t))
                 .findFirst().orElse(null);

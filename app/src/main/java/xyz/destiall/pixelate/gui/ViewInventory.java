@@ -156,7 +156,6 @@ public class ViewInventory implements View {
                             for (int i = 0; i < 4; i++) {
                                 ItemStack item = playerInventory.getCraftingItem(i);
                                 if (item == null) continue;
-                                System.out.println("Removing: " + item.getType().name());
                                 item.removeAmount(1);
                             }
                         }
@@ -196,7 +195,7 @@ public class ViewInventory implements View {
         if (e.getAction() == ControlEvent.Action.UP) {
             if (dragging != null) {
                 int slot = getSlot(x, y);
-                if (slot == -1 || slot == 100) {
+                if (slot == -1 || slot == 100 || slot == draggingSlot) {
                     dragging = null;
                     return;
                 }

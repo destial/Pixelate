@@ -1,6 +1,7 @@
 package xyz.destiall.pixelate.entities;
 
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.EventItemPickup;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -46,8 +47,9 @@ public class EntityItem extends Entity {
             upAndDownTimer = (down ? -1 : 1) * 10;
             down = !down;
         }
-        if (location.getWorld() == null) return;
-        location.getWorld().getNearestEntities(location, Tile.SIZE * 0.5).stream().anyMatch(e -> {
+        World w;
+        if ((w = location.getWorld()) == null) return;
+        w.getNearestEntities(location, Tile.SIZE * 0.5).stream().anyMatch(e -> {
             if (e instanceof EntityPlayer) {
                 EventItemPickup ev = new EventItemPickup(e, this);
                 Pixelate.HANDLER.call(ev);

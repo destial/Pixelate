@@ -3,6 +3,7 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Color;
 
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -75,8 +76,9 @@ public class EntityMonster extends EntityLiving {
     public void update() {
         super.update();
         velocity.setZero();
-        if (location.getWorld() == null) return;
-        location.getWorld().getNearestEntities(location, Tile.SIZE * 3).stream().anyMatch(e -> {
+        World w;
+        if ((w = location.getWorld()) == null) return;
+        w.getNearestEntities(location, Tile.SIZE * 3).stream().anyMatch(e -> {
             if (e instanceof EntityPlayer) {
                 EntityPlayer living = (EntityPlayer) e;
                 velocity.set(living.location.getX() - location.getX(), living.location.getY() - location.getY());

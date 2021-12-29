@@ -114,9 +114,9 @@ public abstract class Imageable {
      * @return The cropped image
      */
     public static Bitmap createSubImageAt(Bitmap image, int rows, int cols, int row, int col) {
-        int height = image.getHeight() / rows;
-        int width = image.getWidth() / cols;
-        return Bitmap.createBitmap(image, col * width, row * height, width, height);
+        float height = image.getHeight() / (float) rows;
+        float width = image.getWidth() /  (float) cols;
+        return Bitmap.createBitmap(image, (int) (col * width), (int) (row * height), (int) width, (int) height);
     }
 
     /**

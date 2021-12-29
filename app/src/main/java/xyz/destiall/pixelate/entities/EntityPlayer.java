@@ -76,8 +76,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @Override
     public void remove() {
-        if (location.getWorld() != null)
-            teleport(location.getWorld().getNearestEmpty(0, 0));
+        World w;
+        if ((w = location.getWorld()) != null)
+            teleport(w.getNearestEmpty(0, 0));
         health = 20.f;
     }
 
@@ -168,8 +169,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler
     private void onPickUp(EventItemPickup e) {
         if (e.getPicker() != this) return;
-        if (location.getWorld() == null) return;
-        location.getWorld().playSound(Sound.SoundType.PICK_UP, location, 1.f);
+        World w;
+        if ((w = location.getWorld()) == null) return;
+        w.playSound(Sound.SoundType.PICK_UP, location, 1.f);
     }
 
     @EventHandler
@@ -179,10 +181,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onLeftTap(EventLeftTapButton e) {
-        if (location.getWorld() == null) return;
+        World w;
+        if ((w = location.getWorld()) == null) return;
         playPunchAnimation = true;
         spriteSheet.setCurrentFrame(0);
-        List<Tile> currentTiles = location.getWorld().findTiles(collision);
+        List<Tile> currentTiles = w.findTiles(collision);
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (!playSwingAnimation && (tile == null || currentTiles.contains(tile) || tile.getTileType() != Tile.TileType.FOREGROUND)) {
@@ -197,7 +200,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 }
             }
             final float finalDamage = damage;
-            location.getWorld().getNearestEntities(loc, Tile.SIZE).stream().filter(en -> en != this).forEach(en -> {
+            w.getNearestEntities(loc, Tile.SIZE).stream().filter(en -> en != this).forEach(en -> {
                 if (en instanceof EntityPlayer) return;
                 if (en instanceof EntityLiving) {
                     EntityLiving living = (EntityLiving) en;
@@ -209,8 +212,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onLeftHold(EventLeftHoldButton e) {
-        if (location.getWorld() == null) return;
-        Location newLoc = getLocation().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
+        World w;
+        if ((w = location.getWorld()) == null) return;
+        Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) {
             playPunchAnimation = false;
@@ -232,12 +236,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 tile.addBlockBreakProgression(-500);
                 return;
             }
-            List<ItemStack> drops = location.getWorld().breakTile(newLoc);
+            List<ItemStack> drops = w.breakTile(newLoc);
             for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
                 ItemStack drop = drops.get((int) i);
                 double x = Math.cos(i) * Tile.SIZE * 0.3;
                 double y = Math.sin(i) * Tile.SIZE * 0.3;
-                location.getWorld().dropItem(drop, tileLoc.add(x, y));
+                w.dropItem(drop, tileLoc.add(x, y));
                 tileLoc.subtract(x, y);
             }
         }
@@ -245,7 +249,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onRightTap(EventRightTapButton e) {
-        if (location.getWorld() == null) return;
+        World w;
+        if ((w = location.getWorld()) == null) return;
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         ItemStack current = getItemInHand();
@@ -266,13 +271,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
         } else if (tile.getMaterial() == Material.TNT) {
             tile.setMaterial(Material.STONE);
             Location location = tile.getLocation();
-            World world = location.getWorld();
             EventIgniteTNT ev = new EventIgniteTNT(location);
             Pixelate.HANDLER.call(ev);
             if (ev.isCancelled()) return;
-            world.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
+            w.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
         } else if (current != null && current.getType().isBlock()) {
-            if (tile.getTileType() != Tile.TileType.FOREGROUND && !location.getWorld().findTiles(collision).contains(tile)) {
+            if (tile.getTileType() != Tile.TileType.FOREGROUND && !w.findTiles(collision).contains(tile)) {
                 EventTilePlace ev = new EventTilePlace(this, tile, current.getType());
                 Pixelate.HANDLER.call(ev);
                 if (ev.isCancelled()) return;

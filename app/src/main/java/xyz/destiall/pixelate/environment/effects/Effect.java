@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.Entity;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.modules.EffectsModule;
@@ -43,8 +44,9 @@ public class Effect extends Entity {
 
     @Override
     public void remove() {
-        if (isRemoved() || location.getWorld() == null) return;
-        location.getWorld().getModule(EffectsModule.class).removeEffect((Effect) this);
+        World w;
+        if (isRemoved() || (w = location.getWorld()) == null) return;
+        w.getModule(EffectsModule.class).removeEffect((Effect) this);
     }
 
     @Override

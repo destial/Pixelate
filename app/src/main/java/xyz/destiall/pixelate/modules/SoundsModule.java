@@ -3,6 +3,7 @@ package xyz.destiall.pixelate.modules;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.destiall.java.timer.Scheduler;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.modular.Module;
@@ -12,6 +13,7 @@ public class SoundsModule implements Module {
     private transient World world;
     private transient final List<Sound> soundsPlaying;
 
+    // TODO: Maybe use another thread to play sound, idk if it's already doing that
     public SoundsModule() {
         soundsPlaying = new ArrayList<>();
     }

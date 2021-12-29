@@ -2,23 +2,25 @@ package xyz.destiall.pixelate.gui.buttons;
 
 import android.graphics.Bitmap;
 
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class CircleImageButton implements Button {
-    private Vector2 center;
+    private final Vector2 center;
+    private final float radius;
+
     private Bitmap image;
-    private float radius;
     private boolean pressed;
 
     private Runnable tap;
     private Runnable hold;
     private Runnable release;
-    public CircleImageButton() {}
 
-    public CircleImageButton(int id, Vector2 center) {
+    public CircleImageButton(int id, Vector2 center, float scale) {
         this.image = ResourceManager.getBitmap(id);
+        this.image = scale != 1f && scale != 0f ? Imageable.resizeImage(image, scale) : image;
         this.center = center;
         this.radius = image.getWidth() * 0.5f;
     }

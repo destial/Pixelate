@@ -157,8 +157,6 @@ public class HUD implements Updateable, Renderable, Listener {
                 buttons.render(screen);
                 hotbar.render(screen);
         }
-        screen.text("FPS: " + Timer.getFPS(), 10, 50, 60, Color.WHITE);
-        screen.text("Delta: " + Timer.getDeltaTime(), 10, 110, 60, Color.WHITE);
     }
 
     @Override

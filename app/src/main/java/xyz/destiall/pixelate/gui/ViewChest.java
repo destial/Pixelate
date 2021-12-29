@@ -158,7 +158,7 @@ public class ViewChest implements View {
         if (e.getAction() == ControlEvent.Action.UP) {
             if (dragging != null) {
                 int slot = getSlot(x, y);
-                if (slot == -1) {
+                if (slot == -1 || slot == draggingSlot) {
                     dragging = null;
                     return;
                 }

@@ -1,6 +1,7 @@
 package xyz.destiall.pixelate.states;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,6 +26,7 @@ import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
+import xyz.destiall.pixelate.timer.Timer;
 
 public class StateGame extends State implements Modular {
     private final HashMap<Class<? extends Module>, Module> modules;
@@ -151,6 +153,9 @@ public class StateGame extends State implements Modular {
                 ((Renderable) m).render(screen);
             }
         }
+        screen.text("FPS: " + Timer.getFPS(), 10, 50, 60, Color.WHITE);
+        screen.text("Delta: " + Timer.getDeltaTime() + "ms", 10, 110, 60, Color.WHITE);
+        screen.text("Draw Calls: " + screen.getDrawCalls(), 10, 170, 60, Color.WHITE);
     }
 
     @Override

@@ -3,6 +3,7 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.events.EventEntityDamage;
 import xyz.destiall.pixelate.events.EventEntityDamageByEntity;
 import xyz.destiall.pixelate.items.InventoryHolder;
@@ -167,10 +168,11 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         updateAABB();
 
         // Only update collision if entity is moving and is in a valid world
-        if (!velocity.isZero() && location.getWorld() != null) {
+        World w;
+        if (!velocity.isZero() && (w = location.getWorld()) != null) {
 
             // If the tile stepping into is a collidable tile
-            if (location.getWorld().isForegroundTile(collision)) {
+            if (w.isForegroundTile(collision)) {
 
                 // Revert position
                 location.subtract(velocity);
@@ -180,7 +182,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
                 updateAABB();
 
                 // If the tile in the x direction is also collidable
-                if (location.getWorld().isForegroundTile(collision)) {
+                if (w.isForegroundTile(collision)) {
 
                     // Revert position
                     location.subtract(velocity.getX(), 0);
@@ -191,7 +193,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
                 updateAABB();
 
                 // If the tile in the y direction is also collidable
-                if (location.getWorld().isForegroundTile(collision)) {
+                if (w.isForegroundTile(collision)) {
 
                     // Revert position
                     location.subtract(0, velocity.getY());

@@ -19,6 +19,7 @@ public class Screen {
     private static final Vector2 displayCenter = new Vector2();
     private final Paint textPaint;
     private final Paint paint;
+    private int drawCalls;
 
     public Screen(Canvas canvas, Entity center, int width, int height) {
         textPaint = new Paint();
@@ -33,6 +34,12 @@ public class Screen {
         displayCenter.set(width * 0.5, height * 0.5);
         offset = displayCenter.subtract(center.getBounds().getWidth() * 0.5, center.getBounds().getHeight() * 0.5).subtract(gameCenter.getRawX(), gameCenter.getRawY());
         constraint();
+
+        drawCalls = 0;
+    }
+
+    public int getDrawCalls() {
+        return drawCalls;
     }
 
     /**
@@ -70,6 +77,7 @@ public class Screen {
      */
     public void draw(Bitmap image, double x, double y) {
         CANVAS.drawBitmap(image, (float) x, (float) y, null);
+        drawCalls++;
     }
 
     /**
@@ -84,6 +92,7 @@ public class Screen {
         textPaint.setTextSize((float) size);
         textPaint.setColor(color);
         CANVAS.drawText(text, (float) x, (float) y, textPaint);
+        drawCalls++;
     }
 
     /**
@@ -97,6 +106,7 @@ public class Screen {
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL);
         CANVAS.drawCircle((float) x, (float) y, (float) radius, paint);
+        drawCalls++;
     }
 
     /**
@@ -112,6 +122,7 @@ public class Screen {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(thickness);
         CANVAS.drawCircle((float) x, (float) y, (float) radius, paint);
+        drawCalls++;
     }
 
     /**
@@ -126,6 +137,7 @@ public class Screen {
         paint.setColor(color);
         paint.setStyle(Paint.Style.FILL);
         CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
+        drawCalls++;
     }
 
     /**
@@ -142,6 +154,7 @@ public class Screen {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(thickness);
         CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
+        drawCalls++;
     }
 
     /**

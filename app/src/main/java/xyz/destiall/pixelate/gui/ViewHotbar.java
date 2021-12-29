@@ -12,6 +12,7 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventKeyboard;
@@ -116,10 +117,11 @@ public class ViewHotbar implements View {
             if (item == null) return;
             EntityPlayer player = (EntityPlayer) playerInventory.getHolder();
             Location location = player.getLocation();
-            if (location.getWorld() == null) return;
+            World w;
+            if ((w = location.getWorld()) == null) return;
             location.add(player.getTarget().getVector().multiply(Tile.SIZE));
             playerInventory.removeItem(item);
-            location.getWorld().dropItem(item, location);
+            w.dropItem(item, location);
             droppingSlot = -1;
             dropTimer = 0f;
         }

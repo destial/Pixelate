@@ -1,37 +1,38 @@
 package xyz.destiall.pixelate.gui.buttons;
 
-import android.graphics.Bitmap;
+import android.graphics.Color;
 
-import xyz.destiall.pixelate.graphics.Imageable;
-import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
-public class ImageButton extends Imageable implements Button {
+public class QuadButton implements Button {
+
     private final Vector2 topleft;
-    private AABB aabb;
+    private final int w, h;
+    private final AABB aabb;
     private boolean pressed;
+    private int color;
+    private String text;
 
     private Runnable tap;
     private Runnable hold;
     private Runnable release;
 
-    public ImageButton(int id, Vector2 topleft) {
-        super(ResourceManager.getBitmap(id), 1, 1);
+    public QuadButton(Vector2 topleft, int width, int height, int color) {
+        this.color = color;
         this.topleft = topleft;
-        aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + image.getWidth(), topleft.getY() + image.getHeight());
+        this.w = width;
+        this.h = height;
+        aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + w, topleft.getY() + h);
     }
 
-    @Override
-    public void setImage(Bitmap image, int rows, int columns) {
-        super.setImage(image, rows, columns);
-        aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + this.image.getWidth(), topleft.getY() + this.image.getHeight());
+    public void setColor(int color) {
+        this.color = color;
     }
 
-    @Override
-    public void render(Screen screen) {
-        screen.draw(image, topleft.getX(), topleft.getY());
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
@@ -80,5 +81,13 @@ public class ImageButton extends Imageable implements Button {
     @Override
     public boolean isHolding() {
         return pressed;
+    }
+
+    @Override
+    public void render(Screen screen) {
+        screen.quad(topleft.getX(), topleft.getY(), w, h, color);
+        if (text != null) {
+            screen.text(text, topleft.getX(), topleft.getY() + 50, 50, Color.WHITE);
+        }
     }
 }

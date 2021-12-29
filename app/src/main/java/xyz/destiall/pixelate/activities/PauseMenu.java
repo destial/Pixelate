@@ -1,4 +1,4 @@
-package xyz.destiall.pixelate.gui.screens;
+package xyz.destiall.pixelate.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,11 +8,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import xyz.destiall.pixelate.GameActivity;
+import xyz.destiall.pixelate.activities.GameActivity;
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.activities.MainMenu;
 
-public class MainMenu extends Activity implements View.OnClickListener {
-    private Button btn_start, btn_back;
+public class PauseMenu extends Activity implements View.OnClickListener {
+    private Button btn_start, btn_quit;
 
     @Override
     protected void onCreate(Bundle saveInstanceState) {
@@ -24,13 +26,13 @@ public class MainMenu extends Activity implements View.OnClickListener {
         //Hide TopBar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.mainmenu);
+        setContentView(R.layout.pausemenu);
 
         btn_start = findViewById(R.id.btn_start);
         btn_start.setOnClickListener(this);
 
-        btn_back = findViewById(R.id.btn_back);
-        btn_back.setOnClickListener(this);
+        btn_quit = findViewById(R.id.btn_quit);
+        btn_quit.setOnClickListener(this);
     }
 
     @Override
@@ -41,9 +43,12 @@ public class MainMenu extends Activity implements View.OnClickListener {
         Intent intent = new Intent();
         if (v == btn_start) {
             intent.setClass(this, GameActivity.class);
-        } else if (v == btn_back) {
+            Pixelate.PAUSED = false;
+            Pixelate.getGSM().setState("Game");
+        } else if (v == btn_quit) {
             intent.setClass(this, MainMenu.class);
         }
+
         startActivity(intent);
     }
 }

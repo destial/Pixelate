@@ -86,7 +86,7 @@ public class Location {
 
     @Nullable
     public World getWorld() {
-        return ((StateGame) Pixelate.getGSM().getCurrentState()).getWorldManager().getWorlds().get(world);
+        return ((StateGame) Pixelate.getGSM().getState("Game")).getWorldManager().getWorlds().get(world);
     }
 
     public Vector2 toVector() {
@@ -95,8 +95,9 @@ public class Location {
     }
 
     public Tile getTile() {
-        if (world == null) return null;
-        return getWorld().findTile(this);
+        World w;
+        if (world == null || (w = getWorld()) == null) return null;
+        return w.findTile(this);
     }
 
     public int getX() {
