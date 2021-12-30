@@ -9,7 +9,6 @@ public class Glint implements Updateable {
     public final static Glint INSTANCE = new Glint();
 
     private final SpriteSheet spriteSheet;
-    private float currentAnimation;
 
     private Glint() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
@@ -22,15 +21,12 @@ public class Glint implements Updateable {
         spriteSheet.addAnimation("GLINT", Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.glint), 5, 5, 0, dWidth, dHeight));
         spriteSheet.addAnimation("GLINT2", Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.glint), 5, 5, 0, width, height));
         spriteSheet.setCurrentAnimation("GLINT");
+        spriteSheet.setSpeed(10);
     }
 
     @Override
     public void update() {
-        currentAnimation += Timer.getDeltaTime() * 10;
-        if (currentAnimation >= spriteSheet.getColumns()) {
-            currentAnimation = 0;
-        }
-        spriteSheet.setCurrentFrame((int) currentAnimation);
+        spriteSheet.update();
     }
 
     public void render(Screen screen, int x, int y) {

@@ -14,7 +14,9 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
 public class Effect extends Entity {
+    private transient float currentAnimation;
     private EffectType type;
+
     protected Effect() {}
 
     public void setType(EffectType type) {

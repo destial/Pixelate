@@ -115,7 +115,7 @@ public class ViewControls implements View {
         screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.BLUE);
 
         EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
-        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.75, Pixelate.WIDTH * 0.2, 50, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
+        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
     }
 
     @Override

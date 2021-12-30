@@ -51,27 +51,27 @@ public enum Material {
 
     TNT(3, 4, Tile.TileType.FOREGROUND, 0.5f, ToolType.NONE),
 
-    DIAMOND_SWORD(R.drawable.diamond_sword, ToolType.SWORD, EfficiencyTier.DIAMOND),
-    GOLD_SWORD(R.drawable.gold_sword, ToolType.SWORD, EfficiencyTier.GOLD),
-    IRON_SWORD(R.drawable.iron_sword, ToolType.SWORD, EfficiencyTier.IRON),
-    STONE_SWORD(R.drawable.stone_sword, ToolType.SWORD, EfficiencyTier.STONE),
-    WOODEN_SWORD(R.drawable.wood_sword, ToolType.SWORD, EfficiencyTier.WOOD),
+    DIAMOND_SWORD(R.drawable.diamond_sword, ToolType.SWORD, EfficiencyTier.DIAMOND, 500),
+    GOLD_SWORD(R.drawable.gold_sword, ToolType.SWORD, EfficiencyTier.GOLD, 50),
+    IRON_SWORD(R.drawable.iron_sword, ToolType.SWORD, EfficiencyTier.IRON, 250),
+    STONE_SWORD(R.drawable.stone_sword, ToolType.SWORD, EfficiencyTier.STONE, 100),
+    WOODEN_SWORD(R.drawable.wood_sword, ToolType.SWORD, EfficiencyTier.WOOD, 50),
 
-    DIAMOND_AXE(R.drawable.diamond_axe, ToolType.AXE, EfficiencyTier.DIAMOND),
-    GOLD_AXE(R.drawable.gold_axe, ToolType.AXE, EfficiencyTier.GOLD),
-    IRON_AXE(R.drawable.iron_axe, ToolType.AXE, EfficiencyTier.IRON),
-    STONE_AXE(R.drawable.stone_axe, ToolType.AXE, EfficiencyTier.STONE),
-    WOODEN_AXE(R.drawable.wood_axe, ToolType.AXE, EfficiencyTier.WOOD),
+    DIAMOND_AXE(R.drawable.diamond_axe, ToolType.AXE, EfficiencyTier.DIAMOND, 500),
+    GOLD_AXE(R.drawable.gold_axe, ToolType.AXE, EfficiencyTier.GOLD, 50),
+    IRON_AXE(R.drawable.iron_axe, ToolType.AXE, EfficiencyTier.IRON, 250),
+    STONE_AXE(R.drawable.stone_axe, ToolType.AXE, EfficiencyTier.STONE, 100),
+    WOODEN_AXE(R.drawable.wood_axe, ToolType.AXE, EfficiencyTier.WOOD, 50),
 
-    DIAMOND_PICKAXE(R.drawable.diamond_pickaxe, ToolType.PICKAXE, EfficiencyTier.DIAMOND),
-    GOLD_PICKAXE(R.drawable.gold_pickaxe, ToolType.PICKAXE, EfficiencyTier.GOLD),
-    IRON_PICKAXE(R.drawable.iron_pickaxe, ToolType.PICKAXE, EfficiencyTier.IRON),
-    STONE_PICKAXE(R.drawable.stone_pickaxe, ToolType.PICKAXE, EfficiencyTier.STONE),
-    WOODEN_PICKAXE(R.drawable.wood_pickaxe, ToolType.PICKAXE, EfficiencyTier.WOOD),
+    DIAMOND_PICKAXE(R.drawable.diamond_pickaxe, ToolType.PICKAXE, EfficiencyTier.DIAMOND, 200),
+    GOLD_PICKAXE(R.drawable.gold_pickaxe, ToolType.PICKAXE, EfficiencyTier.GOLD, 50),
+    IRON_PICKAXE(R.drawable.iron_pickaxe, ToolType.PICKAXE, EfficiencyTier.IRON, 250),
+    STONE_PICKAXE(R.drawable.stone_pickaxe, ToolType.PICKAXE, EfficiencyTier.STONE, 100),
+    WOODEN_PICKAXE(R.drawable.wood_pickaxe, ToolType.PICKAXE, EfficiencyTier.WOOD, 50),
 
     //Other items
-    COAL(R.drawable.coal, ToolType.NONE, EfficiencyTier.NONE),
-    STICK(R.drawable.stick, ToolType.NONE, EfficiencyTier.NONE),
+    COAL(R.drawable.coal, ToolType.NONE, EfficiencyTier.NONE, -1),
+    STICK(R.drawable.stick, ToolType.NONE, EfficiencyTier.NONE, -1),
 
     ;
 
@@ -83,6 +83,7 @@ public enum Material {
     private final boolean container;
 
     private final float defaultBreakDuration;
+    private final int maxDurability;
     private final ToolType toolType;
     private final EfficiencyTier efficiencyTier;
     private Bitmap image;
@@ -104,16 +105,20 @@ public enum Material {
     }
 
     //Items
-    Material(int drawable, ToolType toolType, EfficiencyTier efficiencyTier) {
-        this(-1, -1, false, drawable, Tile.TileType.UNKNOWN, -1, toolType, efficiencyTier, false);
+    Material(int drawable, ToolType toolType, EfficiencyTier efficiencyTier, int maxDurability) {
+        this(-1, -1, false, drawable, Tile.TileType.UNKNOWN, -1, toolType, efficiencyTier, false, maxDurability);
     }
 
     //For materials
     Material(int row, int column, Tile.TileType type, float defaultBreakDuration, ToolType toolType) {
-        this(row, column, true, -1, type, defaultBreakDuration, toolType, EfficiencyTier.NONE, false);
+        this(row, column, true, -1, type, defaultBreakDuration, toolType, EfficiencyTier.NONE, false, -1);
     }
 
-    Material(int row, int column, boolean block, int drawable, Tile.TileType type, float defaultBreakDuration, ToolType toolType, EfficiencyTier efficiencyTier, boolean container) {
+    Material(int row, int column, Tile.TileType type, float defaultBreakDuration, ToolType toolType, boolean container) {
+        this(row, column, true, -1, type, defaultBreakDuration, toolType, EfficiencyTier.NONE, container, -1);
+    }
+
+    Material(int row, int column, boolean block, int drawable, Tile.TileType type, float defaultBreakDuration, ToolType toolType, EfficiencyTier efficiencyTier, boolean container, int maxDurability) {
         this.row = row;
         this.column = column;
         this.block = block;
@@ -123,11 +128,8 @@ public enum Material {
         this.toolType = toolType;
         this.efficiencyTier = efficiencyTier;
         this.container = container;
+        this.maxDurability = maxDurability;
         this.image = null;
-    }
-
-    Material(int row, int column, Tile.TileType type, float defaultBreakDuration, ToolType toolType, boolean container) {
-        this(row, column, true, -1, type, defaultBreakDuration, toolType, EfficiencyTier.NONE, container);
     }
 
     /**
@@ -176,6 +178,14 @@ public enum Material {
     public EfficiencyTier getEfficiencyTier()
     {
         return efficiencyTier;
+    }
+
+    /**
+     * Get the maximum durability of this item
+     * @return The max durability if it is a tool, otherwise -1
+     */
+    public int getMaxDurability() {
+        return isTool() ? maxDurability : -1;
     }
 
     /**

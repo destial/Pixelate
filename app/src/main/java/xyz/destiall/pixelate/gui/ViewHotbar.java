@@ -98,6 +98,9 @@ public class ViewHotbar implements View {
                         40, Color.WHITE);
                 }
                 ItemMeta meta = item.getItemMeta();
+                if (item.getType().isTool()) {
+                    screen.bar(x + 20, y + (int) (this.image.getWidth() * 0.8), this.image.getWidth() - 40, 10, Color.GREEN, Color.RED, meta.getDurability() / (float) item.getType().getMaxDurability());
+                }
                 if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
                     Glint.INSTANCE.render(screen, x + 10, y + 10);
                 }
@@ -116,7 +119,7 @@ public class ViewHotbar implements View {
         if (current != null) {
             ItemMeta meta = current.getItemMeta();
             String name = meta.hasDisplayName() ? meta.getDisplayName() : current.getType().getName();
-            screen.text(name, Pixelate.WIDTH * 0.5f - (name.length() * 10), y - 10, 40, Color.WHITE);
+            screen.text(name, Pixelate.WIDTH * 0.5f - (name.length() * 10), y - 70, 40, Color.WHITE);
         }
     }
 

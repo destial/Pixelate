@@ -237,6 +237,13 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 tile.addBlockBreakProgression(-500);
                 return;
             }
+            ItemStack hand = getItemInHand();
+            if (hand.getType().isTool()) {
+                hand.getItemMeta().setDurability(hand.getItemMeta().getDurability() + 1);
+                if (hand.getItemMeta().getDurability() >= hand.getType().getMaxDurability()) {
+                    hand.setAmount(0);
+                }
+            }
             List<ItemStack> drops = w.breakTile(newLoc);
             for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
                 ItemStack drop = drops.get((int) i);

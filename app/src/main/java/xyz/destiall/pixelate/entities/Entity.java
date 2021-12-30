@@ -25,7 +25,6 @@ public abstract class Entity implements Updateable, Renderable, Modular {
     private transient boolean removed;
 
     protected transient SpriteSheet spriteSheet;
-    protected transient float currentAnimation;
 
     protected Location location;
     protected Vector2 velocity;
@@ -121,11 +120,8 @@ public abstract class Entity implements Updateable, Renderable, Modular {
 
     protected void updateSpriteAnimation() {
         // Update sprite animation
-        currentAnimation += Timer.getDeltaTime() * animationSpeed;
-        if (currentAnimation >= spriteSheet.getColumns())  {
-            currentAnimation = 0;
-        }
-        spriteSheet.setCurrentFrame((int) currentAnimation);
+        spriteSheet.setSpeed(animationSpeed);
+        spriteSheet.update();
     }
 
     /**
