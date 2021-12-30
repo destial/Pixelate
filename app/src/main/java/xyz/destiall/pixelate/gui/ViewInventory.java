@@ -19,8 +19,6 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
-import xyz.destiall.pixelate.items.meta.ItemFlag;
-import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
@@ -83,10 +81,7 @@ public class ViewInventory implements View {
                                 drawY + this.image.getHeight() / 2f,
                                 40, Color.WHITE);
                     }
-                    ItemMeta meta = item.getItemMeta();
-                    if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
-                        Glint.INSTANCE.render(screen, drawX, drawY, 1);
-                    }
+                    ItemStack.renderInventory(screen, item, drawX, drawY);
                 }
                 if (!positions.containsKey(playerInventory.getSize() + a)) {
                     positions.put(playerInventory.getSize() + a, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
@@ -111,10 +106,7 @@ public class ViewInventory implements View {
                     images.put(item.getType(), image);
                 }
                 screen.draw(image, cOutX + 15, cOutY + 15);
-                ItemMeta meta = item.getItemMeta();
-                if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
-                    Glint.INSTANCE.render(screen, cOutX + 15, cOutY + 15, 1);
-                }
+                ItemStack.renderInventory(screen, item, cOutX + 15, cOutY + 15);
                 break;
             }
         }
@@ -149,10 +141,7 @@ public class ViewInventory implements View {
                                 drawY + this.image.getHeight() / 2f,
                                 40, Color.WHITE);
                     }
-                    ItemMeta meta = item.getItemMeta();
-                    if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
-                        Glint.INSTANCE.render(screen, drawX, drawY, 1);
-                    }
+                    ItemStack.renderInventory(screen, item, drawX, drawY);
                 }
                 if (!positions.containsKey(i)) {
                     positions.put(i, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));

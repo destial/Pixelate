@@ -1,17 +1,23 @@
 package xyz.destiall.pixelate.items;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
+import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.graphics.Glint;
+import xyz.destiall.pixelate.graphics.ResourceManager;
+import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.inventory.Inventory;
+import xyz.destiall.pixelate.items.meta.ItemFlag;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
 
 public class ItemStack {
-    private Material material;
     private transient Inventory inventory;
-    private int amount;
+    private Material material;
     private ItemMeta meta;
+    private int amount;
 
     private ItemStack() {}
 
@@ -157,5 +163,24 @@ public class ItemStack {
             return;
         }
         throw new ClassCastException("Trying to set item meta with invalid class: " + meta.getClass() + ", expected " + this.meta.getClass());
+    }
+
+    private static final Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
+
+    /**
+     * Render an item meta in an inventory
+     * @param screen The screen to render to
+     * @param item The item to render
+     * @param x Top left x
+     * @param y Top left y
+     */
+    public static void renderInventory(Screen screen, ItemStack item, int x, int y) {
+        ItemMeta meta = item.getItemMeta();
+        if (item.getType().isTool()) {
+            screen.bar(x + 7, y + (int) (image.getWidth() * 0.6), image.getWidth() - 40, 10, Color.GREEN, Color.RED, meta.getDurability() / (float) item.getType().getMaxDurability());
+        }
+        if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
+            Glint.INSTANCE.render(screen, x, y, 1);
+        }
     }
 }

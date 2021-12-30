@@ -18,7 +18,6 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.settings.Settings;
-import xyz.destiall.pixelate.timer.Timer;
 
 public abstract class Entity implements Updateable, Renderable, Modular {
     private final HashMap<Class<? extends Module>, Module> modules;

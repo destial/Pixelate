@@ -3,12 +3,11 @@ package xyz.destiall.pixelate.graphics;
 import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.timer.Timer;
 
 public class Glint implements Updateable {
-    public final static Glint INSTANCE = new Glint();
+    public static final Glint INSTANCE = new Glint();
 
-    private final SpriteSheet spriteSheet;
+    private transient final SpriteSheet spriteSheet;
 
     private Glint() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
@@ -29,11 +28,24 @@ public class Glint implements Updateable {
         spriteSheet.update();
     }
 
+    /**
+     * Render in hotbar
+     * @param screen The screen to render to
+     * @param x Top left x
+     * @param y Top left y
+     */
     public void render(Screen screen, int x, int y) {
         spriteSheet.setCurrentAnimation("GLINT");
         screen.draw(spriteSheet.getCurrentSprite(), x, y);
     }
 
+    /**
+     * Render in inventory
+     * @param screen The screen to render to
+     * @param x Top left x
+     * @param y Top left y
+     * @param z 1
+     */
     public void render(Screen screen, int x, int y, int z) {
         spriteSheet.setCurrentAnimation("GLINT2");
         screen.draw(spriteSheet.getCurrentSprite(), x, y);
