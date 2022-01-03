@@ -15,11 +15,13 @@ import java.lang.reflect.Type;
 import xyz.destiall.java.reflection.Reflect;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.inventory.Inventory;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 
 public class TileSerializer implements JsonDeserializer<Tile>, JsonSerializer<Tile> {
     private final Gson gson = new GsonBuilder()
             .enableComplexMapKeySerialization()
             .registerTypeAdapter(Inventory.class, new InventorySerializer())
+            .registerTypeAdapter(ItemMeta.class, new ItemMetaSerializer())
             .setPrettyPrinting()
             .serializeNulls()
             .create();

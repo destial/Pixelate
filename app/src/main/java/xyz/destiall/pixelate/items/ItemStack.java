@@ -10,6 +10,7 @@ import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.inventory.Inventory;
+import xyz.destiall.pixelate.items.meta.DefaultItemMeta;
 import xyz.destiall.pixelate.items.meta.ItemFlag;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
 

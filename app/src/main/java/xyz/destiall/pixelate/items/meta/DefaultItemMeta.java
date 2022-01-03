@@ -1,19 +1,16 @@
-package xyz.destiall.pixelate.items;
+package xyz.destiall.pixelate.items.meta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import xyz.destiall.pixelate.items.meta.Enchantment;
-import xyz.destiall.pixelate.items.meta.ItemFlag;
-import xyz.destiall.pixelate.items.meta.ItemMeta;
-
-class DefaultItemMeta implements ItemMeta {
-    private final HashMap<Enchantment, Integer> enchants = new HashMap<>();
-    private final ArrayList<ItemFlag> flags = new ArrayList<>();
+public class DefaultItemMeta implements ItemMeta {
+    private final Map<Enchantment, Integer> enchants = new HashMap<>();
+    private final List<ItemFlag> flags = new ArrayList<>();
     private int durability;
     private String display;
     private boolean unbreakable;

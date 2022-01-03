@@ -17,9 +17,11 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.inventory.Inventory;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.serialize.EntitySerializer;
 import xyz.destiall.pixelate.serialize.InventorySerializer;
+import xyz.destiall.pixelate.serialize.ItemMetaSerializer;
 import xyz.destiall.pixelate.serialize.ModuleSerializer;
 import xyz.destiall.pixelate.serialize.TileSerializer;
 import xyz.destiall.pixelate.states.GSM;
@@ -36,6 +38,7 @@ public class Pixelate extends Thread {
             .registerTypeAdapter(Entity.class, new EntitySerializer())
             .registerTypeAdapter(Module.class, new ModuleSerializer())
             .registerTypeAdapter(Inventory.class, new InventorySerializer())
+            .registerTypeAdapter(ItemMeta.class, new ItemMetaSerializer())
             .registerTypeAdapter(Tile.class, new TileSerializer())
             .create();
 
