@@ -142,7 +142,7 @@ public class ItemStack {
      * @return true if same, otherwise false
      */
     public boolean similar(ItemStack other) {
-        return other.material == material && other.meta.similar(meta);
+        return other.material == material && other.meta.equals(meta);
     }
 
     /**

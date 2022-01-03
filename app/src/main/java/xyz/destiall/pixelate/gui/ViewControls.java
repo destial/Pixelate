@@ -7,9 +7,11 @@ import java.util.List;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.commands.CommandGraph;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.ControlEvent;
+import xyz.destiall.pixelate.events.EventChat;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
 import xyz.destiall.pixelate.events.EventLeftReleaseButton;
@@ -165,6 +167,19 @@ public class ViewControls implements View {
         Pixelate.HANDLER.unregisterListener(this);
     }
 
+    @EventHandler(priority = EventHandler.Priority.HIGHEST)
+    public void onChat(EventChat e) {
+        String message = e.getMessage();
+        QuadButton chat = (QuadButton) buttons.stream().filter(b -> b instanceof QuadButton).findFirst().orElse(null);
+        if (chat == null) return;
+        if (message.startsWith("/")) {
+            if (!CommandGraph.INSTANCE.executeCommand(message.substring(1))) {
+                message = "Unable to execute command!";
+            }
+        }
+        chat.setText(message);
+    }
+
     @EventHandler
     public void onTouch(EventTouch e) {
         if (!Pixelate.PAUSED) {
@@ -192,7 +207,7 @@ public class ViewControls implements View {
                         if (button.isOn(x, y)) {
                             if (!button.isHolding()) {
                                 button.setHold(true);
-                                button.tap();
+                                //button.tap();
                             }
                         } else if (button.isHolding()) {
                             button.setHold(false);

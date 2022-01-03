@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import java.util.List;
+import java.util.Random;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
@@ -16,6 +17,7 @@ import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
+import xyz.destiall.pixelate.events.EventChat;
 import xyz.destiall.pixelate.events.EventIgniteTNT;
 import xyz.destiall.pixelate.events.EventItemPickup;
 import xyz.destiall.pixelate.events.EventJoystick;
@@ -36,6 +38,8 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.meta.Enchantment;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
@@ -73,6 +77,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
+    }
+
+    public void sendMessage(String message) {
+        EventChat chat = new EventChat(message);
+        Pixelate.HANDLER.call(chat);
     }
 
     @Override
@@ -239,19 +248,29 @@ public class EntityPlayer extends EntityLiving implements Listener {
             }
             ItemStack hand = getItemInHand();
             if (hand.getType().isTool()) {
-                hand.getItemMeta().setDurability(hand.getItemMeta().getDurability() + 1);
-                if (hand.getItemMeta().getDurability() >= hand.getType().getMaxDurability()) {
+                int use = 1;
+                ItemMeta meta = hand.getItemMeta();
+                if (meta.hasEnchantment(Enchantment.DURABILITY)) {
+                    use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
+                    if (use > 1 || use == 0) {
+                        use = 0;
+                    }
+                }
+                meta.setDurability(hand.getItemMeta().getDurability() + use);
+                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
                     hand.setAmount(0);
                 }
             }
-            List<ItemStack> drops = w.breakTile(newLoc);
-            for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
-                ItemStack drop = drops.get((int) i);
-                double x = Math.cos(i) * Tile.SIZE * 0.3;
-                double y = Math.sin(i) * Tile.SIZE * 0.3;
-                w.dropItem(drop, tileLoc.add(x, y));
-                tileLoc.subtract(x, y);
-            }
+            List<ItemStack> drops = w.breakTile(newLoc.getTile(), getItemInHand());
+            //if (drops != null) {
+                for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
+                    ItemStack drop = drops.get((int) i);
+                    double x = Math.cos(i) * Tile.SIZE * 0.3;
+                    double y = Math.sin(i) * Tile.SIZE * 0.3;
+                    w.dropItem(drop, tileLoc.add(x, y));
+                    tileLoc.subtract(x, y);
+                }
+            //}
         }
     }
 

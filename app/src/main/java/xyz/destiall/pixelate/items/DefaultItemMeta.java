@@ -117,7 +117,7 @@ class DefaultItemMeta implements ItemMeta {
     }
 
     @Override
-    public boolean similar(ItemMeta other) {
+    public boolean equals(ItemMeta other) {
         if (!other.getClass().equals(getClass())) return false;
         DefaultItemMeta meta = (DefaultItemMeta) other;
         return Objects.equals(meta.display, display) &&

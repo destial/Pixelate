@@ -18,7 +18,7 @@ public class Sound implements Updateable {
     private float volume;
 
     public void setType(SoundType effect) {
-        player = MediaPlayer.create(Pixelate.getGameSurface().getContext(), effect.getId());
+        player = MediaPlayer.create(Pixelate.getContext(), effect.getId());
         released = false;
     }
 

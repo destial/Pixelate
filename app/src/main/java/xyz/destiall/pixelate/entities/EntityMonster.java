@@ -16,7 +16,7 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class EntityMonster extends EntityLiving {
-    private Type type;
+    private Type type = Type.ZOMBIE;
 
     //private PathFindingModule pathFinding;
     protected EntityMonster() {}

@@ -9,7 +9,8 @@ import xyz.destiall.pixelate.items.ItemStack;
 public enum Enchantment {
     DAMAGE_ALL(5, ToolType.AXE, ToolType.SWORD),
     DIG_SPEED(5, ToolType.AXE, ToolType.PICKAXE, ToolType.SHOVEL),
-    DURABILITY(3, ToolType.SHEAR, ToolType.AXE, ToolType.PICKAXE, ToolType.SHOVEL)
+    DURABILITY(3, ToolType.SHEAR, ToolType.AXE, ToolType.PICKAXE, ToolType.SHOVEL),
+    FORTUNE(3, ToolType.AXE, ToolType.PICKAXE, ToolType.SHOVEL)
 
     ;
 

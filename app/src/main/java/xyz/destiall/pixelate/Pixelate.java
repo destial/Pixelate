@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import xyz.destiall.java.events.EventHandling;
+import xyz.destiall.pixelate.activities.GameActivity;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
@@ -145,5 +146,9 @@ public class Pixelate extends Thread {
 
     public static GameSurface getGameSurface() {
         return gameSurface;
+    }
+
+    public static GameActivity getContext() {
+        return (GameActivity) getGameSurface().getContext();
     }
 }

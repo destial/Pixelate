@@ -117,5 +117,5 @@ public interface ItemMeta {
      * @param other The other item meta
      * @return true if similar, otherwise false
      */
-    boolean similar(ItemMeta other);
+    boolean equals(ItemMeta other);
 }

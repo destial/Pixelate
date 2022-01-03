@@ -11,6 +11,9 @@ import java.util.HashMap;
 
 import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.commands.CommandGraph;
+import xyz.destiall.pixelate.commands.executors.SpawnCommand;
+import xyz.destiall.pixelate.commands.executors.SummonCommand;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
@@ -39,6 +42,7 @@ public class StateGame extends State implements Modular {
         modules = new HashMap<>();
         setSurface(surface);
         setupRecipes();
+        setupCommands();
     }
 
     @Override
@@ -79,7 +83,7 @@ public class StateGame extends State implements Modular {
         //Adding example items
         ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
         sword.getItemMeta().addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        ItemStack d_axe = new ItemStack(Material.DIAMOND_AXE, 1);
+        ItemStack d_axe = new ItemStack(Material.WOODEN_AXE, 1);
         d_axe.getItemMeta().addEnchantment(Enchantment.DIG_SPEED, 5);
         ItemStack d_pickaxe = new ItemStack(Material.DIAMOND_PICKAXE, 1);
         ItemStack furnace = new ItemStack(Material.FURNACE, 1);
@@ -196,7 +200,6 @@ public class StateGame extends State implements Modular {
     }
 
     private void setupRecipes() {
-
         Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS, 4));
         plankRecipe.setShape("W");
         // { W  , null
@@ -228,5 +231,10 @@ public class StateGame extends State implements Modular {
         stickRecipe.setShape(null, "P", null, "P");
         stickRecipe.setIngredient("P", Material.PLANKS);
         RecipeManager.addRecipe(stickRecipe);
+    }
+
+    private void setupCommands() {
+        CommandGraph.INSTANCE.registerCommand("spawn", new SpawnCommand());
+        CommandGraph.INSTANCE.registerCommand("summon", new SummonCommand());
     }
 }
