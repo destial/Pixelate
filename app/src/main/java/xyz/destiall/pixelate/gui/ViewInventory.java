@@ -9,9 +9,10 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
+import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -40,7 +41,7 @@ public class ViewInventory implements View {
         exitButton = new Vector2(Pixelate.WIDTH - 100, 100);
         exitButtonRadius = 40;
         image = ResourceManager.getBitmap(R.drawable.hotbar);
-        scale = (int) (image.getWidth() * 0.8);
+        scale = (int) (image.getWidth() * 0.7);
         positions = new HashMap<>();
         images = new HashMap<>();
         Pixelate.HANDLER.registerListener(this);
@@ -65,17 +66,22 @@ public class ViewInventory implements View {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getType(), image);
                     }
+                    int drawX, drawY;
                     if (item == dragging) {
-                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                        drawX = (int) (draggingX - image.getWidth() / 2f);
+                        drawY = (int) (draggingY - image.getHeight() / 2f);
                     } else {
-                        screen.draw(image, posX + 15, posY + 5);
-                        if (item.getAmount() > 1) {
-                            screen.text("" + item.getAmount(),
-                                    posX + this.image.getWidth() / 2f,
-                                    posY + this.image.getHeight() / 2f,
-                                    40, Color.WHITE);
-                        }
+                        drawX = posX + 15;
+                        drawY = posY + 15;
                     }
+                    screen.draw(image, drawX, drawY);
+                    if (item.getAmount() > 1) {
+                        screen.text("" + item.getAmount(),
+                                drawX + this.image.getWidth() / 2f,
+                                drawY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                    ItemStack.renderInventory(screen, item, drawX, drawY);
                 }
                 if (!positions.containsKey(playerInventory.getSize() + a)) {
                     positions.put(playerInventory.getSize() + a, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
@@ -99,7 +105,8 @@ public class ViewInventory implements View {
                     image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                     images.put(item.getType(), image);
                 }
-                screen.draw(image, cOutX + 15, cOutY + 5);
+                screen.draw(image, cOutX + 15, cOutY + 15);
+                ItemStack.renderInventory(screen, item, cOutX + 15, cOutY + 15);
                 break;
             }
         }
@@ -119,17 +126,22 @@ public class ViewInventory implements View {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getType(), image);
                     }
+                    int drawX, drawY;
                     if (item != dragging) {
-                        screen.draw(image, posX + 15, posY + 5);
-                        if (item.getAmount() > 1) {
-                            screen.text(""+item.getAmount(),
-                                posX + this.image.getWidth() / 2f,
-                                posY + this.image.getHeight() / 2f,
-                                40, Color.WHITE);
-                        }
+                        drawX = posX + 15;
+                        drawY = posY + 15;
                     } else {
-                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                        drawX = (int) (draggingX - image.getWidth() / 2f);
+                        drawY = (int) (draggingY - image.getHeight() / 2f);
                     }
+                    screen.draw(image, drawX, drawY);
+                    if (item.getAmount() > 1) {
+                        screen.text(""+item.getAmount(),
+                                drawX + this.image.getWidth() / 2f,
+                                drawY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                    ItemStack.renderInventory(screen, item, drawX, drawY);
                 }
                 if (!positions.containsKey(i)) {
                     positions.put(i, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
@@ -140,7 +152,9 @@ public class ViewInventory implements View {
     }
 
     @Override
-    public void update() {}
+    public void update() {
+        Glint.INSTANCE.update();
+    }
 
     @EventHandler
     private void onTouch(EventTouch e) {
@@ -156,7 +170,6 @@ public class ViewInventory implements View {
                             for (int i = 0; i < 4; i++) {
                                 ItemStack item = playerInventory.getCraftingItem(i);
                                 if (item == null) continue;
-                                System.out.println("Removing: " + item.getType().name());
                                 item.removeAmount(1);
                             }
                         }
@@ -196,7 +209,7 @@ public class ViewInventory implements View {
         if (e.getAction() == ControlEvent.Action.UP) {
             if (dragging != null) {
                 int slot = getSlot(x, y);
-                if (slot == -1 || slot == 100) {
+                if (slot == -1 || slot == 100 || slot == draggingSlot) {
                     dragging = null;
                     return;
                 }

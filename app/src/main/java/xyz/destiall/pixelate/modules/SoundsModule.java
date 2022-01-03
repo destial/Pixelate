@@ -12,6 +12,7 @@ public class SoundsModule implements Module {
     private transient World world;
     private transient final List<Sound> soundsPlaying;
 
+    // TODO: Maybe use another thread to play sound, idk if it's already doing that
     public SoundsModule() {
         soundsPlaying = new ArrayList<>();
     }

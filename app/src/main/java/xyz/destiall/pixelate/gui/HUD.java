@@ -1,7 +1,5 @@
 package xyz.destiall.pixelate.gui;
 
-import android.graphics.Color;
-
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
@@ -10,7 +8,6 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
-import xyz.destiall.pixelate.timer.Timer;
 
 public class HUD implements Updateable, Renderable, Listener {
     public static HUD INSTANCE = get();
@@ -157,8 +154,6 @@ public class HUD implements Updateable, Renderable, Listener {
                 buttons.render(screen);
                 hotbar.render(screen);
         }
-        screen.text("FPS: " + Timer.getFPS(), 10, 50, 60, Color.WHITE);
-        screen.text("Delta: " + Timer.getDeltaTime(), 10, 110, 60, Color.WHITE);
     }
 
     @Override

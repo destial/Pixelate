@@ -9,9 +9,10 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.events.ControlEvent;
 import xyz.destiall.pixelate.events.EventTouch;
+import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.ItemStack;
@@ -69,17 +70,22 @@ public class ViewChest implements View {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getType(), image);
                     }
-                    if (item != dragging) {
-                        screen.draw(image, posX + 15, posY + 5);
-                        if (item.getAmount() > 1) {
-                            screen.text(""+item.getAmount(),
-                                posX + this.image.getWidth() / 2f,
-                                posY + this.image.getHeight() / 2f,
-                                40, Color.WHITE);
-                        }
+                    int drawX, drawY;
+                    if (item == dragging) {
+                        drawX = (int) (draggingX - image.getWidth() / 2f);
+                        drawY = (int) (draggingY - image.getHeight() / 2f);
                     } else {
-                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                        drawX = posX + 15;
+                        drawY = posY + 15;
                     }
+                    screen.draw(image, drawX, drawY);
+                    if (item.getAmount() > 1) {
+                        screen.text("" + item.getAmount(),
+                                drawX + this.image.getWidth() / 2f,
+                                drawY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                    ItemStack.renderInventory(screen, item, drawX, drawY);
                 }
                 if (!positions.containsKey(i)) {
                     positions.put(i, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
@@ -104,17 +110,22 @@ public class ViewChest implements View {
                         image = Bitmap.createScaledBitmap(item.getImage(), scale, scale, true);
                         images.put(item.getType(), image);
                     }
-                    if (item != dragging) {
-                        screen.draw(image, posX + 15, posY + 5);
-                        if (item.getAmount() > 1) {
-                            screen.text(""+item.getAmount(),
-                                    posX + this.image.getWidth() / 2f,
-                                    posY + this.image.getHeight() / 2f,
-                                    40, Color.WHITE);
-                        }
+                    int drawX, drawY;
+                    if (item == dragging) {
+                        drawX = (int) (draggingX - image.getWidth() / 2f);
+                        drawY = (int) (draggingY - image.getHeight() / 2f);
                     } else {
-                        screen.draw(image, draggingX - image.getWidth() / 2f, draggingY - image.getHeight() / 2f);
+                        drawX = posX + 15;
+                        drawY = posY + 15;
                     }
+                    screen.draw(image, drawX, drawY);
+                    if (item.getAmount() > 1) {
+                        screen.text("" + item.getAmount(),
+                                drawX + this.image.getWidth() / 2f,
+                                drawY + this.image.getHeight() / 2f,
+                                40, Color.WHITE);
+                    }
+                    ItemStack.renderInventory(screen, item, drawX, drawY);
                 }
                 if (!positions.containsKey(i)) {
                     positions.put(i, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
@@ -125,7 +136,9 @@ public class ViewChest implements View {
     }
 
     @Override
-    public void update() {}
+    public void update() {
+        Glint.INSTANCE.update();
+    }
 
     @EventHandler
     private void onTouch(EventTouch e) {
@@ -158,7 +171,7 @@ public class ViewChest implements View {
         if (e.getAction() == ControlEvent.Action.UP) {
             if (dragging != null) {
                 int slot = getSlot(x, y);
-                if (slot == -1) {
+                if (slot == -1 || slot == draggingSlot) {
                     dragging = null;
                     return;
                 }

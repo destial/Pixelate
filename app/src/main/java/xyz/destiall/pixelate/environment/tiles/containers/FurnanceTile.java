@@ -2,8 +2,8 @@ package xyz.destiall.pixelate.environment.tiles.containers;
 
 import java.util.HashMap;
 
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.timer.Timer;

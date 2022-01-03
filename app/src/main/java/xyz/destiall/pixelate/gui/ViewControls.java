@@ -7,14 +7,17 @@ import java.util.List;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.commands.CommandGraph;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.ControlEvent;
+import xyz.destiall.pixelate.events.EventChat;
 import xyz.destiall.pixelate.events.EventJoystick;
 import xyz.destiall.pixelate.events.EventLeftHoldButton;
 import xyz.destiall.pixelate.events.EventLeftReleaseButton;
 import xyz.destiall.pixelate.events.EventLeftTapButton;
 import xyz.destiall.pixelate.events.EventOpenInventory;
+import xyz.destiall.pixelate.events.EventOpenKeyboard;
 import xyz.destiall.pixelate.events.EventRightHoldButton;
 import xyz.destiall.pixelate.events.EventRightReleaseButton;
 import xyz.destiall.pixelate.events.EventRightTapButton;
@@ -22,6 +25,7 @@ import xyz.destiall.pixelate.events.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.buttons.Button;
 import xyz.destiall.pixelate.gui.buttons.CircleButton;
+import xyz.destiall.pixelate.gui.buttons.QuadButton;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.states.StateGame;
 
@@ -34,15 +38,17 @@ public class ViewControls implements View {
     private boolean joystick;
 
     private final EventJoystick eventJoystick;
-    private final EventOpenInventory eventOpenInventory;
+    private final EventOpenInventory eventOpenInventory = new EventOpenInventory();
 
-    private final EventLeftHoldButton eventLeftHoldButton;
-    private final EventLeftReleaseButton eventLeftReleaseButton;
-    private final EventLeftTapButton eventLeftTapButton;
+    private final EventLeftHoldButton eventLeftHoldButton = new EventLeftHoldButton();
+    private final EventLeftReleaseButton eventLeftReleaseButton = new EventLeftReleaseButton();
+    private final EventLeftTapButton eventLeftTapButton = new EventLeftTapButton();
 
-    private final EventRightHoldButton eventRightHoldButton;
-    private final EventRightReleaseButton eventRightReleaseButton;
-    private final EventRightTapButton eventRightTapButton;
+    private final EventRightHoldButton eventRightHoldButton = new EventRightHoldButton();
+    private final EventRightReleaseButton eventRightReleaseButton = new EventRightReleaseButton();
+    private final EventRightTapButton eventRightTapButton = new EventRightTapButton();
+
+    private final EventOpenKeyboard eventOpenKeyboard = new EventOpenKeyboard();
 
     //private final EventGamePause eventGamePause;
 
@@ -50,22 +56,14 @@ public class ViewControls implements View {
 
     public ViewControls() {
         buttons = new ArrayList<>();
-        outerCircleCenter = new Vector2(275, Pixelate.HEIGHT - 200);
-        innerCircleCenter = new Vector2(275, Pixelate.HEIGHT - 200);
-        outerCircleRadius = 100;
-        innerCircleRadius = 50;
+        outerCircleCenter = new Vector2(275, Pixelate.HEIGHT - 300);
+        innerCircleCenter = outerCircleCenter.clone();
+        outerCircleRadius = 120;
+        innerCircleRadius = 60;
         actuator = new Vector2();
         actuator.setZero();
 
         eventJoystick = new EventJoystick(actuator.getX(), actuator.getY(), EventJoystick.Action.DOWN);
-        eventLeftHoldButton = new EventLeftHoldButton();
-        eventLeftReleaseButton = new EventLeftReleaseButton();
-        eventLeftTapButton = new EventLeftTapButton();
-        eventRightHoldButton = new EventRightHoldButton();
-        eventRightReleaseButton = new EventRightReleaseButton();
-        eventRightTapButton = new EventRightTapButton();
-        eventOpenInventory = new EventOpenInventory();
-        //eventGamePause = new EventGamePause();
         Pixelate.HANDLER.registerListener(this);
 
         // Button location initialisation
@@ -76,17 +74,22 @@ public class ViewControls implements View {
         });
         buttons.add(pause);
 
-        Button inv = new CircleButton(new Vector2(Pixelate.WIDTH - 150, Pixelate.HEIGHT - 100), 50, Color.GREEN);
+        QuadButton chat = new QuadButton(new Vector2(10, Pixelate.HEIGHT- 80), 400, 70, Color.argb(150, 100, 100, 100));
+        chat.setText("Chat:");
+        chat.onTap(() -> Pixelate.HANDLER.call(eventOpenKeyboard));
+        buttons.add(chat);
+
+        Button inv = new CircleButton(new Vector2(Pixelate.WIDTH - 200, Pixelate.HEIGHT - 200), 60, Color.GREEN);
         inv.onTap(() -> Pixelate.HANDLER.call(eventOpenInventory));
         buttons.add(inv);
 
-        Button left = new CircleButton(new Vector2(Pixelate.WIDTH - 300, Pixelate.HEIGHT - 150), 50, Color.YELLOW);
+        Button left = new CircleButton(new Vector2(Pixelate.WIDTH - 340, Pixelate.HEIGHT - 250), 60, Color.YELLOW);
         left.onHold(() -> Pixelate.HANDLER.call(eventLeftHoldButton));
         left.onTap(() -> Pixelate.HANDLER.call(eventLeftTapButton));
         left.onRelease(() -> Pixelate.HANDLER.call(eventLeftReleaseButton));
         buttons.add(left);
 
-        Button right = new CircleButton(new Vector2(Pixelate.WIDTH - 200, Pixelate.HEIGHT - 250), 50, Color.BLUE);
+        Button right = new CircleButton(new Vector2(Pixelate.WIDTH - 240, Pixelate.HEIGHT - 350), 60, Color.BLUE);
         right.onHold(() -> Pixelate.HANDLER.call(eventRightHoldButton));
         right.onTap(() -> Pixelate.HANDLER.call(eventRightTapButton));
         right.onRelease(() -> Pixelate.HANDLER.call(eventRightReleaseButton));
@@ -110,11 +113,11 @@ public class ViewControls implements View {
         for (Button button : buttons) {
             button.render(screen);
         }
-        screen.ring(outerCircleCenter.getX(), outerCircleCenter.getY(), outerCircleRadius, 20, Color.RED);
+        screen.ring(outerCircleCenter.getX(), outerCircleCenter.getY(), outerCircleRadius, 10, Color.RED);
         screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.BLUE);
 
-        EntityPlayer player = ((StateGame) Pixelate.getGSM().getCurrentState()).getPlayer();
-        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.75, Pixelate.WIDTH * 0.2, 50, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
+        EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
     }
 
     @Override
@@ -164,6 +167,19 @@ public class ViewControls implements View {
         Pixelate.HANDLER.unregisterListener(this);
     }
 
+    @EventHandler(priority = EventHandler.Priority.HIGHEST)
+    public void onChat(EventChat e) {
+        String message = e.getMessage();
+        QuadButton chat = (QuadButton) buttons.stream().filter(b -> b instanceof QuadButton).findFirst().orElse(null);
+        if (chat == null) return;
+        if (message.startsWith("/")) {
+            if (!CommandGraph.INSTANCE.executeCommand(message.substring(1))) {
+                message = "Unable to execute command!";
+            }
+        }
+        chat.setText(message);
+    }
+
     @EventHandler
     public void onTouch(EventTouch e) {
         if (!Pixelate.PAUSED) {
@@ -191,7 +207,7 @@ public class ViewControls implements View {
                         if (button.isOn(x, y)) {
                             if (!button.isHolding()) {
                                 button.setHold(true);
-                                button.tap();
+                                //button.tap();
                             }
                         } else if (button.isHolding()) {
                             button.setHold(false);

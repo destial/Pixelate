@@ -8,7 +8,7 @@ import xyz.destiall.java.events.Event;
 public abstract class ControlEvent extends Event {
     protected Action action;
     public ControlEvent(Action action) {
-        super(true);
+        //super(true);
         this.action = action;
     }
 

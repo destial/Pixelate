@@ -7,10 +7,9 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.modules.EffectsModule;
-import xyz.destiall.pixelate.modules.SoundsModule;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.timer.Timer;
 
@@ -20,11 +19,10 @@ public class EntityPrimedTNT extends Entity {
     protected EntityPrimedTNT() {}
 
     public EntityPrimedTNT(double x, double y, World world) {
-        super(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2);
         location.set(x, y);
         location.setWorld(world);
         scale = 0.8f;
-        spriteSheet.addAnimation("TNT", createAnimation(0));
+        spriteSheet.addAnimation("TNT", Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2,0));
         spriteSheet.setCurrentAnimation("TNT");
         spriteSheet.setCurrentFrame(0);
         animationSpeed = 5;
@@ -45,15 +43,16 @@ public class EntityPrimedTNT extends Entity {
     }
 
     public void sizzle() {
-        if (location.getWorld() == null) return;
-        location.getWorld().playSound(Sound.SoundType.SIZZLE, location, 1.f);
+        World w;
+        if ((w = location.getWorld()) == null) return;
+        w.playSound(Sound.SoundType.SIZZLE, location, 1.f);
     }
 
     public void explode() {
-        if (location.getWorld() == null) return;
+        World w;
+        if ((w = location.getWorld()) == null) return;
         this.remove();
-        World world = location.getWorld();
-        world.getNearestEntities(location, Tile.SIZE * 2).forEach(e -> {
+        w.getNearestEntities(location, Tile.SIZE * 2).forEach(e -> {
             if (e instanceof EntityLiving) {
                 ((EntityLiving) e).damage(this, (float) ((Tile.SIZE * 2 - e.getLocation().distance(location)) / 20f));
             } else {
@@ -61,16 +60,14 @@ public class EntityPrimedTNT extends Entity {
             }
         });
         AABB explosionBounds = new AABB(location.getX() - Tile.SIZE, location.getY() - Tile.SIZE, location.getX() + 2 * Tile.SIZE, location.getY() + 2 * Tile.SIZE);
-        world.findTiles(explosionBounds).forEach(t -> {
+        w.findTiles(explosionBounds).forEach(t -> {
             if (t.getTileType() == Tile.TileType.BACKGROUND) return;
-            List<ItemStack> drops = world.breakTile(t);
+            List<ItemStack> drops = w.breakTile(t);
             for (ItemStack drop : drops) {
-                world.dropItem(drop, t.getVector());
+                w.dropItem(drop, t.getVector());
             }
         });
-        if (world.hasModule(EffectsModule.class))
-            world.playEffect(Effect.EffectType.EXPLOSION, location);
-        if (world.hasModule(SoundsModule.class))
-            world.playSound(Sound.SoundType.EXPLOSION, location, 1.f);
+        w.playEffect(Effect.EffectType.EXPLOSION, location);
+        w.playSound(Sound.SoundType.EXPLOSION, location, 1.f);
     }
 }

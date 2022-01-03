@@ -1,7 +1,7 @@
 package xyz.destiall.pixelate.environment.tiles.containers;
 
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 

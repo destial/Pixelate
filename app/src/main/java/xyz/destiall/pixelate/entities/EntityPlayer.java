@@ -4,18 +4,20 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import java.util.List;
+import java.util.Random;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.EfficiencyTier;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
-import xyz.destiall.pixelate.environment.tiles.EfficiencyType;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
+import xyz.destiall.pixelate.events.EventChat;
 import xyz.destiall.pixelate.events.EventIgniteTNT;
 import xyz.destiall.pixelate.events.EventItemPickup;
 import xyz.destiall.pixelate.events.EventJoystick;
@@ -27,6 +29,7 @@ import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventRightTapButton;
 import xyz.destiall.pixelate.events.EventTileBreak;
 import xyz.destiall.pixelate.events.EventTilePlace;
+import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
@@ -35,6 +38,8 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.meta.Enchantment;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
@@ -47,17 +52,17 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient boolean playSwingAnimation;
     private transient boolean playPunchAnimation;
     private transient double swingAnimationTimer;
-    private final float originalAnimSpeed;
+    private transient final float originalAnimSpeed;
 
     public EntityPlayer() {
-        super(ResourceManager.getBitmap(R.drawable.player), 6, 3);
+        Bitmap image = ResourceManager.getBitmap(R.drawable.player);
         location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
-        spriteSheet.addAnimation("LOOK RIGHT" , createAnimation(0));
-        spriteSheet.addAnimation("LOOK LEFT"  , createAnimation(1));
-        spriteSheet.addAnimation("WALK RIGHT" , createAnimation(2));
-        spriteSheet.addAnimation("WALK LEFT"  , createAnimation(3));
-        spriteSheet.addAnimation("PUNCH RIGHT", createAnimation(4));
-        spriteSheet.addAnimation("PUNCH LEFT" , createAnimation(5));
+        spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0));
+        spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1));
+        spriteSheet.addAnimation("WALK RIGHT" , Imageable.createAnimation(image, 6, 3,2));
+        spriteSheet.addAnimation("WALK LEFT"  , Imageable.createAnimation(image, 6, 3,3));
+        spriteSheet.addAnimation("PUNCH RIGHT", Imageable.createAnimation(image, 6, 3,4));
+        spriteSheet.addAnimation("PUNCH LEFT" , Imageable.createAnimation(image, 6, 3,5));
         spriteSheet.setCurrentAnimation("LOOK RIGHT");
         scale = 0.5f;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
@@ -66,18 +71,24 @@ public class EntityPlayer extends EntityLiving implements Listener {
         playPunchAnimation = false;
         slash = new SpriteSheet();
         Bitmap slashSheet = ResourceManager.getBitmap(R.drawable.slashanimation);
-        slash.addAnimation("RIGHT", createAnimation(slashSheet, 4, 4, 0));
-        slash.addAnimation("UP"   , createAnimation(slashSheet, 4, 4, 1));
-        slash.addAnimation("LEFT" , createAnimation(slashSheet, 4, 4, 2));
-        slash.addAnimation("DOWN" , createAnimation(slashSheet, 4, 4, 3));
+        slash.addAnimation("RIGHT", Imageable.createAnimation(slashSheet, 4, 4, 0));
+        slash.addAnimation("UP"   , Imageable.createAnimation(slashSheet, 4, 4, 1));
+        slash.addAnimation("LEFT" , Imageable.createAnimation(slashSheet, 4, 4, 2));
+        slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
     }
 
+    public void sendMessage(String message) {
+        EventChat chat = new EventChat(message);
+        Pixelate.HANDLER.call(chat);
+    }
+
     @Override
     public void remove() {
-        if (location.getWorld() != null)
-            teleport(location.getWorld().getNearestEmpty(0, 0));
+        World w;
+        if ((w = location.getWorld()) != null)
+            teleport(w.getNearestEmpty(0, 0));
         health = 20.f;
     }
 
@@ -139,7 +150,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (swingAnimationTimer != 0) {
             slash.setCurrentFrame((int) swingAnimationTimer);
             Bitmap map = slash.getCurrentSprite();
-            map = resizeImage(map, 0.3f);
+            map = Imageable.resizeImage(map, 0.3f);
             Vector2 offset = vector.subtract(Tile.SIZE * 0.5, Tile.SIZE * 0.5);
             screen.draw(map, offset.getX(), offset.getY());
         }
@@ -168,8 +179,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler
     private void onPickUp(EventItemPickup e) {
         if (e.getPicker() != this) return;
-        if (location.getWorld() == null) return;
-        location.getWorld().playSound(Sound.SoundType.PICK_UP, location, 1.f);
+        World w;
+        if ((w = location.getWorld()) == null) return;
+        w.playSound(Sound.SoundType.PICK_UP, location, 1.f);
     }
 
     @EventHandler
@@ -179,10 +191,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onLeftTap(EventLeftTapButton e) {
-        if (location.getWorld() == null) return;
+        World w;
+        if ((w = location.getWorld()) == null) return;
         playPunchAnimation = true;
         spriteSheet.setCurrentFrame(0);
-        List<Tile> currentTiles = location.getWorld().findTiles(collision);
+        List<Tile> currentTiles = w.findTiles(collision);
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (!playSwingAnimation && (tile == null || currentTiles.contains(tile) || tile.getTileType() != Tile.TileType.FOREGROUND)) {
@@ -192,12 +205,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
             ItemStack hand = getItemInHand();
             float damage = 1;
             if (hand != null) {
-                if (hand.getType().getEfficiencyTier() != EfficiencyType.NONE) {
+                if (hand.getType().getEfficiencyTier() != EfficiencyTier.NONE) {
                     damage = hand.getType().getEfficiencyTier().getMultiplier();
                 }
             }
             final float finalDamage = damage;
-            location.getWorld().getNearestEntities(loc, Tile.SIZE).stream().filter(en -> en != this).forEach(en -> {
+            w.getNearestEntities(loc, Tile.SIZE).stream().filter(en -> en != this).forEach(en -> {
                 if (en instanceof EntityPlayer) return;
                 if (en instanceof EntityLiving) {
                     EntityLiving living = (EntityLiving) en;
@@ -209,8 +222,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler
     private void onLeftHold(EventLeftHoldButton e) {
-        if (location.getWorld() == null) return;
-        Location newLoc = getLocation().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
+        World w;
+        if ((w = location.getWorld()) == null) return;
+        Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) {
             playPunchAnimation = false;
@@ -232,20 +246,38 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 tile.addBlockBreakProgression(-500);
                 return;
             }
-            List<ItemStack> drops = location.getWorld().breakTile(newLoc);
-            for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
-                ItemStack drop = drops.get((int) i);
-                double x = Math.cos(i) * Tile.SIZE * 0.3;
-                double y = Math.sin(i) * Tile.SIZE * 0.3;
-                location.getWorld().dropItem(drop, tileLoc.add(x, y));
-                tileLoc.subtract(x, y);
+            ItemStack hand = getItemInHand();
+            if (hand.getType().isTool()) {
+                int use = 1;
+                ItemMeta meta = hand.getItemMeta();
+                if (meta.hasEnchantment(Enchantment.DURABILITY)) {
+                    use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
+                    if (use > 1 || use == 0) {
+                        use = 0;
+                    }
+                }
+                meta.setDurability(hand.getItemMeta().getDurability() + use);
+                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                    hand.setAmount(0);
+                }
             }
+            List<ItemStack> drops = w.breakTile(newLoc.getTile(), getItemInHand());
+            //if (drops != null) {
+                for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
+                    ItemStack drop = drops.get((int) i);
+                    double x = Math.cos(i) * Tile.SIZE * 0.3;
+                    double y = Math.sin(i) * Tile.SIZE * 0.3;
+                    w.dropItem(drop, tileLoc.add(x, y));
+                    tileLoc.subtract(x, y);
+                }
+            //}
         }
     }
 
     @EventHandler
     private void onRightTap(EventRightTapButton e) {
-        if (location.getWorld() == null) return;
+        World w;
+        if ((w = location.getWorld()) == null) return;
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Tile tile = newLoc.getTile();
         ItemStack current = getItemInHand();
@@ -266,13 +298,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
         } else if (tile.getMaterial() == Material.TNT) {
             tile.setMaterial(Material.STONE);
             Location location = tile.getLocation();
-            World world = location.getWorld();
             EventIgniteTNT ev = new EventIgniteTNT(location);
             Pixelate.HANDLER.call(ev);
             if (ev.isCancelled()) return;
-            world.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
+            w.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
         } else if (current != null && current.getType().isBlock()) {
-            if (tile.getTileType() != Tile.TileType.FOREGROUND && !location.getWorld().findTiles(collision).contains(tile)) {
+            if (tile.getTileType() != Tile.TileType.FOREGROUND && !w.findTiles(collision).contains(tile)) {
                 EventTilePlace ev = new EventTilePlace(this, tile, current.getType());
                 Pixelate.HANDLER.call(ev);
                 if (ev.isCancelled()) return;

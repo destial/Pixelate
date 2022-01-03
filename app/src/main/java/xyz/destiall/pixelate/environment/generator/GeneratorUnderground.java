@@ -7,8 +7,8 @@ import java.util.SplittableRandom;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.noise.PerlinNoise;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.TileFactory;
@@ -64,7 +64,7 @@ public class GeneratorUnderground implements Generator {
                 if(tile == null)
                     tile = TileFactory.createTile(Material.STONE, x,y,world);
 
-                if (Math.random() > 0.98 && tile.getTileType() == Tile.TileType.BACKGROUND) world.spawnMonster(new Location(x, y, world), Entity.Type.ZOMBIE);
+                if (Math.random() > 0.98 && tile.getTileType() == Tile.TileType.BACKGROUND) world.spawnMonster(Entity.Type.ZOMBIE, new Location(x, y, world));
                 tiles.add(tile);
             }
         }

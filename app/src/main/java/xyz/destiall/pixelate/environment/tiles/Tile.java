@@ -5,8 +5,8 @@ import android.graphics.Bitmap;
 import com.google.gson.annotations.SerializedName;
 
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.environment.Material;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
@@ -14,7 +14,7 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
 public class Tile implements Updateable, Renderable {
-    public static final long SIZE = Pixelate.getTileMap().getWidth() / Material.getColumns();
+    public static final int SIZE = Pixelate.getTileMap().getWidth() / Material.getColumns();
     protected transient Bitmap image;
 
     protected Location location;
@@ -91,10 +91,10 @@ public class Tile implements Updateable, Renderable {
     public Tile setMaterial(Material mat) {
         if (!mat.isBlock()) return this;
         if (mat != material && mat.isContainer()) {
-            World world = location.getWorld();
-            if (world == null) return this;
-            Tile t = TileFactory.createTile(mat, location.getX(), location.getY(), world);
-            world.replaceTile(this, t);
+            World w;
+            if ((w = location.getWorld()) == null) return this;
+            Tile t = TileFactory.createTile(mat, location.getX(), location.getY(), w);
+            w.replaceTile(this, t);
             material = mat;
             tileType = mat.getTileType();
             brokenProgression = 0;

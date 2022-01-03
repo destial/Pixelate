@@ -6,6 +6,7 @@ import android.graphics.Color;
 import java.util.HashMap;
 
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -17,20 +18,21 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.settings.Settings;
-import xyz.destiall.pixelate.timer.Timer;
 
-public abstract class Entity extends Imageable implements Updateable, Renderable, Modular {
+public abstract class Entity implements Updateable, Renderable, Modular {
+    private final HashMap<Class<? extends Module>, Module> modules;
+    private transient boolean removed;
+
     protected transient SpriteSheet spriteSheet;
-    protected HashMap<Class<? extends Module>, Module> modules;
+
     protected Location location;
-    protected float scale;
     protected Vector2 velocity;
-    protected float currentAnimation;
-    protected float animationSpeed;
     protected AABB collision;
     protected Direction facing;
     protected Direction target;
-    private boolean removed;
+
+    protected float animationSpeed;
+    protected float scale;
 
     protected Entity() {
         spriteSheet = new SpriteSheet();
@@ -44,25 +46,23 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
         animationSpeed = 60;
     }
 
-    public Entity(Bitmap image, int rows, int columns) {
-        super(image, rows, columns);
-        spriteSheet = new SpriteSheet();
-        velocity = new Vector2();
-        scale = 1;
-        location = new Location(0, 0);
-        facing = Direction.RIGHT;
-        target = facing;
-        modules = new HashMap<>();
-        removed = false;
-        animationSpeed = 60;
-    }
+    public void refresh() {}
 
     /**
      * Get this entity's location
      * @return An immutable location
      */
     public Location getLocation() {
-        return location.clone();
+        return getLocation(false);
+    }
+
+    /**
+     * Get this entity's location
+     * @param mutable Get a mutable reference or an immutable clone
+     * @return The location
+     */
+    public Location getLocation(boolean mutable) {
+        return mutable ? location : location.clone();
     }
 
     /**
@@ -119,11 +119,8 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
 
     protected void updateSpriteAnimation() {
         // Update sprite animation
-        currentAnimation += Timer.getDeltaTime() * animationSpeed;
-        if (currentAnimation >= columns)  {
-            currentAnimation = 0;
-        }
-        spriteSheet.setCurrentFrame((int) currentAnimation);
+        spriteSheet.setSpeed(animationSpeed);
+        spriteSheet.update();
     }
 
     /**
@@ -139,8 +136,9 @@ public abstract class Entity extends Imageable implements Updateable, Renderable
      */
     @SuppressWarnings("all")
     public void remove() {
-        if (isRemoved() || location.getWorld() == null) return;
-        location.getWorld().removeEntity(this);
+        World w;
+        if (isRemoved() || (w = location.getWorld()) == null) return;
+        w.removeEntity(this);
         removed = true;
     }
 

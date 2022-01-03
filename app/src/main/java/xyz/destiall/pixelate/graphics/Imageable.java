@@ -114,9 +114,9 @@ public abstract class Imageable {
      * @return The cropped image
      */
     public static Bitmap createSubImageAt(Bitmap image, int rows, int cols, int row, int col) {
-        int height = image.getHeight() / rows;
-        int width = image.getWidth() / cols;
-        return Bitmap.createBitmap(image, col * width, row * height, width, height);
+        float height = image.getHeight() / (float) rows;
+        float width = image.getWidth() /  (float) cols;
+        return Bitmap.createBitmap(image, (int) (col * width), (int) (row * height), (int) width, (int) height);
     }
 
     /**
@@ -136,6 +136,24 @@ public abstract class Imageable {
     }
 
     /**
+     * Create an animation from the requested row from the given source image
+     * @param source The source image
+     * @param rows The total rows
+     * @param cols The total columns
+     * @param row The row to animate
+     * @param width The desired frame width
+     * @param height The desired frame height
+     * @return The animation array
+     */
+    public static Bitmap[] createAnimation(Bitmap source, int rows, int cols, int row, int width, int height) {
+        Bitmap[] animation = new Bitmap[cols];
+        for (int i = 0; i < cols; i++) {
+            animation[i] = resizeImage(createSubImageAt(source, rows, cols, row, i), width, height);
+        }
+        return animation;
+    }
+
+    /**
      * Resize/Scale an image
      * @param image The image to resize
      * @param scale The scalar value
@@ -143,5 +161,16 @@ public abstract class Imageable {
      */
     public static Bitmap resizeImage(Bitmap image, float scale) {
         return Bitmap.createScaledBitmap(image, (int) (image.getWidth() * scale), (int) (image.getHeight() * scale), false);
+    }
+
+    /**
+     * Resize/Scale an image
+     * @param image The image to resize
+     * @param width The desired width
+     * @param height The desired height
+     * @return The resized image
+     */
+    public static Bitmap resizeImage(Bitmap image, int width, int height) {
+        return Bitmap.createScaledBitmap(image, width, height, false);
     }
 }

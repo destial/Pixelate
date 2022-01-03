@@ -19,6 +19,7 @@ import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
@@ -29,6 +30,8 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
+import xyz.destiall.pixelate.items.meta.Enchantment;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.modules.EffectsModule;
@@ -185,7 +188,7 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @param type Type of monster
      * @return The spawned monster, never null
      */
-    public EntityMonster spawnMonster(Location location, Entity.Type type) {
+    public EntityMonster spawnMonster(Entity.Type type, Location location) {
         EntityMonster monster = new EntityMonster(type);
         monster.teleport(location);
         Cancellable cancel = (Cancellable) Pixelate.HANDLER.call(new EventSpawnEntity(monster, this));
@@ -208,7 +211,7 @@ public class World implements Updateable, Renderable, Module, Modular {
             entities.add(e);
             return clazz.cast(e);
         } else if (clazz == EntityMonster.class) {
-            return clazz.cast(spawnMonster(location, Entity.Type.ZOMBIE));
+            return clazz.cast(spawnMonster(Entity.Type.ZOMBIE, location));
         } else if (clazz == EntityPlayer.class) {
             if (entities.stream().anyMatch(e -> e instanceof EntityPlayer)) {
                 return null;
@@ -219,7 +222,7 @@ public class World implements Updateable, Renderable, Module, Modular {
             entities.add(e);
             return clazz.cast(e);
         } else if (clazz == EntityItem.class) {
-            return clazz.cast(dropItem(new ItemStack(Material.STONE), location));
+            return clazz.cast(dropItem(new ItemStack(Material.WOOD), location));
         }
         return null;
     }
@@ -230,7 +233,9 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @return The tile, or null if not found or if not same the world
      */
     public Tile findTile(Location location) {
-        if (location.getWorld() != this) return null;
+        World w;
+        if ((w = location.getWorld()) == null) return null;
+        if (w != this) return null;
         return tiles.stream()
                 .filter(t -> AABB.isOverlap(location, t))
                 .findFirst().orElse(null);
@@ -274,8 +279,23 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @return List of drops, or null if can't be broken
      */
     public List<ItemStack> breakTile(Tile tile) {
+        return breakTile(tile, null);
+    }
+
+    /**
+     * Break the requested tile
+     * @param tile The requested tile
+     * @param item The item that broke the tile
+     * @return List of drops, or null if can't be broken
+     */
+    public List<ItemStack> breakTile(Tile tile, ItemStack item) {
         if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return null;
-        List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), 0);
+        int luck = 0;
+        if (item != null) {
+            ItemMeta meta = item.getItemMeta();
+            luck = meta.hasEnchantment(Enchantment.FORTUNE) ? meta.getEnchantLevel(Enchantment.FORTUNE) : luck;
+        }
+        List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), luck);
         if (tile instanceof ContainerTile) {
             ContainerTile containerTile = (ContainerTile) tile;
             drops.addAll(Arrays.stream(containerTile.getInventory().getItems()).filter(Objects::nonNull).collect(Collectors.toList()));

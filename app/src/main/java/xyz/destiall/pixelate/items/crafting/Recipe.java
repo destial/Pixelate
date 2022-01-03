@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.items.crafting;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.items.ItemStack;
 
 public class Recipe {
@@ -32,13 +32,12 @@ public class Recipe {
      */
     // TODO: Make crafting recipes fulfill if they are just in the correct order, regardless of position
     public boolean isFulfilled(ItemStack[] crafting) {
-        int i = 0;
-        for (ItemStack stack : crafting) {
+        for (int i = 0; i < crafting.length; i++) {
+            ItemStack stack = crafting[i];
             if (stack != null) {
                 if (i >= recipe.length) return false;
                 if (stack.getType() == recipe[i]) return true;
             }
-            i++;
         }
         return false;
     }
@@ -46,9 +45,9 @@ public class Recipe {
     /**
      * Set the shape of the crafting recipe.
      * This is the args order:
-     * {0, 1, 2}
-     * {3, 4, 5}
-     * {6, 7, 8}
+     * { 0, 1, 2 }
+     * { 3, 4, 5 }
+     * { 6, 7, 8 }
      * If there is an empty spot between elements, use null
      * @param args The shape
      */

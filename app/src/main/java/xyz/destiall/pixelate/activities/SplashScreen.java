@@ -1,4 +1,4 @@
-package xyz.destiall.pixelate.gui.screens;
+package xyz.destiall.pixelate.activities;
 
 import android.app.Activity;
 import android.content.Intent;

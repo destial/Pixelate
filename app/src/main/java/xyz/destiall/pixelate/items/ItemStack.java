@@ -1,16 +1,24 @@
 package xyz.destiall.pixelate.items;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
-import xyz.destiall.pixelate.environment.Material;
+import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.graphics.Glint;
+import xyz.destiall.pixelate.graphics.ResourceManager;
+import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.items.inventory.Inventory;
+import xyz.destiall.pixelate.items.meta.ItemFlag;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 
-@SuppressWarnings("all")
 public class ItemStack {
-    private Material material;
     private transient Inventory inventory;
+    private Material material;
+    private ItemMeta meta;
     private int amount;
+
     private ItemStack() {}
 
     public ItemStack(Material material) {
@@ -20,6 +28,7 @@ public class ItemStack {
     public ItemStack(Material material, int amount) {
         setType(material);
         setAmount(amount);
+        meta = new DefaultItemMeta();
     }
 
     /**
@@ -108,6 +117,10 @@ public class ItemStack {
         return new ItemStack(material, amount);
     }
 
+    /**
+     * Clone this item, including the inventory that this item is in
+     * @return The cloned item
+     */
     public ItemStack cloneItem() {
         ItemStack clone = clone();
         clone.inventory = inventory;
@@ -120,7 +133,7 @@ public class ItemStack {
      * @return true if same, otherwise false
      */
     public boolean equals(ItemStack other) {
-        return other.material == material && other.amount == amount;
+        return similar(other) && other.amount == amount;
     }
 
     /**
@@ -129,6 +142,45 @@ public class ItemStack {
      * @return true if same, otherwise false
      */
     public boolean similar(ItemStack other) {
-        return other.material == material;
+        return other.material == material && other.meta.equals(meta);
+    }
+
+    /**
+     * Get the item meta of this item
+     * @return The item meta
+     */
+    public ItemMeta getItemMeta() {
+        return meta;
+    }
+
+    /**
+     * Set the item meta of this item
+     * @param meta The new item meta
+     */
+    public void setItemMeta(ItemMeta meta) {
+        if (meta.getClass().equals(this.meta.getClass())) {
+            this.meta = meta;
+            return;
+        }
+        throw new ClassCastException("Trying to set item meta with invalid class: " + meta.getClass() + ", expected " + this.meta.getClass());
+    }
+
+    private static final Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
+
+    /**
+     * Render an item meta in an inventory
+     * @param screen The screen to render to
+     * @param item The item to render
+     * @param x Top left x
+     * @param y Top left y
+     */
+    public static void renderInventory(Screen screen, ItemStack item, int x, int y) {
+        ItemMeta meta = item.getItemMeta();
+        if (item.getType().isTool()) {
+            screen.bar(x + 7, y + (int) (image.getWidth() * 0.6), image.getWidth() - 40, 10, Color.GREEN, Color.RED, meta.getDurability() / (float) item.getType().getMaxDurability());
+        }
+        if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
+            Glint.INSTANCE.render(screen, x, y, 1);
+        }
     }
 }

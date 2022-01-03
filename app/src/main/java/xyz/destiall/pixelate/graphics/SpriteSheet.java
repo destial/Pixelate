@@ -4,13 +4,34 @@ import android.graphics.Bitmap;
 
 import java.util.HashMap;
 
-public class SpriteSheet {
+import xyz.destiall.pixelate.timer.Timer;
+
+public class SpriteSheet implements Updateable {
     private final HashMap<String, Bitmap[]> sprites;
     private String current;
     private int animationFrame;
+    private float animationTime;
+    private float speed;
+
     public SpriteSheet() {
         sprites = new HashMap<>();
         animationFrame = 0;
+    }
+
+    /**
+     * Set the animation speed
+     * @param speed The speed
+     */
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    /**
+     * Get the animation speed
+     * @return The speed
+     */
+    public float getSpeed() {
+        return speed;
     }
 
     /**
@@ -80,5 +101,19 @@ public class SpriteSheet {
      */
     public Bitmap getCurrentSprite() {
         return getCurrentAnimation()[animationFrame];
+    }
+
+    public int getColumns() {
+        return getCurrentAnimation().length;
+    }
+
+    @Override
+    public void update() {
+        animationTime += Timer.getDeltaTime() * speed;
+        if (animationTime >= getColumns()) {
+            animationTime = 0;
+        }
+        if (animationFrame != (int) animationTime)
+            animationFrame = (int) animationTime;
     }
 }
