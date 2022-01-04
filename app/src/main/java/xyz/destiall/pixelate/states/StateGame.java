@@ -96,6 +96,8 @@ public class StateGame extends State implements Modular {
         player.getInventory().addItem(chest);
         player.getInventory().addItem(tnt);
 
+        player.getInventory().addItem(new ItemStack(Material.COAL_ORE,1));
+
         Location loc = worldManager.getCurrentWorld().getNearestEmpty(location);
         world.dropItem(chest, loc.add(Tile.SIZE, Tile.SIZE));
         player.teleport(loc.subtract(Tile.SIZE, Tile.SIZE));

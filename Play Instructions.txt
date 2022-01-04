@@ -1,0 +1,9 @@
+Use Joystick to Move Around,
+Select Sword in inventory to Kill Enemies
+Switch between Overworld World and Cave World using the blue button on top
+
+Use/Mine/Attack - Yellow Button at the Bottom
+Place/Interact - Yellow Button on top the previous Yellow Button
+Open Inventory - The Green Button at the Bottom
+
+Enemies spawn in Cave Biome

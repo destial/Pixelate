@@ -176,6 +176,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         velocity.multiply((Tile.SIZE - 10) / 5f);
     }
 
+
     @EventHandler
     private void onPickUp(EventItemPickup e) {
         if (e.getPicker() != this) return;
@@ -289,8 +290,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
             if (tile.getMaterial() == Material.FURNACE) {
                 FurnaceInventory furnaceInventory = (FurnaceInventory) container.getInventory();
                 HUD.INSTANCE.setFurnaceDisplay(getInventory(), (FurnanceTile) container);
-                furnaceInventory.setToSmeltSlot(new ItemStack(Material.COAL_ORE, 1));
-                furnaceInventory.setBurnerSlot(new ItemStack(Material.COAL, 1));
             } else if (tile.getMaterial() == Material.CHEST) {
                 ChestInventory chestInventory = (ChestInventory) container.getInventory();
                 HUD.INSTANCE.setChestDisplay(getInventory(), chestInventory);

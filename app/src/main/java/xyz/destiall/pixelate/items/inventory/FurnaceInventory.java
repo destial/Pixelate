@@ -7,9 +7,11 @@ public class FurnaceInventory extends Inventory {
 
     public FurnaceInventory() {}
 
+    //Can be redone to figure out material type and whether it can be removed from burner or processor slot
     @Override
     public void removeItem(ItemStack item) {}
 
+    //Can be redone to figure out material type and whether it can fit into burner or processor slot
     @Override
     public boolean addItem(ItemStack item) {
         return false;

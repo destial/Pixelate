@@ -1,0 +1,52 @@
+Completed:
+	Rance:
+		Custom framework
+		Controls
+		Inventory
+		Animation
+		Crafting
+		Entities
+		Developer API
+	Yong Hong:
+		Majority of Tile Imports (New Block Materials)
+		World Generation Framework(Perlin Noise Generation with normalization)
+		Ore Generation Framework using Perlin
+		World Management
+		Tile Breaking Sprite Animation & Functionality (Speed depedent on tools)
+		Tile LootTables
+		Container Type Tiles (Tiles with Data)
+		FurnaceTile
+		FurnaceInventory
+		Furnace UI
+		Block Attributes (EfficiencyTier, GenericModifier)
+		Pause Menu
+		Cave World
+		Splash Screen
+		Main Menu
+
+Todo:
+	Rance:
+		Leaderboards
+		Ender Dragon??
+		Save/Load World
+		Potions
+		3x3 Crafting
+		Icon Loading for Buttons
+		Hunger & Food System
+		Vibrations
+		Some Achievements
+
+	Yong Hong:
+		Enemy FSM
+		Enemy Pathfinding
+		Audio
+		Achievements Framework
+		Some Achievements
+		Furnace Smelting functionality
+		Chests
+		Ender Chests
+		TnT
+		Creeper Enemy
+		Furnace Animation, Chest Open animation
+
+
