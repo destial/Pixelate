@@ -300,6 +300,9 @@ public class World implements Updateable, Renderable, Module, Modular {
             ContainerTile containerTile = (ContainerTile) tile;
             drops.addAll(Arrays.stream(containerTile.getInventory().getItems()).filter(Objects::nonNull).collect(Collectors.toList()));
         }
+
+
+
         tile.setMaterial(Material.STONE);
         return drops;
     }

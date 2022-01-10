@@ -29,12 +29,14 @@ import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventRightTapButton;
 import xyz.destiall.pixelate.events.EventTileBreak;
 import xyz.destiall.pixelate.events.EventTilePlace;
+import xyz.destiall.pixelate.experience.Experience;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
@@ -53,6 +55,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient boolean playPunchAnimation;
     private transient double swingAnimationTimer;
     private transient final float originalAnimSpeed;
+
+    protected Experience exp;
 
     public EntityPlayer() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.player);
@@ -77,6 +81,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
+        exp = new Experience();
     }
 
     public void sendMessage(String message) {
@@ -169,6 +174,29 @@ public class EntityPlayer extends EntityLiving implements Listener {
         return getInventory().getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
     }
 
+    public void addXP(int xp)
+    {
+        if(exp.addXP(xp))
+        {
+            this.getLocation().getWorld().playSound(Sound.SoundType.EXPLOSION, this.getLocation(), 1.0f);
+        }
+    }
+
+    public void setXPLevel(int level)
+    {
+        exp.setLevel(level);
+    }
+
+    public float getXPProgress()
+    {
+        return (float)exp.getXP() / Experience.getRequiredXP(exp.getLevel());
+    }
+
+    public int getLevel()
+    {
+        return exp.getLevel();
+    }
+
     @EventHandler
     private void onJoystickEvent(EventJoystick e) {
         velocity.setX(e.getOffsetX());
@@ -248,6 +276,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 return;
             }
             ItemStack hand = getItemInHand();
+            int luck = 0;
             if (hand.getType().isTool()) {
                 int use = 1;
                 ItemMeta meta = hand.getItemMeta();
@@ -257,11 +286,17 @@ public class EntityPlayer extends EntityLiving implements Listener {
                         use = 0;
                     }
                 }
+                if (meta.hasEnchantment(Enchantment.FORTUNE))
+                    luck = meta.getEnchantLevel(Enchantment.FORTUNE);
                 meta.setDurability(hand.getItemMeta().getDurability() + use);
                 if (meta.getDurability() >= hand.getType().getMaxDurability()) {
                     hand.setAmount(0);
                 }
             }
+            //XP Drops
+            int xpDrop = LootTable.getInstance().getXPDrops(tile.getMaterial(), luck);
+            exp.addXP(xpDrop);
+
             List<ItemStack> drops = w.breakTile(newLoc.getTile(), getItemInHand());
             //if (drops != null) {
                 for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {

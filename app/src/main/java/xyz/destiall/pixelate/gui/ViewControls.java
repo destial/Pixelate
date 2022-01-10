@@ -118,6 +118,9 @@ public class ViewControls implements View {
 
         EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
         screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
+
+        screen.bar(Pixelate.WIDTH * 0.325, Pixelate.HEIGHT * 0.82, Pixelate.WIDTH * 0.35, 30, Color.DKGRAY, Color.GREEN, player.getXPProgress());
+        screen.text(String.valueOf(player.getLevel()), Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.814, 60, Color.GREEN);
     }
 
     @Override
