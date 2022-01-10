@@ -9,6 +9,9 @@ import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.states.StateGame;
 
+/**
+ * Written by Rance
+ */
 public class Sound implements Updateable {
     private final EntityPlayer entityPlayer;
     private static final float DISTANCE = 10f;

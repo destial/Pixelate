@@ -15,13 +15,16 @@ import xyz.destiall.pixelate.environment.tiles.TileFactory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
+/**
+ * Written by Yong Hong
+ */
 public class GeneratorUnderground implements Generator {
-
 
     @Override
     public void generate(World world, Collection<Tile> tiles) {
         generate(0, world, tiles);
     }
+
     public static SplittableRandom ran = new SplittableRandom();
 
     private float generationScale = 0.05f;
@@ -33,7 +36,7 @@ public class GeneratorUnderground implements Generator {
         double divisor = 1.0/Tile.SIZE;
 
         double min = 1, max = 0;
-        List<Location> orePopulationZones = new ArrayList<Location>();
+        List<Location> orePopulationZones = new ArrayList<>();
 
         PerlinNoise.reshufflePermutation(); //Reshuffle Permutation
 

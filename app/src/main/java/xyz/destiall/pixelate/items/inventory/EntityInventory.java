@@ -5,6 +5,9 @@ import java.util.Arrays;
 import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Rance
+ */
 public class EntityInventory extends Inventory {
     protected transient InventoryHolder holder;
     protected int size;

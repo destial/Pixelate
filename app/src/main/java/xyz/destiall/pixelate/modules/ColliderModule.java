@@ -4,6 +4,9 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 
+/**
+ * Written by Rance
+ */
 public class ColliderModule implements Module {
     private final AABB bounds;
     public ColliderModule() {

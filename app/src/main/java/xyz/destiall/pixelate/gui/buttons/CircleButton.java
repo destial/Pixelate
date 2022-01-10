@@ -3,6 +3,9 @@ package xyz.destiall.pixelate.gui.buttons;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance
+ */
 public class CircleButton implements Button {
     private final Vector2 center;
     private final float radius;

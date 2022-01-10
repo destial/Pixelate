@@ -8,8 +8,10 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Yong Hong
+ */
 public class FurnanceTile extends ContainerTile {
-
     private float burnerRemainingTime = 0.f;
     private float lastBurnerMaxTime = 0.f;
 

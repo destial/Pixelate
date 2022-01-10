@@ -10,6 +10,9 @@ import android.widget.Button;
 
 import xyz.destiall.pixelate.R;
 
+/**
+ * Written by Yong Hong
+ */
 public class MainMenu extends Activity implements View.OnClickListener {
     private Button btn_start, btn_back;
 

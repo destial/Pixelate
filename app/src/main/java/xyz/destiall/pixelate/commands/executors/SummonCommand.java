@@ -11,6 +11,9 @@ import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Rance
+ */
 public class SummonCommand implements Command {
     @Override
     public boolean onCommand(EntityPlayer player, String command, String[] args) {

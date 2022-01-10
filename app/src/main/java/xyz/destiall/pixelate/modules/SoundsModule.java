@@ -8,6 +8,9 @@ import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
 
+/**
+ * Written by Rance
+ */
 public class SoundsModule implements Module {
     private transient World world;
     private transient final List<Sound> soundsPlaying;

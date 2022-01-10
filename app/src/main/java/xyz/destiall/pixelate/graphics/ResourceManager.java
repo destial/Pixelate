@@ -8,6 +8,9 @@ import java.util.Map;
 
 import xyz.destiall.pixelate.Pixelate;
 
+/**
+ * Written by Ms Tan
+ */
 public class ResourceManager {
     private static final Map<Integer, Bitmap> RESOURCES = new HashMap<>();
 

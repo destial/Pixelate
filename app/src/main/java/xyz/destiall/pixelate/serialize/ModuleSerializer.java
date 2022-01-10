@@ -13,6 +13,9 @@ import java.lang.reflect.Type;
 import xyz.destiall.java.reflection.Reflect;
 import xyz.destiall.pixelate.modular.Module;
 
+/**
+ * Written by Rance
+ */
 public class ModuleSerializer implements JsonSerializer<Module>, JsonDeserializer<Module> {
     @Override
     public JsonElement serialize(Module src, Type typeOfSrc, JsonSerializationContext context) {

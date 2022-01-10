@@ -6,6 +6,9 @@ import java.util.SplittableRandom;
 
 import xyz.destiall.pixelate.environment.materials.Material;
 
+/**
+ * Written by Yong Hong
+ */
 public class LootTable {
     private static LootTable instance = null;
     private LootTable() {}

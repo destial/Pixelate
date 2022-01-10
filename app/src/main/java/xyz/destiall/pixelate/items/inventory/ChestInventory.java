@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Rance
+ */
 public class ChestInventory extends Inventory {
     private int size;
     protected ChestInventory() {}

@@ -7,6 +7,9 @@ import java.util.Map;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.states.StateGame;
 
+/**
+ * Written by Rance
+ */
 public class CommandGraph {
     public static CommandGraph INSTANCE = new CommandGraph();
     private final Map<String, Command> mappings;

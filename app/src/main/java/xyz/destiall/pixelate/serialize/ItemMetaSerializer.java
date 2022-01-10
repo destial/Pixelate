@@ -13,6 +13,9 @@ import java.lang.reflect.Type;
 import xyz.destiall.java.reflection.Reflect;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
 
+/**
+ * Written by Rance
+ */
 public class ItemMetaSerializer implements JsonSerializer<ItemMeta>, JsonDeserializer<ItemMeta> {
     @Override
     public JsonElement serialize(ItemMeta src, Type typeOfSrc, JsonSerializationContext context) {

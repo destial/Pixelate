@@ -7,6 +7,9 @@ import java.util.HashMap;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.modular.Module;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class GSM implements Updateable, Module {
     private final HashMap<String, State> states;
     private String currentState;

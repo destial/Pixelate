@@ -2,6 +2,9 @@ package xyz.destiall.pixelate.gui.buttons;
 
 import xyz.destiall.pixelate.graphics.Renderable;
 
+/**
+ * Written by Rance
+ */
 public interface Button extends Renderable {
     void onTap(Runnable runnable);
     void onHold(Runnable runnable);

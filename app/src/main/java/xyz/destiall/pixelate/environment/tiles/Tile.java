@@ -13,6 +13,9 @@ import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class Tile implements Updateable, Renderable {
     public static final int SIZE = Pixelate.getTileMap().getWidth() / Material.getColumns();
     protected transient Bitmap image;

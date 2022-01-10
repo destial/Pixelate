@@ -5,6 +5,9 @@ import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public abstract class ContainerTile extends Tile {
     protected Inventory tileInventory;
 

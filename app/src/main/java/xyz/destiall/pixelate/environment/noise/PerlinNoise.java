@@ -2,6 +2,9 @@ package xyz.destiall.pixelate.environment.noise;
 
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Yong Hong
+ */
 public class PerlinNoise {
 
     //Randomised permutation array as designed by Perlin

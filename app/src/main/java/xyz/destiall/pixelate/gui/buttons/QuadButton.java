@@ -6,14 +6,17 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance
+ */
 public class QuadButton implements Button {
-
     private final Vector2 topleft;
     private final int w, h;
     private final AABB aabb;
     private boolean pressed;
     private int color;
     private String text;
+    private int textSize;
 
     private Runnable tap;
     private Runnable hold;
@@ -25,6 +28,7 @@ public class QuadButton implements Button {
         this.w = width;
         this.h = height;
         aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + w, topleft.getY() + h);
+        textSize = 50;
     }
 
     public void setColor(int color) {
@@ -33,6 +37,10 @@ public class QuadButton implements Button {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setTextSize(int textSize) {
+        this.textSize = textSize;
     }
 
     @Override
@@ -87,7 +95,7 @@ public class QuadButton implements Button {
     public void render(Screen screen) {
         screen.quad(topleft.getX(), topleft.getY(), w, h, color);
         if (text != null) {
-            screen.text(text, topleft.getX(), topleft.getY() + 50, 50, Color.WHITE);
+            screen.text(text, topleft.getX(), topleft.getY() + textSize, textSize, Color.WHITE);
         }
     }
 }

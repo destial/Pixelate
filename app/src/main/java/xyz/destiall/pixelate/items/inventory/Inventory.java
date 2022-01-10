@@ -6,6 +6,9 @@ import java.util.Objects;
 
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Rance
+ */
 public abstract class Inventory {
     protected ItemStack[] items;
     private static Field inventoryFieldItemStack;

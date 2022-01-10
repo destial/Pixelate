@@ -1,7 +1,5 @@
 package xyz.destiall.pixelate.entities;
 
-import java.util.List;
-
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.effects.Effect;
@@ -9,10 +7,12 @@ import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
-import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class EntityPrimedTNT extends Entity {
     private float explosionTimer = 5f;
     private boolean sizzled;
@@ -59,13 +59,12 @@ public class EntityPrimedTNT extends Entity {
                 e.remove();
             }
         });
-        AABB explosionBounds = new AABB(location.getX() - Tile.SIZE, location.getY() - Tile.SIZE, location.getX() + 2 * Tile.SIZE, location.getY() + 2 * Tile.SIZE);
+        AABB explosionBounds = new AABB(location.getX() - Tile.SIZE * 2, location.getY() - Tile.SIZE * 2, location.getX() + 2 * Tile.SIZE, location.getY() + 2 * Tile.SIZE);
         w.findTiles(explosionBounds).forEach(t -> {
             if (t.getTileType() == Tile.TileType.BACKGROUND) return;
-            List<ItemStack> drops = w.breakTile(t);
-            for (ItemStack drop : drops) {
-                w.dropItem(drop, t.getVector());
-            }
+            double distance = t.getVector().distance(location.toVector()) / Tile.SIZE;
+            // TODO: Use block break progression
+            if (Math.random() * distance < 1.5) w.breakTile(t);
         });
         w.playEffect(Effect.EffectType.EXPLOSION, location);
         w.playSound(Sound.SoundType.EXPLOSION, location, 1.f);

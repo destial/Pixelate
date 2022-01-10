@@ -11,6 +11,9 @@ import xyz.destiall.pixelate.items.inventory.EntityInventory;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected transient float damageDelay;
 
