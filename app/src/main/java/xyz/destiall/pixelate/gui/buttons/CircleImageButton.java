@@ -7,6 +7,9 @@ import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance
+ */
 public class CircleImageButton implements Button {
     private final Vector2 center;
     private final float radius;

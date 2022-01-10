@@ -40,14 +40,18 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class World implements Updateable, Renderable, Module, Modular {
-    private final List<Entity> entities;
-    private String name;
     protected transient final HashMap<Class<? extends Module>, Module> modules;
+    private transient final Generator generator;
+    private final List<Entity> entities;
+
     // TODO: Maybe split tiles into chunks?
     private final List<Tile> tiles;
-    private transient final Generator generator;
     private Environment environment;
+    private String name;
 
     public World() {
         this(new GeneratorBasic());
@@ -118,7 +122,7 @@ public class World implements Updateable, Renderable, Module, Modular {
      */
     public void generateWorld(int seed, boolean force) {
         if (tiles.size() == 0 || force) {
-            if (force) tiles.clear();
+            tiles.clear();
             generator.generate(seed, this, tiles);
         }
     }
@@ -286,7 +290,7 @@ public class World implements Updateable, Renderable, Module, Modular {
      * Break the requested tile
      * @param tile The requested tile
      * @param item The item that broke the tile
-     * @return List of drops, or null if can't be broken
+     * @return List of drops, or null if can't be broken or if the event is cancelled
      */
     public List<ItemStack> breakTile(Tile tile, ItemStack item) {
         if (tile == null || tile.getTileType() != Tile.TileType.FOREGROUND) return null;
@@ -299,6 +303,17 @@ public class World implements Updateable, Renderable, Module, Modular {
         if (tile instanceof ContainerTile) {
             ContainerTile containerTile = (ContainerTile) tile;
             drops.addAll(Arrays.stream(containerTile.getInventory().getItems()).filter(Objects::nonNull).collect(Collectors.toList()));
+        }
+        EventTileBreak ev = new EventTileBreak(tile, drops);
+        Pixelate.HANDLER.call(ev);
+        if (ev.isCancelled()) return null;
+        Location tileLoc = tile.getLocation();
+        for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
+            ItemStack drop = drops.get((int) i);
+            double x = Math.cos(i) * Tile.SIZE * 0.3;
+            double y = Math.sin(i) * Tile.SIZE * 0.3;
+            dropItem(drop, tileLoc.add(x, y));
+            tileLoc.subtract(x, y);
         }
         tile.setMaterial(Material.STONE);
         return drops;

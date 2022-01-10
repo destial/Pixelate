@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Written by Rance
+ */
 public class RecipeManager {
     private static final Map<String, Recipe> recipeMap = new HashMap<>();
 

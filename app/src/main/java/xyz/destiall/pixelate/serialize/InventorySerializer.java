@@ -15,6 +15,9 @@ import xyz.destiall.java.reflection.Reflect;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 
+/**
+ * Written by Rance
+ */
 public class InventorySerializer implements JsonSerializer<Inventory>, JsonDeserializer<Inventory> {
     @Override
     public JsonElement serialize(Inventory src, Type typeOfSrc, JsonSerializationContext context) {

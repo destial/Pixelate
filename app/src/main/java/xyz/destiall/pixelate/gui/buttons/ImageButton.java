@@ -8,6 +8,9 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance
+ */
 public class ImageButton extends Imageable implements Button {
     private final Vector2 topleft;
     private AABB aabb;

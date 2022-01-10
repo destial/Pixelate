@@ -7,6 +7,9 @@ import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.pathfinding.algorithms.Algorithm;
 import xyz.destiall.pixelate.position.Location;
 
+/**
+ * Written by Yong Hong
+ */
 public class PathFindingModule implements Module {
     private transient Entity self;
     private Long previousUpdate = System.currentTimeMillis();

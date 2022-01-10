@@ -3,9 +3,12 @@ package xyz.destiall.pixelate.items.inventory;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Rance
+ */
 public class CreativeInventory extends EntityInventory {
     public CreativeInventory() {
-        super(null, 3 * 9);
+        super(null, 4 * 9);
         for (Material m : Material.values()) {
             addItem(new ItemStack(m));
         }

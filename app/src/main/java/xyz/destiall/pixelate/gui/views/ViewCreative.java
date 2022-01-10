@@ -21,6 +21,9 @@ import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance
+ */
 public class ViewCreative implements View {
     private final Map<Integer, AABB> positions;
     private final HashMap<Material, Bitmap> images;

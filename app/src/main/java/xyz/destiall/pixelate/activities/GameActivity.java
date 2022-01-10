@@ -15,6 +15,9 @@ import xyz.destiall.pixelate.events.controls.EventGamePause;
 import xyz.destiall.pixelate.events.controls.EventOpenKeyboard;
 import xyz.destiall.pixelate.gui.popups.KeyboardFragment;
 
+/**
+ * Written by Rance
+ */
 public class GameActivity extends AppCompatActivity implements Listener {
 
     @Override

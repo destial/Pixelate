@@ -4,6 +4,9 @@ import java.util.LinkedList;
 
 import xyz.destiall.pixelate.position.Location;
 
+/**
+ * Written by Yong Hong
+ */
 public abstract class Algorithm {
     protected LinkedList<Location> path;
 

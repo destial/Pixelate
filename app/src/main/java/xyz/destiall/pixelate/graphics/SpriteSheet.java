@@ -6,6 +6,9 @@ import java.util.HashMap;
 
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class SpriteSheet implements Updateable {
     private final HashMap<String, Bitmap[]> sprites;
     private String current;

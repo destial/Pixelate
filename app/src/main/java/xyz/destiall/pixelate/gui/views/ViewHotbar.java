@@ -28,6 +28,9 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class ViewHotbar implements View {
     private final HashMap<Integer, AABB> positions;
     private final HashMap<Material, Bitmap> images;

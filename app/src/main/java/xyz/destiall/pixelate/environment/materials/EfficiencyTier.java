@@ -1,5 +1,8 @@
 package xyz.destiall.pixelate.environment.materials;
 
+/**
+ * Written by Yong Hong
+ */
 public enum EfficiencyTier {
     WOOD(1.2f),
     STONE(2f),

@@ -10,6 +10,9 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.modular.Module;
 
+/**
+ * Written by Yong Hong
+ */
 public class WorldManager implements Updateable, Renderable, Module {
     private Map<String, World> worlds;
     private String activeWorld;

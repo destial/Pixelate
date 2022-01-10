@@ -1,5 +1,8 @@
 package xyz.destiall.pixelate.modular;
 
+/**
+ * Written by Rance
+ */
 public interface Modular {
     /**
      * Get a loaded module

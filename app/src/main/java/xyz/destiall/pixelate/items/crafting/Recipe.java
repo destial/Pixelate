@@ -6,6 +6,9 @@ import java.util.Map;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Rance
+ */
 public class Recipe {
     private final String key;
     private final ItemStack item;

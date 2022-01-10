@@ -2,6 +2,9 @@ package xyz.destiall.pixelate.items.inventory;
 
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Yong Hong
+ */
 public class FurnaceInventory extends Inventory {
     private ItemStack toSmelt, burner, processed;
 

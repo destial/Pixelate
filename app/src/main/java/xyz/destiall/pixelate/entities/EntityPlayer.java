@@ -46,6 +46,9 @@ import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class EntityPlayer extends EntityLiving implements Listener {
     private transient final SpriteSheet slash;
     private transient final Bitmap crosshair;
@@ -53,6 +56,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient boolean playPunchAnimation;
     private transient double swingAnimationTimer;
     private transient final float originalAnimSpeed;
+    private Gamemode gamemode;
 
     public EntityPlayer() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.player);
@@ -77,11 +81,32 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
+        gamemode = Gamemode.SURVIVAL;
     }
 
     public void sendMessage(String message) {
         EventChat chat = new EventChat(message);
         Pixelate.HANDLER.call(chat);
+    }
+
+    public void setGamemode(Gamemode gamemode) {
+        this.gamemode = gamemode;
+    }
+
+    public Gamemode getGamemode() {
+        return gamemode;
+    }
+
+    @Override
+    public void damage(float damage) {
+        if (gamemode == Gamemode.CREATIVE) return;
+        super.damage(damage);
+    }
+
+    @Override
+    public void damage(Entity damager, float damage) {
+        if (gamemode == Gamemode.CREATIVE) return;
+        super.damage(damager, damage);
     }
 
     @Override
@@ -233,7 +258,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         }
         if (!playPunchAnimation) spriteSheet.setCurrentFrame(0);
         playPunchAnimation = true;
-        Vector2 tileLoc = tile.getVector();
         float bbProgress = tile.getBlockBreakProgress(); //Out of 100.0
         float bbDuration = tile.getMaterial().getRequiredMineDuration(getItemInHand());
         float timeRelative = bbProgress / 100.0f * bbDuration;
@@ -241,37 +265,25 @@ public class EntityPlayer extends EntityLiving implements Listener {
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
         tile.addBlockBreakProgression(bbProgressDiff);
         if (tile.getBlockBreakProgress() >= 100) {
-            EventTileBreak ev = new EventTileBreak(tile);
-            Pixelate.HANDLER.call(ev);
-            if (ev.isCancelled()) {
-                tile.addBlockBreakProgression(-500);
-                return;
-            }
-            ItemStack hand = getItemInHand();
-            if (hand.getType().isTool()) {
-                int use = 1;
-                ItemMeta meta = hand.getItemMeta();
-                if (meta.hasEnchantment(Enchantment.DURABILITY)) {
-                    use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
-                    if (use > 1 || use == 0) {
-                        use = 0;
+            if (w.breakTile(newLoc.getTile(), getItemInHand()) != null) {
+                ItemStack hand = getItemInHand();
+                if (hand.getType().isTool()) {
+                    int use = 1;
+                    ItemMeta meta = hand.getItemMeta();
+                    if (meta.hasEnchantment(Enchantment.DURABILITY)) {
+                        use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
+                        if (use > 1 || use == 0) {
+                            use = 0;
+                        }
+                    }
+                    meta.setDurability(hand.getItemMeta().getDurability() + use);
+                    if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                        hand.setAmount(0);
                     }
                 }
-                meta.setDurability(hand.getItemMeta().getDurability() + use);
-                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
-                    hand.setAmount(0);
-                }
+            } else {
+                tile.addBlockBreakProgression(-500);
             }
-            List<ItemStack> drops = w.breakTile(newLoc.getTile(), getItemInHand());
-            //if (drops != null) {
-                for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
-                    ItemStack drop = drops.get((int) i);
-                    double x = Math.cos(i) * Tile.SIZE * 0.3;
-                    double y = Math.sin(i) * Tile.SIZE * 0.3;
-                    w.dropItem(drop, tileLoc.add(x, y));
-                    tileLoc.subtract(x, y);
-                }
-            //}
         }
     }
 
@@ -314,7 +326,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler(priority = EventHandler.Priority.HIGHEST)
     private void onOpenInventory(EventOpenInventory e) {
-        // HUD.INSTANCE.setCreative(getInventory());
-        HUD.INSTANCE.setInventory(getInventory());
+        if (gamemode == Gamemode.CREATIVE) {
+            HUD.INSTANCE.setCreative(getInventory());
+        } else {
+            HUD.INSTANCE.setInventory(getInventory());
+        }
     }
 }

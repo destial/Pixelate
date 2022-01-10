@@ -10,6 +10,9 @@ import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.events.controls.EventKeyboard;
 import xyz.destiall.pixelate.events.controls.EventTouch;
 
+/**
+ * Written by Rance
+ */
 public class GameSurface extends SurfaceView implements SurfaceHolder.Callback, Listener {
     private Pixelate gameThread;
 

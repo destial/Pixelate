@@ -12,6 +12,7 @@ import java.util.HashMap;
 import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.commands.CommandGraph;
+import xyz.destiall.pixelate.commands.executors.GamemodeCommand;
 import xyz.destiall.pixelate.commands.executors.SpawnCommand;
 import xyz.destiall.pixelate.commands.executors.SummonCommand;
 import xyz.destiall.pixelate.entities.EntityPlayer;
@@ -32,6 +33,9 @@ import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class StateGame extends State implements Modular {
     private final HashMap<Class<? extends Module>, Module> modules;
     private EntityPlayer player;
@@ -178,7 +182,7 @@ public class StateGame extends State implements Modular {
 
     @Override
     public <N extends Module> N getModule(Class<N> clazz) {
-        return (N) modules.get(clazz);
+        return clazz.cast(modules.get(clazz));
     }
 
     @Override
@@ -238,5 +242,6 @@ public class StateGame extends State implements Modular {
     private void setupCommands() {
         CommandGraph.INSTANCE.registerCommand("spawn", new SpawnCommand());
         CommandGraph.INSTANCE.registerCommand("summon", new SummonCommand());
+        CommandGraph.INSTANCE.registerCommand("gamemode", new GamemodeCommand());
     }
 }

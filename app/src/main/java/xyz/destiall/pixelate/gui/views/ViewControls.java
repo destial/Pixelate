@@ -9,6 +9,7 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.commands.CommandGraph;
 import xyz.destiall.pixelate.entities.EntityPlayer;
+import xyz.destiall.pixelate.entities.Gamemode;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
 import xyz.destiall.pixelate.events.controls.EventChat;
@@ -30,6 +31,9 @@ import xyz.destiall.pixelate.gui.buttons.QuadButton;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.states.StateGame;
 
+/**
+ * Written by Rance
+ */
 public class ViewControls implements View {
     private final int outerCircleRadius;
     private final int innerCircleRadius;
@@ -118,7 +122,8 @@ public class ViewControls implements View {
         screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.BLUE);
 
         EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
-        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
+        if (player.getGamemode() != Gamemode.CREATIVE)
+            screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
     }
 
     @Override
@@ -175,10 +180,11 @@ public class ViewControls implements View {
         if (chat == null) return;
         if (message.startsWith("/")) {
             if (!CommandGraph.INSTANCE.executeCommand(message.substring(1))) {
-                message = "Unable to execute command!";
+                chat.setText("Unable to execute command!");
             }
+            return;
         }
-        chat.setText(message);
+        chat.setText("Chat: " + message);
     }
 
     @EventHandler
