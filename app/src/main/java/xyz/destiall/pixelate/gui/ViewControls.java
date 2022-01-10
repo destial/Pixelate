@@ -121,15 +121,11 @@ public class ViewControls implements View {
         screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.BLUE);
 
         EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
-<<<<<<< HEAD
-        screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
-
         screen.bar(Pixelate.WIDTH * 0.325, Pixelate.HEIGHT * 0.82, Pixelate.WIDTH * 0.35, 30, Color.DKGRAY, Color.GREEN, player.getXPProgress());
         screen.text(String.valueOf(player.getLevel()), Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.814, 60, Color.GREEN);
-=======
+
         if (player.getGamemode() != Gamemode.CREATIVE)
             screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
->>>>>>> a7629e4c3b1db619636eabcd23158ede2190ced2
     }
 
     @Override
