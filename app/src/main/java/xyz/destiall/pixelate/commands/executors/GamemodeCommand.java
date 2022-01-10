@@ -2,7 +2,7 @@ package xyz.destiall.pixelate.commands.executors;
 
 import xyz.destiall.pixelate.commands.Command;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.entities.Gamemode;
+import xyz.destiall.pixelate.status.Gamemode;
 
 /**
  * Written by Rance

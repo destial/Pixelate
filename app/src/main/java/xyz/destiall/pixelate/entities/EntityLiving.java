@@ -99,20 +99,7 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
      * @param damage The damage to deal
      */
     public void damage(float damage) {
-        if (damageDelay != 0) return;
-        damageDelay = (float) Timer.getDeltaTime();
-        if (health > 0) {
-            EventEntityDamage e = new EventEntityDamage(this, damage);
-            Pixelate.HANDLER.call(e);
-            if (e.isCancelled()) return;
-            health -= e.getDamage();
-            if (health < 0) {
-                health = 0;
-            }
-            if (health <= 0) {
-                remove();
-            }
-        }
+        damage(null, damage);
     }
 
     /**
@@ -132,9 +119,17 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
                 health = 0;
             }
             if (health <= 0) {
-                remove();
+                die();
             }
         }
+    }
+
+    /**
+     * Kill this Entity
+     */
+    public void die() {
+        health = 0;
+        remove();
     }
 
     @Override

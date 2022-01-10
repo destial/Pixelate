@@ -1,4 +1,4 @@
-package xyz.destiall.pixelate.entities;
+package xyz.destiall.pixelate.status;
 
 /**
  * Written by Rance

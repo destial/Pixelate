@@ -48,8 +48,8 @@ public class EntityMonster extends EntityLiving {
     }
 
     @Override
-    public void remove() {
-        super.remove();
+    public void die() {
+        super.die();
         if (health <= 0) {
             World world;
             if ((world = location.getWorld()) == null) return;

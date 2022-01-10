@@ -45,6 +45,7 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.settings.Settings;
+import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.timer.Timer;
 
 /**
@@ -100,7 +101,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
     }
 
     @Override
-    public void remove() {
+    public void die() {
         World w;
         if ((w = location.getWorld()) != null) teleport(w.getNearestEmpty(0, 0));
         health = 20.f;
@@ -110,7 +111,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
     protected void updateSprite() {
         if (velocity.getX() > 0) facing = Direction.RIGHT;
         else if (velocity.getX() < 0) facing = Direction.LEFT;
-        //else facing = Direction.RIGHT;
 
         String anim = (velocity.isZero() ? (playPunchAnimation || swingAnimationTimer != 0 ? "PUNCH " : "LOOK ") : "WALK ") + facing.name();
         spriteSheet.setCurrentAnimation(anim);

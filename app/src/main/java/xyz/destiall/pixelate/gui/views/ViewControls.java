@@ -8,7 +8,7 @@ import java.util.List;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.entities.Gamemode;
+import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
 import xyz.destiall.pixelate.events.controls.EventChat;

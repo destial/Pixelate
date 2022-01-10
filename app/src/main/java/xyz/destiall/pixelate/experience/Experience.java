@@ -1,5 +1,8 @@
 package xyz.destiall.pixelate.experience;
 
+/**
+ * Written by Yong Hong
+ */
 public class Experience {
     private int xp;
     private int level;
