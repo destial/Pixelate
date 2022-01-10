@@ -30,4 +30,26 @@ public class LootTable {
         if (items.isEmpty()) items.add(new ItemStack(type, 1));
         return items;
     }
+
+    public int getXPDrops(Material type, int luck)
+    {
+        int amt = 0;
+        switch(type)
+        {
+            case COAL_ORE:
+                amt = 20;
+                break;
+            case REDSTONE_ORE:
+                amt = 30;
+                break;
+            case LAPIS_ORE:
+                amt = 30;
+                break;
+            case DIAMOND_ORE:
+                amt = 50;
+            case EMERALD_ORE:
+                amt = 65;
+        }
+        return (int)(amt * (1+luck*0.2));
+    }
 }

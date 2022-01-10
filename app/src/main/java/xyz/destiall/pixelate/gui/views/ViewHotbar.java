@@ -122,7 +122,7 @@ public class ViewHotbar implements View {
         if (current != null) {
             ItemMeta meta = current.getItemMeta();
             String name = meta.hasDisplayName() ? meta.getDisplayName() : current.getType().getName();
-            screen.text(name, Pixelate.WIDTH * 0.5f - (name.length() * 10), y - 70, 40, Color.WHITE);
+            screen.text(name, Pixelate.WIDTH * 0.5f - (name.length() * 10), y - 160, 40, Color.WHITE);
         }
     }
 

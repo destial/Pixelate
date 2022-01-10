@@ -28,12 +28,14 @@ import xyz.destiall.pixelate.events.entity.EventItemPickup;
 import xyz.destiall.pixelate.events.tile.EventIgniteTNT;
 import xyz.destiall.pixelate.events.tile.EventOpenContainer;
 import xyz.destiall.pixelate.events.tile.EventTilePlace;
+import xyz.destiall.pixelate.experience.Experience;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
@@ -56,6 +58,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient double swingAnimationTimer;
     private transient final float originalAnimSpeed;
     private Gamemode gamemode;
+
+    protected Experience exp;
 
     public EntityPlayer() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.player);
@@ -80,6 +84,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
+        exp = new Experience();
         gamemode = Gamemode.SURVIVAL;
     }
 
@@ -193,6 +198,40 @@ public class EntityPlayer extends EntityLiving implements Listener {
         return getInventory().getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
     }
 
+    /**
+     * Add experience points to this player
+     * @param xp The experience to add
+     */
+    public void addXP(int xp) {
+        if (exp.addXP(xp)) {
+            location.getWorld().playSound(Sound.SoundType.EXPLOSION, this.getLocation(), 1.0f);
+        }
+    }
+
+    /**
+     * Set the experience level of this player
+     * @param level The new level
+     */
+    public void setXPLevel(int level) {
+        exp.setLevel(level);
+    }
+
+    /**
+     * Get the experience progress of this player
+     * @return The experience progress
+     */
+    public float getXPProgress() {
+        return (float) exp.getXP() / Experience.getRequiredXP(exp.getLevel());
+    }
+
+    /**
+     * Get the experience level of this player
+     * @return The experience level
+     */
+    public int getXPLevel() {
+        return exp.getLevel();
+    }
+
     @EventHandler
     private void onJoystickEvent(EventJoystick e) {
         velocity.setX(e.getOffsetX());
@@ -263,21 +302,32 @@ public class EntityPlayer extends EntityLiving implements Listener {
         timeRelative += Timer.getDeltaTime();
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
         if (tile.addBlockBreakProgression(bbProgressDiff)) {
+            int luck = 0;
             ItemStack hand = getItemInHand();
             if (hand.getType().isTool()) {
                 int use = 1;
                 ItemMeta meta = hand.getItemMeta();
                 if (meta.hasEnchantment(Enchantment.DURABILITY)) {
                     use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
-                    if (use > 1 || use == 0) {
+                    if (use > 1) {
                         use = 0;
                     }
+                }
+                if (meta.hasEnchantment(Enchantment.FORTUNE)) {
+                    luck = meta.getEnchantLevel(Enchantment.FORTUNE);
+                }
+                meta.setDurability(hand.getItemMeta().getDurability() + use);
+                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                    hand.setAmount(0);
                 }
                 meta.setDurability(hand.getItemMeta().getDurability() + use);
                 if (meta.getDurability() >= hand.getType().getMaxDurability()) {
                     hand.setAmount(0);
                 }
             }
+            //XP Drops
+            int xpDrop = LootTable.getInstance().getXPDrops(tile.getMaterial(), luck);
+            exp.addXP(xpDrop);
         }
     }
 
