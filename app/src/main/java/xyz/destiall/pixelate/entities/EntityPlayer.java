@@ -27,7 +27,6 @@ import xyz.destiall.pixelate.events.EventLeftTapButton;
 import xyz.destiall.pixelate.events.EventOpenContainer;
 import xyz.destiall.pixelate.events.EventOpenInventory;
 import xyz.destiall.pixelate.events.EventRightTapButton;
-import xyz.destiall.pixelate.events.EventTileBreak;
 import xyz.destiall.pixelate.events.EventTilePlace;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
@@ -258,7 +257,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         }
         if (!playPunchAnimation) spriteSheet.setCurrentFrame(0);
         playPunchAnimation = true;
-        Vector2 tileLoc = tile.getVector();
         float bbProgress = tile.getBlockBreakProgress(); //Out of 100.0
         float bbDuration = tile.getMaterial().getRequiredMineDuration(getItemInHand());
         float timeRelative = bbProgress / 100.0f * bbDuration;
@@ -266,37 +264,25 @@ public class EntityPlayer extends EntityLiving implements Listener {
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
         tile.addBlockBreakProgression(bbProgressDiff);
         if (tile.getBlockBreakProgress() >= 100) {
-            EventTileBreak ev = new EventTileBreak(tile);
-            Pixelate.HANDLER.call(ev);
-            if (ev.isCancelled()) {
-                tile.addBlockBreakProgression(-500);
-                return;
-            }
-            ItemStack hand = getItemInHand();
-            if (hand.getType().isTool()) {
-                int use = 1;
-                ItemMeta meta = hand.getItemMeta();
-                if (meta.hasEnchantment(Enchantment.DURABILITY)) {
-                    use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
-                    if (use > 1 || use == 0) {
-                        use = 0;
+            if (w.breakTile(newLoc.getTile(), getItemInHand()) != null) {
+                ItemStack hand = getItemInHand();
+                if (hand.getType().isTool()) {
+                    int use = 1;
+                    ItemMeta meta = hand.getItemMeta();
+                    if (meta.hasEnchantment(Enchantment.DURABILITY)) {
+                        use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
+                        if (use > 1 || use == 0) {
+                            use = 0;
+                        }
+                    }
+                    meta.setDurability(hand.getItemMeta().getDurability() + use);
+                    if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                        hand.setAmount(0);
                     }
                 }
-                meta.setDurability(hand.getItemMeta().getDurability() + use);
-                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
-                    hand.setAmount(0);
-                }
+            } else {
+                tile.addBlockBreakProgression(-500);
             }
-            List<ItemStack> drops = w.breakTile(newLoc.getTile(), getItemInHand());
-            //if (drops != null) {
-                for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
-                    ItemStack drop = drops.get((int) i);
-                    double x = Math.cos(i) * Tile.SIZE * 0.3;
-                    double y = Math.sin(i) * Tile.SIZE * 0.3;
-                    w.dropItem(drop, tileLoc.add(x, y));
-                    tileLoc.subtract(x, y);
-                }
-            //}
         }
     }
 

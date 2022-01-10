@@ -12,10 +12,11 @@ import xyz.destiall.pixelate.states.StateGame;
  * Written by Rance
  */
 public class Location {
+    private final transient Vector2 vector;
     private double x;
     private double y;
     private String world;
-    private final transient Vector2 vector;
+
     public Location() {
         vector = new Vector2(x, y);
     }
