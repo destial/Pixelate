@@ -57,9 +57,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient boolean playPunchAnimation;
     private transient double swingAnimationTimer;
     private transient final float originalAnimSpeed;
+    private final Experience exp;
     private Gamemode gamemode;
-
-    protected Experience exp;
 
     public EntityPlayer() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.player);
@@ -88,19 +87,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         gamemode = Gamemode.SURVIVAL;
     }
 
-    public void sendMessage(String message) {
-        EventChat chat = new EventChat(message);
-        Pixelate.HANDLER.call(chat);
-    }
-
-    public void setGamemode(Gamemode gamemode) {
-        this.gamemode = gamemode;
-    }
-
-    public Gamemode getGamemode() {
-        return gamemode;
-    }
-
     @Override
     public void damage(float damage) {
         if (gamemode == Gamemode.CREATIVE) return;
@@ -116,8 +102,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @Override
     public void remove() {
         World w;
-        if ((w = location.getWorld()) != null)
-            teleport(w.getNearestEmpty(0, 0));
+        if ((w = location.getWorld()) != null) teleport(w.getNearestEmpty(0, 0));
         health = 20.f;
     }
 
@@ -149,9 +134,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         super.render(screen);
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Vector2 vector = Screen.convert(newLoc);
-        // Vector2 dir = target.getVector();
-        // dir.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25);
-        // vector.add(dir);
 
         if (Settings.ENABLE_BLOCK_TRACE) {
             Tile t = newLoc.getTile();
@@ -188,6 +170,31 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @Override
     public PlayerInventory getInventory() {
         return (PlayerInventory) inventory;
+    }
+
+    /**
+     * Send a message to this player
+     * @param message The message to send
+     */
+    public void sendMessage(String message) {
+        EventChat chat = new EventChat(message);
+        Pixelate.HANDLER.call(chat);
+    }
+
+    /**
+     * Set the gamemode of this player
+     * @param gamemode The gamemode to set
+     */
+    public void setGamemode(Gamemode gamemode) {
+        this.gamemode = gamemode;
+    }
+
+    /**
+     * Get the gamemode of this player
+     * @return The player's gamemode
+     */
+    public Gamemode getGamemode() {
+        return gamemode;
     }
 
     /**
