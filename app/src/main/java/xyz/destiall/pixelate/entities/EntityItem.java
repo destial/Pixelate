@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.entities;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
-import xyz.destiall.pixelate.events.EventItemPickup;
+import xyz.destiall.pixelate.events.entity.EventItemPickup;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;

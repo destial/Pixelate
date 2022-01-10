@@ -103,6 +103,10 @@ public class SpriteSheet implements Updateable {
         return getCurrentAnimation()[animationFrame];
     }
 
+    /**
+     * Get the number of columns of the current sprite
+     * @return The number of columns
+     */
     public int getColumns() {
         return getCurrentAnimation().length;
     }
@@ -113,7 +117,7 @@ public class SpriteSheet implements Updateable {
         if (animationTime >= getColumns()) {
             animationTime = 0;
         }
-        if (animationFrame != (int) animationTime)
+        if (getAnimationFrame() != (int) animationTime)
             animationFrame = (int) animationTime;
     }
 }

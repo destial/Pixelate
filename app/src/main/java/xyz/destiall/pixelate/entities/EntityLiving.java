@@ -4,8 +4,8 @@ import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
-import xyz.destiall.pixelate.events.EventEntityDamage;
-import xyz.destiall.pixelate.events.EventEntityDamageByEntity;
+import xyz.destiall.pixelate.events.entity.EventEntityDamage;
+import xyz.destiall.pixelate.events.entity.EventEntityDamageByEntity;
 import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.items.inventory.EntityInventory;
 import xyz.destiall.pixelate.items.inventory.Inventory;

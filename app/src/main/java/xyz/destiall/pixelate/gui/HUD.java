@@ -6,6 +6,13 @@ import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.gui.views.ViewChest;
+import xyz.destiall.pixelate.gui.views.ViewControls;
+import xyz.destiall.pixelate.gui.views.ViewCreative;
+import xyz.destiall.pixelate.gui.views.ViewFurnace;
+import xyz.destiall.pixelate.gui.views.ViewHotbar;
+import xyz.destiall.pixelate.gui.views.ViewInventory;
+import xyz.destiall.pixelate.gui.views.ViewPaused;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 

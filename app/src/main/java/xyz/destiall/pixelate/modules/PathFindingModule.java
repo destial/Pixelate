@@ -2,38 +2,40 @@ package xyz.destiall.pixelate.modules;
 
 import java.util.LinkedList;
 
+import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.pathfinding.algorithms.Algorithm;
 import xyz.destiall.pixelate.position.Location;
 
 public class PathFindingModule implements Module {
-
-    Long previousUpdate = System.currentTimeMillis();
-    double pathUpdateFrequency;
-    Algorithm algo;
+    private transient Entity self;
+    private Long previousUpdate = System.currentTimeMillis();
+    private double pathUpdateFrequency;
+    private Algorithm algo;
 
     public PathFindingModule() {}
 
-    public PathFindingModule(Algorithm algo, double pathUpdateFrequency) {
+    public PathFindingModule(Entity entity, Algorithm algo, double pathUpdateFrequency) {
+        this.self = entity;
         this.pathUpdateFrequency = pathUpdateFrequency;
-        previousUpdate -= (long) (this.pathUpdateFrequency * 1000);
+        previousUpdate -= (long) (pathUpdateFrequency * 1000);
         this.algo = algo;
     }
 
-    public LinkedList<Location> getPath(Location start, Location end) {
-        if(previousUpdate + (long) (pathUpdateFrequency * 1000) < System.currentTimeMillis())
-            return algo.findNewPath(start, end);
+    public LinkedList<Location> getPath(Location end) {
+        if (previousUpdate + (long) (pathUpdateFrequency * 1000) < System.currentTimeMillis())
+            return algo.findNewPath(self.getLocation(), end);
         else
             return algo.getCurrentPath();
     }
 
-    @Override
-    public void update() {
-
+    public void setSelf(Entity self) {
+        this.self = self;
     }
 
     @Override
-    public void destroy() {
+    public void update() {}
 
-    }
+    @Override
+    public void destroy() {}
 }

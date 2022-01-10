@@ -11,9 +11,9 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.events.EventGamePause;
-import xyz.destiall.pixelate.events.EventOpenKeyboard;
-import xyz.destiall.pixelate.gui.KeyboardFragment;
+import xyz.destiall.pixelate.events.controls.EventGamePause;
+import xyz.destiall.pixelate.events.controls.EventOpenKeyboard;
+import xyz.destiall.pixelate.gui.popups.KeyboardFragment;
 
 public class GameActivity extends AppCompatActivity implements Listener {
 

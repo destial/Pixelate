@@ -22,6 +22,7 @@ public class FurnanceTile extends ContainerTile {
         //Smeltable List
         smeltable.put(Material.COAL_ORE, Material.COAL);
         smeltable.put(Material.COBBLESTONE, Material.STONE);
+        smeltable.put(Material.WOOD, Material.COAL);
 
         //Burn Rate
         burnRate.put(Material.COAL, 8.1f);
@@ -53,6 +54,7 @@ public class FurnanceTile extends ContainerTile {
     public float getTimeToSmelt() {
         return timeToSmelt;
     }
+
     public void setTimeToSmelt(float newTime) {
         timeToSmelt = newTime;
     }
@@ -60,11 +62,13 @@ public class FurnanceTile extends ContainerTile {
     public float getSmeltProgress() {
         return smeltProgress;
     }
+
     public float getBurnerRemainingPercentage() {
-        if(lastBurnerMaxTime == 0.0) return 0;
+        if (lastBurnerMaxTime == 0.0) return 0;
         return burnerRemainingTime / lastBurnerMaxTime;
     }
 
+    @SuppressWarnings("all")
     @Override
     public void update() {
         FurnaceInventory inventory = getInventory();
@@ -77,13 +81,11 @@ public class FurnanceTile extends ContainerTile {
                 burner.removeAmount(1);
                 lastBurnerMaxTime = burnRate.get(burner.getType());
                 burnerRemainingTime += burnRate.get(burner.getType());
-                //System.out.println("removed " + burnerRemainingTime);
                 if (burner.getAmount() == 0) inventory.setBurnerSlot(null);
             }
         }
 
         if (burnerRemainingTime > 0) {
-            //System.out.println("burn rate " + burnerRemainingTime);
             ItemStack toSmelt = inventory.getToSmeltSlot();
             if (toSmelt != null && isASmeltable(toSmelt)) {
                 ItemStack processed = inventory.getProcessedSlot();

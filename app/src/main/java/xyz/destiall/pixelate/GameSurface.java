@@ -7,8 +7,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import xyz.destiall.java.events.Listener;
-import xyz.destiall.pixelate.events.EventKeyboard;
-import xyz.destiall.pixelate.events.EventTouch;
+import xyz.destiall.pixelate.events.controls.EventKeyboard;
+import xyz.destiall.pixelate.events.controls.EventTouch;
 
 public class GameSurface extends SurfaceView implements SurfaceHolder.Callback, Listener {
     private Pixelate gameThread;

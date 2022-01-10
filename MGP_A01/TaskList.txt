@@ -1,12 +1,28 @@
 Completed:
 	Rance:
 		Custom framework
+		Custom event handler
+		Vector2D math API
+		Collision API
+		Canvas Drawing API
+		GUI framework API
 		Controls
 		Inventory
-		Animation
+		Spritesheet / Animation
 		Crafting
 		Entities
-		Developer API
+		Items
+		Dropped items
+		Item enchantments & glint
+		Item durability
+		Chat & commands
+		TNT explosion
+		Visual Effects
+		Sound Effects
+		Saving & Loading with GSON
+		Modular Systems
+		Debug drawing collision bounds
+		
 	Yong Hong:
 		Majority of Tile Imports (New Block Materials)
 		World Generation Framework(Perlin Noise Generation with normalization)
@@ -18,7 +34,7 @@ Completed:
 		FurnaceTile
 		FurnaceInventory
 		Furnace UI
-		Block Attributes (EfficiencyTier, GenericModifier)
+		Block Attributes (EfficiencyTier, ToolType)
 		Pause Menu
 		Cave World
 		Splash Screen
@@ -28,7 +44,6 @@ Todo:
 	Rance:
 		Leaderboards
 		Ender Dragon??
-		Save/Load World
 		Potions
 		3x3 Crafting
 		Icon Loading for Buttons
@@ -39,13 +54,10 @@ Todo:
 	Yong Hong:
 		Enemy FSM
 		Enemy Pathfinding
-		Audio
 		Achievements Framework
 		Some Achievements
 		Furnace Smelting functionality
-		Chests
 		Ender Chests
-		TnT
 		Creeper Enemy
 		Furnace Animation, Chest Open animation
 
