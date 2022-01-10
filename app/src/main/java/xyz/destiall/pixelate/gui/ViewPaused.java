@@ -14,6 +14,9 @@ import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Yong Hong
+ */
 public class ViewPaused implements View {
     private final Vector2 resumeButton;
     private final int resumeButtonRadius;

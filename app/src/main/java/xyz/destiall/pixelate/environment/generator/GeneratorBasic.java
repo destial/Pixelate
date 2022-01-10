@@ -13,14 +13,17 @@ import xyz.destiall.pixelate.environment.tiles.TileFactory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 
+/**
+ * Written by Yong Hong
+ */
 public class GeneratorBasic implements Generator {
     @Override
     public void generate(World world, Collection<Tile> tiles) {
         generate(0, world, tiles);
     }
 
-    private float generationScale = 0.05f;
-    private float oreGenerationScale = 0.3f;
+    private final float generationScale = 0.05f;
+    private final float oreGenerationScale = 0.3f;
 
     @Override
     public void generate(int seed, World world, Collection<Tile> tiles) {
@@ -89,7 +92,5 @@ public class GeneratorBasic implements Generator {
                 }
             }
         }
-
-
     }
 }

@@ -11,6 +11,9 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public enum Material {
     STONE(0, 0, Tile.TileType.BACKGROUND, 10, ToolType.PICKAXE),
     WOOD(0, 1, Tile.TileType.FOREGROUND, 4, ToolType.AXE),

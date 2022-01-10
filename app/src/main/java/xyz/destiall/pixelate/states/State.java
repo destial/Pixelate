@@ -6,6 +6,9 @@ import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.modular.Module;
 
+/**
+ * Written by Rance
+ */
 public abstract class State implements Updateable, Module {
     protected transient GameSurface surface;
     public State() {}

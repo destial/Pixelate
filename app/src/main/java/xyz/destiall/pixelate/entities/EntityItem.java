@@ -10,6 +10,9 @@ import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class EntityItem extends Entity {
     private ItemStack drop;
     private transient float upAndDownTimer;

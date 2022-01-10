@@ -13,6 +13,9 @@ import androidx.fragment.app.DialogFragment;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.events.EventChat;
 
+/**
+ * Written by Rance
+ */
 public class KeyboardFragment extends DialogFragment {
 
     @NonNull

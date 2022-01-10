@@ -13,6 +13,9 @@ import xyz.destiall.pixelate.modules.EffectsModule;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class Effect extends Entity {
     private transient float currentAnimation;
     private EffectType type;

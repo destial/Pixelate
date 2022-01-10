@@ -13,6 +13,9 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance
+ */
 public class Screen {
     public static Canvas CANVAS;
     private static Vector2 offset;

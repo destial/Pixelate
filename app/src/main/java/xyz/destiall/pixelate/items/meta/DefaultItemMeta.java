@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Written by Rance
+ */
 public class DefaultItemMeta implements ItemMeta {
     private final Map<Enchantment, Integer> enchants = new HashMap<>();
     private final List<ItemFlag> flags = new ArrayList<>();

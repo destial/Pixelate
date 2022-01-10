@@ -5,6 +5,9 @@ import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.containers.ChestTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 
+/**
+ * Written by Rance
+ */
 public class TileFactory {
 
     /**

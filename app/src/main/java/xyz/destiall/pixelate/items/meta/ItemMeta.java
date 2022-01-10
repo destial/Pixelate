@@ -2,6 +2,9 @@ package xyz.destiall.pixelate.items.meta;
 
 import java.util.Map;
 
+/**
+ * Written by Rance
+ */
 public interface ItemMeta {
 
     /**

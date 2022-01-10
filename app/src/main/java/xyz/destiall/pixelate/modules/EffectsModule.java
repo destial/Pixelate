@@ -10,6 +10,9 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
 
+/**
+ * Written by Rance
+ */
 public class EffectsModule implements Renderable, Module {
     private transient World world;
     private transient final List<Effect> effects;

@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 
 import xyz.destiall.pixelate.R;
 
+/**
+ * Written by Rance
+ */
 public class Glint implements Updateable {
     public static final Glint INSTANCE = new Glint();
 

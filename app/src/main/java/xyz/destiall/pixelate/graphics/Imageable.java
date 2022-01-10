@@ -5,6 +5,9 @@ import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Written by Rance
+ */
 public abstract class Imageable {
     protected transient Bitmap image;
     protected float height;

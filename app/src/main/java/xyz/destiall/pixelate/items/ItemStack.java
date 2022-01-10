@@ -14,6 +14,9 @@ import xyz.destiall.pixelate.items.meta.DefaultItemMeta;
 import xyz.destiall.pixelate.items.meta.ItemFlag;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
 
+/**
+ * Written by Rance
+ */
 public class ItemStack {
     private transient Inventory inventory;
     private Material material;

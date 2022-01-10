@@ -46,6 +46,9 @@ import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class EntityPlayer extends EntityLiving implements Listener {
     private transient final SpriteSheet slash;
     private transient final Bitmap crosshair;
@@ -53,6 +56,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient boolean playPunchAnimation;
     private transient double swingAnimationTimer;
     private transient final float originalAnimSpeed;
+    private Gamemode gamemode;
 
     public EntityPlayer() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.player);
@@ -77,11 +81,32 @@ public class EntityPlayer extends EntityLiving implements Listener {
         slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
+        gamemode = Gamemode.SURVIVAL;
     }
 
     public void sendMessage(String message) {
         EventChat chat = new EventChat(message);
         Pixelate.HANDLER.call(chat);
+    }
+
+    public void setGamemode(Gamemode gamemode) {
+        this.gamemode = gamemode;
+    }
+
+    public Gamemode getGamemode() {
+        return gamemode;
+    }
+
+    @Override
+    public void damage(float damage) {
+        if (gamemode == Gamemode.CREATIVE) return;
+        super.damage(damage);
+    }
+
+    @Override
+    public void damage(Entity damager, float damage) {
+        if (gamemode == Gamemode.CREATIVE) return;
+        super.damage(damager, damage);
     }
 
     @Override
@@ -314,7 +339,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @EventHandler(priority = EventHandler.Priority.HIGHEST)
     private void onOpenInventory(EventOpenInventory e) {
-        // HUD.INSTANCE.setCreative(getInventory());
-        HUD.INSTANCE.setInventory(getInventory());
+        if (gamemode == Gamemode.CREATIVE) {
+            HUD.INSTANCE.setCreative(getInventory());
+        } else {
+            HUD.INSTANCE.setInventory(getInventory());
+        }
     }
 }

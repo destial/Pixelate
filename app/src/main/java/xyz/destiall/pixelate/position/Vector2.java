@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 
 import xyz.destiall.pixelate.errors.DivideByZeroException;
 
+/**
+ * Written by Rance
+ */
 public class Vector2 implements Cloneable {
     private double x;
     private double y;

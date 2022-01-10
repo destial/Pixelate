@@ -2,6 +2,9 @@ package xyz.destiall.pixelate.position;
 
 import xyz.destiall.pixelate.environment.tiles.Tile;
 
+/**
+ * Written by Rance
+ */
 public class AABB {
     private final Vector2 min;
     private final Vector2 max;

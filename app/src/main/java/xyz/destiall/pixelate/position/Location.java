@@ -8,6 +8,9 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.states.StateGame;
 
+/**
+ * Written by Rance
+ */
 public class Location {
     private double x;
     private double y;

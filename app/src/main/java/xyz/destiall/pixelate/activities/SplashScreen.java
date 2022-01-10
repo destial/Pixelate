@@ -9,6 +9,9 @@ import android.view.WindowManager;
 
 import xyz.destiall.pixelate.R;
 
+/**
+ * Written by Yong Hong
+ */
 public class SplashScreen extends Activity {
     protected boolean _active = true;
     protected int _splashTime = 3000;

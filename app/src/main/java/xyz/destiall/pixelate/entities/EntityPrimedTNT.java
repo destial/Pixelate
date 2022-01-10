@@ -13,6 +13,9 @@ import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class EntityPrimedTNT extends Entity {
     private float explosionTimer = 5f;
     private boolean sizzled;

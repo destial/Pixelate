@@ -17,6 +17,9 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
 
+/**
+ * Written by Rance
+ */
 public class TileSerializer implements JsonDeserializer<Tile>, JsonSerializer<Tile> {
     private final Gson gson = new GsonBuilder()
             .enableComplexMapKeySerialization()

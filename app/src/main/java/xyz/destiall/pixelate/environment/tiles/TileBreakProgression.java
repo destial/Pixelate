@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.graphics.Imageable;
 
+/**
+ * Written by Yong Hong
+ */
 public class TileBreakProgression extends Imageable {
     private static TileBreakProgression instance = null;
 

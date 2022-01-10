@@ -13,6 +13,9 @@ import java.lang.reflect.Type;
 import xyz.destiall.java.reflection.Reflect;
 import xyz.destiall.pixelate.entities.Entity;
 
+/**
+ * Written by Rance
+ */
 public class EntitySerializer implements JsonSerializer<Entity>, JsonDeserializer<Entity> {
     @Override
     public JsonElement serialize(Entity src, Type typeOfSrc, JsonSerializationContext context) {

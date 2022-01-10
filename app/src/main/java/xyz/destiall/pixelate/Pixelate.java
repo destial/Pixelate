@@ -28,6 +28,9 @@ import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written by Rance
+ */
 public class Pixelate extends Thread {
     public static final EventHandling HANDLER = new EventHandling();
     public static final Gson GSON = new GsonBuilder()

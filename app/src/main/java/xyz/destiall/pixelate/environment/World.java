@@ -40,6 +40,9 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class World implements Updateable, Renderable, Module, Modular {
     private final List<Entity> entities;
     private String name;
@@ -118,7 +121,7 @@ public class World implements Updateable, Renderable, Module, Modular {
      */
     public void generateWorld(int seed, boolean force) {
         if (tiles.size() == 0 || force) {
-            if (force) tiles.clear();
+            tiles.clear();
             generator.generate(seed, this, tiles);
         }
     }

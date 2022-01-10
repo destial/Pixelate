@@ -6,6 +6,9 @@ import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.materials.ToolType;
 import xyz.destiall.pixelate.items.ItemStack;
 
+/**
+ * Written by Rance
+ */
 public enum Enchantment {
     DAMAGE_ALL(5, ToolType.AXE, ToolType.SWORD),
     DIG_SPEED(5, ToolType.AXE, ToolType.PICKAXE, ToolType.SHOVEL),

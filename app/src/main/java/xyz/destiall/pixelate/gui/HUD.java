@@ -9,6 +9,9 @@ import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class HUD implements Updateable, Renderable, Listener {
     public static HUD INSTANCE = get();
 

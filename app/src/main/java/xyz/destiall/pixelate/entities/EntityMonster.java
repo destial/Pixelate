@@ -15,6 +15,9 @@ import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public class EntityMonster extends EntityLiving {
     private Type type = Type.ZOMBIE;
 

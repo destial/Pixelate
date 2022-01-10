@@ -4,6 +4,9 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 
+/**
+ * Written by Rance
+ */
 public class ChestTile extends ContainerTile {
     protected ChestTile() {}
 

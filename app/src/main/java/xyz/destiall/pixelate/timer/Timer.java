@@ -2,6 +2,9 @@ package xyz.destiall.pixelate.timer;
 
 import xyz.destiall.pixelate.graphics.Updateable;
 
+/**
+ * Written by Rance
+ */
 public class Timer implements Updateable {
     private static long lastNanoTime = -1;
     private static double deltaTime;

@@ -19,6 +19,9 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.settings.Settings;
 
+/**
+ * Written by Rance & Yong Hong
+ */
 public abstract class Entity implements Updateable, Renderable, Modular {
     private final HashMap<Class<? extends Module>, Module> modules;
     private transient boolean removed;
