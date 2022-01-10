@@ -24,6 +24,7 @@ import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.events.entity.EventSpawnEntity;
+import xyz.destiall.pixelate.events.tile.EventTileBreak;
 import xyz.destiall.pixelate.events.tile.EventTileReplace;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -98,10 +99,11 @@ public class World implements Updateable, Renderable, Module, Modular {
      * Play a particle effect at the requested location
      * @param type The particle type
      * @param location The requested location
+     * @return The effect that is playing
      */
-    public void playEffect(Effect.EffectType type, Location location) {
-        if (!hasModule(EffectsModule.class)) return;
-        getModule(EffectsModule.class).spawnEffect(type, location);
+    public Effect playEffect(Effect.EffectType type, Location location) {
+        if (!hasModule(EffectsModule.class)) return null;
+        return getModule(EffectsModule.class).spawnEffect(type, location);
     }
 
     /**
@@ -109,10 +111,11 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @param sound The sound to play
      * @param location The requested location
      * @param volume The volume of the sound
+     * @return The sound that is playing
      */
-    public void playSound(Sound.SoundType sound, Location location, float volume) {
-        if (!hasModule(SoundsModule.class)) return;
-        getModule(SoundsModule.class).playSound(sound, location, volume);
+    public Sound playSound(Sound.SoundType sound, Location location, float volume) {
+        if (!hasModule(SoundsModule.class)) return null;
+        return getModule(SoundsModule.class).playSound(sound, location, volume);
     }
 
     /**

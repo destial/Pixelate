@@ -130,11 +130,18 @@ public class Tile implements Updateable, Renderable {
     /**
      * Add a block break progression to this tile
      * @param progression The progress to add
+     * @return true if this tile broke, otherwise false
      */
-    public void addBlockBreakProgression(float progression) {
+    public boolean addBlockBreakProgression(float progression) {
         brokenProgression += progression;
         if (brokenProgression < 0) brokenProgression = 0;
-        if (brokenProgression > 100) brokenProgression = 100;
+        if (readyToBreak()) {
+            brokenProgression = 100;
+            World w;
+            if ((w = location.getWorld()) == null) return false;
+            return w.breakTile(this) != null;
+        }
+        return false;
     }
 
     /**

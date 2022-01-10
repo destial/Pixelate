@@ -18,7 +18,6 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
-import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
@@ -99,7 +98,7 @@ public class ViewInventory implements View {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
         screen.draw(image, cOutX, cOutY);
-        for (Recipe recipe : RecipeManager.getRecipes()) {
+        for (Recipe recipe : Pixelate.getRecipeManager().getRecipes()) {
             if (recipe.isFulfilled(playerInventory.getCrafting())) {
                 ItemStack item = recipe.getItem();
                 Bitmap image;
@@ -167,7 +166,7 @@ public class ViewInventory implements View {
         if (e.getAction() == ControlEvent.Action.DOWN) {
             int slot = getSlot(x, y);
             if (slot == 100) {
-                for (Recipe recipe : RecipeManager.getRecipes()) {
+                for (Recipe recipe : Pixelate.getRecipeManager().getRecipes()) {
                     if (recipe.isFulfilled(playerInventory.getCrafting())) {
                         //playerInventory.setItem(draggingSlot, null);
                         if (playerInventory.addItem(recipe.getItem())) {

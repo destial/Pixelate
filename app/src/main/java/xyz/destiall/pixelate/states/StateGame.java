@@ -11,10 +11,6 @@ import java.util.HashMap;
 
 import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.commands.CommandGraph;
-import xyz.destiall.pixelate.commands.executors.GamemodeCommand;
-import xyz.destiall.pixelate.commands.executors.SpawnCommand;
-import xyz.destiall.pixelate.commands.executors.SummonCommand;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
@@ -25,8 +21,6 @@ import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.items.crafting.Recipe;
-import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
@@ -45,8 +39,6 @@ public class StateGame extends State implements Modular {
     public StateGame(GameSurface surface) {
         modules = new HashMap<>();
         setSurface(surface);
-        setupRecipes();
-        setupCommands();
     }
 
     @Override
@@ -203,45 +195,5 @@ public class StateGame extends State implements Modular {
             modules.remove(clazz);
         }
         return module;
-    }
-
-    private void setupRecipes() {
-        Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS, 4));
-        plankRecipe.setShape("W");
-        // { W  , null
-        // null, null }
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
-
-        plankRecipe = new Recipe("plank2", new ItemStack(Material.PLANKS, 4));
-        plankRecipe.setShape(null, "W");
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
-
-        plankRecipe = new Recipe("plank3", new ItemStack(Material.PLANKS, 4));
-        plankRecipe.setShape(null, null, "W");
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
-
-        plankRecipe = new Recipe("plank4", new ItemStack(Material.PLANKS, 4));
-        plankRecipe.setShape(null, null, null, "W");
-        plankRecipe.setIngredient("W", Material.WOOD);
-        RecipeManager.addRecipe(plankRecipe);
-
-        Recipe stickRecipe = new Recipe("stick1", new ItemStack(Material.STICK, 4));
-        stickRecipe.setShape("P", null, "P");
-        stickRecipe.setIngredient("P", Material.PLANKS);
-        RecipeManager.addRecipe(stickRecipe);
-
-        stickRecipe = new Recipe("stick2", new ItemStack(Material.STICK, 4));
-        stickRecipe.setShape(null, "P", null, "P");
-        stickRecipe.setIngredient("P", Material.PLANKS);
-        RecipeManager.addRecipe(stickRecipe);
-    }
-
-    private void setupCommands() {
-        CommandGraph.INSTANCE.registerCommand("spawn", new SpawnCommand());
-        CommandGraph.INSTANCE.registerCommand("summon", new SummonCommand());
-        CommandGraph.INSTANCE.registerCommand("gamemode", new GamemodeCommand());
     }
 }

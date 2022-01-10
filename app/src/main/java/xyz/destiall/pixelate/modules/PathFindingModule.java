@@ -3,14 +3,14 @@ package xyz.destiall.pixelate.modules;
 import java.util.LinkedList;
 
 import xyz.destiall.pixelate.entities.Entity;
-import xyz.destiall.pixelate.modular.Module;
+import xyz.destiall.pixelate.modular.Component;
 import xyz.destiall.pixelate.pathfinding.algorithms.Algorithm;
 import xyz.destiall.pixelate.position.Location;
 
 /**
  * Written by Yong Hong
  */
-public class PathFindingModule implements Module {
+public class PathFindingModule implements Component<Entity> {
     private transient Entity self;
     private Long previousUpdate = System.currentTimeMillis();
     private double pathUpdateFrequency;
@@ -32,8 +32,14 @@ public class PathFindingModule implements Module {
             return algo.getCurrentPath();
     }
 
-    public void setSelf(Entity self) {
+    @Override
+    public void setParent(Entity self) {
         this.self = self;
+    }
+
+    @Override
+    public Entity getParent() {
+        return self;
     }
 
     @Override

@@ -13,21 +13,30 @@ import xyz.destiall.pixelate.states.StateGame;
  * Written by Rance
  */
 public class Sound implements Updateable {
-    private final EntityPlayer entityPlayer;
     private static final float DISTANCE = 10f;
+    private transient final EntityPlayer entityPlayer;
+
     private Location location;
     private MediaPlayer player;
     private boolean released;
     private float volume;
 
-    public void setType(SoundType effect) {
-        player = MediaPlayer.create(Pixelate.getContext(), effect.getId());
-        released = false;
-    }
-
     public Sound(SoundType effect) {
         setType(effect);
         entityPlayer = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+    }
+
+    public void setType(SoundType effect) {
+        if (player != null) {
+            if (player.isPlaying()) {
+                player.stop();
+            }
+            if (!released) {
+                player.release();
+            }
+        }
+        player = MediaPlayer.create(Pixelate.getContext(), effect.getId());
+        released = false;
     }
 
     public void play(float volume) {

@@ -37,7 +37,7 @@ public class Glint implements Updateable {
      * @param x Top left x
      * @param y Top left y
      */
-    public void render(Screen screen, int x, int y) {
+    public void renderHotbar(Screen screen, int x, int y) {
         spriteSheet.setCurrentAnimation("GLINT");
         screen.draw(spriteSheet.getCurrentSprite(), x, y);
     }
@@ -47,9 +47,8 @@ public class Glint implements Updateable {
      * @param screen The screen to render to
      * @param x Top left x
      * @param y Top left y
-     * @param z 1
      */
-    public void render(Screen screen, int x, int y, int z) {
+    public void renderInventory(Screen screen, int x, int y) {
         spriteSheet.setCurrentAnimation("GLINT2");
         screen.draw(spriteSheet.getCurrentSprite(), x, y);
     }

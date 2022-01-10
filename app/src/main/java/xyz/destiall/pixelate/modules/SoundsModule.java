@@ -5,13 +5,13 @@ import java.util.List;
 
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.sounds.Sound;
-import xyz.destiall.pixelate.modular.Module;
+import xyz.destiall.pixelate.modular.Component;
 import xyz.destiall.pixelate.position.Location;
 
 /**
  * Written by Rance
  */
-public class SoundsModule implements Module {
+public class SoundsModule implements Component<World> {
     private transient World world;
     private transient final List<Sound> soundsPlaying;
 
@@ -31,10 +31,11 @@ public class SoundsModule implements Module {
      * @param location The requested location
      * @param volume The volume of the sound
      */
-    public void playSound(Sound.SoundType effect, Location location, float volume) {
+    public Sound playSound(Sound.SoundType effect, Location location, float volume) {
         Sound sound = new Sound(effect);
         sound.play(location.clone().setWorld(world), volume);
         soundsPlaying.add(sound);
+        return sound;
     }
 
     @Override
@@ -54,5 +55,15 @@ public class SoundsModule implements Module {
             if (!sound.isReleased()) sound.getPlayer().release();
         }
         soundsPlaying.clear();
+    }
+
+    @Override
+    public World getParent() {
+        return world;
+    }
+
+    @Override
+    public void setParent(World world) {
+        this.world = world;
     }
 }

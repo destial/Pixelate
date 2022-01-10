@@ -18,16 +18,15 @@ import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.controls.EventChat;
-import xyz.destiall.pixelate.events.tile.EventIgniteTNT;
-import xyz.destiall.pixelate.events.entity.EventItemPickup;
 import xyz.destiall.pixelate.events.controls.EventJoystick;
 import xyz.destiall.pixelate.events.controls.EventLeftHoldButton;
 import xyz.destiall.pixelate.events.controls.EventLeftReleaseButton;
 import xyz.destiall.pixelate.events.controls.EventLeftTapButton;
-import xyz.destiall.pixelate.events.tile.EventOpenContainer;
 import xyz.destiall.pixelate.events.controls.EventOpenInventory;
 import xyz.destiall.pixelate.events.controls.EventRightTapButton;
-import xyz.destiall.pixelate.events.tile.EventTileBreak;
+import xyz.destiall.pixelate.events.entity.EventItemPickup;
+import xyz.destiall.pixelate.events.tile.EventIgniteTNT;
+import xyz.destiall.pixelate.events.tile.EventOpenContainer;
 import xyz.destiall.pixelate.events.tile.EventTilePlace;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
@@ -263,26 +262,21 @@ public class EntityPlayer extends EntityLiving implements Listener {
         float timeRelative = bbProgress / 100.0f * bbDuration;
         timeRelative += Timer.getDeltaTime();
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
-        tile.addBlockBreakProgression(bbProgressDiff);
-        if (tile.getBlockBreakProgress() >= 100) {
-            if (w.breakTile(newLoc.getTile(), getItemInHand()) != null) {
-                ItemStack hand = getItemInHand();
-                if (hand.getType().isTool()) {
-                    int use = 1;
-                    ItemMeta meta = hand.getItemMeta();
-                    if (meta.hasEnchantment(Enchantment.DURABILITY)) {
-                        use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
-                        if (use > 1 || use == 0) {
-                            use = 0;
-                        }
-                    }
-                    meta.setDurability(hand.getItemMeta().getDurability() + use);
-                    if (meta.getDurability() >= hand.getType().getMaxDurability()) {
-                        hand.setAmount(0);
+        if (tile.addBlockBreakProgression(bbProgressDiff)) {
+            ItemStack hand = getItemInHand();
+            if (hand.getType().isTool()) {
+                int use = 1;
+                ItemMeta meta = hand.getItemMeta();
+                if (meta.hasEnchantment(Enchantment.DURABILITY)) {
+                    use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
+                    if (use > 1 || use == 0) {
+                        use = 0;
                     }
                 }
-            } else {
-                tile.addBlockBreakProgression(-500);
+                meta.setDurability(hand.getItemMeta().getDurability() + use);
+                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                    hand.setAmount(0);
+                }
             }
         }
     }

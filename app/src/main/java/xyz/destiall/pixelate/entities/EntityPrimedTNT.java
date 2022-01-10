@@ -34,7 +34,6 @@ public class EntityPrimedTNT extends Entity {
         super.update();
         if (explosionTimer == 5.f && !sizzled) {
             sizzle();
-            sizzled = true;
         }
         explosionTimer -= Timer.getDeltaTime();
         if (explosionTimer <= 0 && !isRemoved()) {
@@ -42,13 +41,14 @@ public class EntityPrimedTNT extends Entity {
         }
     }
 
-    public void sizzle() {
+    private void sizzle() {
+        sizzled = true;
         World w;
         if ((w = location.getWorld()) == null) return;
         w.playSound(Sound.SoundType.SIZZLE, location, 1.f);
     }
 
-    public void explode() {
+    private void explode() {
         World w;
         if ((w = location.getWorld()) == null) return;
         this.remove();
@@ -63,8 +63,8 @@ public class EntityPrimedTNT extends Entity {
         w.findTiles(explosionBounds).forEach(t -> {
             if (t.getTileType() == Tile.TileType.BACKGROUND) return;
             double distance = t.getVector().distance(location.toVector()) / Tile.SIZE;
-            // TODO: Use block break progression
             if (Math.random() * distance < 1.5) w.breakTile(t);
+            else t.addBlockBreakProgression((float) ((1f / distance) * 100));
         });
         w.playEffect(Effect.EffectType.EXPLOSION, location);
         w.playSound(Sound.SoundType.EXPLOSION, location, 1.f);

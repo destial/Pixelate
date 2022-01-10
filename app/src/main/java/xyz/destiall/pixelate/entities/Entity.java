@@ -12,6 +12,7 @@ import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.modular.Component;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
@@ -49,7 +50,14 @@ public abstract class Entity implements Updateable, Renderable, Modular {
         animationSpeed = 60;
     }
 
-    public void refresh() {}
+    public void refresh() {
+        for (Module m : modules.values()) {
+            if (m instanceof Component) {
+                Component<Entity> component = (Component<Entity>) m;
+                component.setParent(this);
+            }
+        }
+    }
 
     /**
      * Get this entity's location

@@ -7,13 +7,13 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.modular.Module;
+import xyz.destiall.pixelate.modular.Component;
 import xyz.destiall.pixelate.position.Location;
 
 /**
  * Written by Rance
  */
-public class EffectsModule implements Renderable, Module {
+public class EffectsModule implements Renderable, Component<World> {
     private transient World world;
     private transient final List<Effect> effects;
 
@@ -31,10 +31,11 @@ public class EffectsModule implements Renderable, Module {
      * @param type The particle type
      * @param location The requested location
      */
-    public void spawnEffect(Effect.EffectType type, Location location) {
+    public Effect spawnEffect(Effect.EffectType type, Location location) {
         Effect effect = new Effect(type);
         effect.teleport(location.clone().setWorld(world));
         effects.add(effect);
+        return effect;
     }
 
     /**
@@ -62,5 +63,15 @@ public class EffectsModule implements Renderable, Module {
     @Override
     public void destroy() {
         effects.clear();
+    }
+
+    @Override
+    public World getParent() {
+        return world;
+    }
+
+    @Override
+    public void setParent(World world) {
+        this.world = world;
     }
 }

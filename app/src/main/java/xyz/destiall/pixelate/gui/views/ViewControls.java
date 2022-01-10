@@ -7,7 +7,6 @@ import java.util.List;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.commands.CommandGraph;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.entities.Gamemode;
 import xyz.destiall.pixelate.environment.WorldManager;
@@ -179,7 +178,7 @@ public class ViewControls implements View {
         QuadButton chat = (QuadButton) buttons.stream().filter(b -> b instanceof QuadButton).findFirst().orElse(null);
         if (chat == null) return;
         if (message.startsWith("/")) {
-            if (!CommandGraph.INSTANCE.executeCommand(message.substring(1))) {
+            if (!Pixelate.getCommands().executeCommand(message.substring(1))) {
                 chat.setText("Unable to execute command!");
             }
             return;

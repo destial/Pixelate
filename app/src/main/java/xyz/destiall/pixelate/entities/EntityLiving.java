@@ -2,6 +2,8 @@ package xyz.destiall.pixelate.entities;
 
 import android.graphics.Bitmap;
 
+import java.util.UUID;
+
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.events.entity.EventEntityDamage;
@@ -16,6 +18,7 @@ import xyz.destiall.pixelate.timer.Timer;
  */
 public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected transient float damageDelay;
+    protected UUID uuid;
 
     protected Inventory inventory;
     protected float health;
@@ -29,6 +32,15 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
         speed = 1f;
         armor = 0f;
         damageDelay = 0f;
+        uuid = UUID.nameUUIDFromBytes(("" + System.currentTimeMillis()).getBytes());
+    }
+
+    /**
+     * Get the unique identifier of this entity
+     * @return The unique identifier
+     */
+    public UUID getUUID() {
+        return uuid;
     }
 
     @Override

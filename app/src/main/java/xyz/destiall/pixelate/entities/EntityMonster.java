@@ -70,15 +70,16 @@ public class EntityMonster extends EntityLiving {
             case CREEPER:
                 spriteSheet.addAnimation("BLOW RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),4));
                 spriteSheet.addAnimation("BLOW LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(), 5));
-                drops.add(Material.COAL);
+                drops.add(Material.GUNPOWDER);
             case ZOMBIE:
                 spriteSheet.addAnimation("WALK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),2));
                 spriteSheet.addAnimation("WALK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),3));
+                drops.add(Material.ROTTEN_FLESH);
                 break;
             case SKELETON:
                 spriteSheet.addAnimation("WALK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),0));
                 spriteSheet.addAnimation("WALK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),1));
-                drops.add(Material.STICK);
+                drops.add(Material.BONE);
                 break;
             default: break;
         }

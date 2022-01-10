@@ -184,7 +184,7 @@ public class ItemStack {
             screen.bar(x + 7, y + (int) (image.getWidth() * 0.6), image.getWidth() - 40, 10, Color.GREEN, Color.RED, meta.getDurability() / (float) item.getType().getMaxDurability());
         }
         if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
-            Glint.INSTANCE.render(screen, x, y, 1);
+            Glint.INSTANCE.renderInventory(screen, x, y);
         }
     }
 }

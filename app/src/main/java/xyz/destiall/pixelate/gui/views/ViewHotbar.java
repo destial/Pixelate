@@ -105,7 +105,7 @@ public class ViewHotbar implements View {
                     screen.bar(x + 20, y + (int) (this.image.getWidth() * 0.8), this.image.getWidth() - 40, 10, Color.GREEN, Color.RED, meta.getDurability() / (float) item.getType().getMaxDurability());
                 }
                 if (meta.isEnchanted() && !meta.hasItemFlag(ItemFlag.HIDE_ENCHANT)) {
-                    Glint.INSTANCE.render(screen, x + 10, y + 10);
+                    Glint.INSTANCE.renderHotbar(screen, x + 10, y + 10);
                 }
             }
             if (!positions.containsKey(i)) {

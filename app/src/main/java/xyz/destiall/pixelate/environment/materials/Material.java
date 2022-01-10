@@ -51,6 +51,7 @@ public enum Material {
 
     MOSSY_COBBLESTONE(5,0, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
     COBBLESTONE(5,8, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
+    SAND(5, 7, Tile.TileType.FOREGROUND, 3, ToolType.SHOVEL),
 
     TNT(3, 4, Tile.TileType.FOREGROUND, 0.5f, ToolType.NONE),
 
@@ -75,6 +76,9 @@ public enum Material {
     //Other items
     COAL(R.drawable.coal, ToolType.NONE, EfficiencyTier.NONE, -1),
     STICK(R.drawable.stick, ToolType.NONE, EfficiencyTier.NONE, -1),
+    GUNPOWDER(R.drawable.gunpowder, ToolType.NONE, EfficiencyTier.NONE, -1),
+    BONE(R.drawable.bone, ToolType.NONE, EfficiencyTier.NONE, -1),
+    ROTTEN_FLESH(R.drawable.rotten_flesh, ToolType.NONE, EfficiencyTier.NONE, -1),
 
     ;
 
@@ -278,8 +282,10 @@ public enum Material {
      */
     public Bitmap getImage() {
         if (image == null) {
-            if (drawable != -1)
+            if (drawable != -1) {
                 image = ResourceManager.getBitmap(drawable);
+                image = Imageable.resizeImage(image, Tile.SIZE, Tile.SIZE);
+            }
             else
                 image = Imageable.createSubImageAt(Pixelate.getTileMap(), rows, columns, row, column);
         }

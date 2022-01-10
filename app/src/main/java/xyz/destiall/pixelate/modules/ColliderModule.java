@@ -1,16 +1,20 @@
 package xyz.destiall.pixelate.modules;
 
+import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.tiles.Tile;
-import xyz.destiall.pixelate.modular.Module;
+import xyz.destiall.pixelate.modular.Component;
 import xyz.destiall.pixelate.position.AABB;
 
 /**
  * Written by Rance
  */
-public class ColliderModule implements Module {
+public class ColliderModule implements Component<Entity> {
     private final AABB bounds;
-    public ColliderModule() {
+    private transient Entity entity;
+
+    public ColliderModule(Entity entity) {
         bounds = new AABB(0, 0, Tile.SIZE, Tile.SIZE);
+        this.entity = entity;
     }
 
     /**
@@ -47,4 +51,14 @@ public class ColliderModule implements Module {
 
     @Override
     public void destroy() {}
+
+    @Override
+    public Entity getParent() {
+        return entity;
+    }
+
+    @Override
+    public void setParent(Entity entity) {
+        this.entity = entity;
+    }
 }

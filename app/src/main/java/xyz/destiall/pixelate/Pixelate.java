@@ -10,12 +10,21 @@ import com.google.gson.GsonBuilder;
 
 import xyz.destiall.java.events.EventHandling;
 import xyz.destiall.pixelate.activities.GameActivity;
+import xyz.destiall.pixelate.commands.CommandGraph;
+import xyz.destiall.pixelate.commands.executors.GamemodeCommand;
+import xyz.destiall.pixelate.commands.executors.SettingsCommand;
+import xyz.destiall.pixelate.commands.executors.SpawnCommand;
+import xyz.destiall.pixelate.commands.executors.SummonCommand;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
+import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.items.crafting.Recipe;
+import xyz.destiall.pixelate.items.crafting.RecipeManager;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.modular.Module;
@@ -56,6 +65,8 @@ public class Pixelate extends Thread {
     private static GSM stateManager;
     public static boolean PAUSED = false;
     private final Timer timer;
+    private static RecipeManager recipeManager;
+    private static CommandGraph commandGraph;
     private boolean running;
 
     public Pixelate(GameSurface gameSurface, SurfaceHolder surfaceHolder)  {
@@ -71,6 +82,10 @@ public class Pixelate extends Thread {
         timer = new Timer();
         Pixelate.stateManager = new GSM();
         Pixelate.stateManager.addState("Game", new StateGame(gameSurface));
+        commandGraph = new CommandGraph();
+        recipeManager = new RecipeManager();
+        setupCommands();
+        setupRecipes();
     }
 
     @Override
@@ -156,5 +171,54 @@ public class Pixelate extends Thread {
 
     public static GameActivity getContext() {
         return (GameActivity) getGameSurface().getContext();
+    }
+
+    public static RecipeManager getRecipeManager() {
+        return recipeManager;
+    }
+
+    public static CommandGraph getCommands() {
+        return commandGraph;
+    }
+
+    private static void setupCommands() {
+        commandGraph.registerCommand("spawn", new SpawnCommand());
+        commandGraph.registerCommand("summon", new SummonCommand());
+        commandGraph.registerCommand("gamemode", new GamemodeCommand());
+        commandGraph.registerCommand("settings", new SettingsCommand());
+    }
+
+    private static void setupRecipes() {
+        Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape("W");
+        // { W  , null
+        // null, null }
+        plankRecipe.setIngredient("W", Material.WOOD);
+        recipeManager.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank2", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape(null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        recipeManager.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank3", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape(null, null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        recipeManager.addRecipe(plankRecipe);
+
+        plankRecipe = new Recipe("plank4", new ItemStack(Material.PLANKS, 4));
+        plankRecipe.setShape(null, null, null, "W");
+        plankRecipe.setIngredient("W", Material.WOOD);
+        recipeManager.addRecipe(plankRecipe);
+
+        Recipe stickRecipe = new Recipe("stick1", new ItemStack(Material.STICK, 4));
+        stickRecipe.setShape("P", null, "P");
+        stickRecipe.setIngredient("P", Material.PLANKS);
+        recipeManager.addRecipe(stickRecipe);
+
+        stickRecipe = new Recipe("stick2", new ItemStack(Material.STICK, 4));
+        stickRecipe.setShape(null, "P", null, "P");
+        stickRecipe.setIngredient("P", Material.PLANKS);
+        recipeManager.addRecipe(stickRecipe);
     }
 }

@@ -11,10 +11,9 @@ import xyz.destiall.pixelate.states.StateGame;
  * Written by Rance
  */
 public class CommandGraph {
-    public static CommandGraph INSTANCE = new CommandGraph();
     private final Map<String, Command> mappings;
 
-    private CommandGraph() {
+    public CommandGraph() {
         mappings = new HashMap<>();
     }
 
