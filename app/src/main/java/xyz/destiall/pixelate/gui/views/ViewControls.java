@@ -117,15 +117,16 @@ public class ViewControls implements View {
         for (Button button : buttons) {
             button.render(screen);
         }
-        screen.ring(outerCircleCenter.getX(), outerCircleCenter.getY(), outerCircleRadius, 10, Color.RED);
-        screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.BLUE);
+        screen.ring(outerCircleCenter.getX(), outerCircleCenter.getY(), outerCircleRadius, 10, Color.argb(235, 54, 54, 54));
+        screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.argb(220, 128, 128 ,128));
 
         EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
         screen.bar(Pixelate.WIDTH * 0.325, Pixelate.HEIGHT * 0.82, Pixelate.WIDTH * 0.35, 30, Color.DKGRAY, Color.GREEN, player.getXPProgress());
         screen.text(String.valueOf(player.getXPLevel()), Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.814, 60, Color.GREEN);
 
         if (player.getGamemode() != Gamemode.CREATIVE)
-            screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.RED, Color.GREEN, player.getHealth() / player.getMaxHealth());
+            screen.bar(Pixelate.WIDTH * 0.252, Pixelate.HEIGHT * 0.777, Pixelate.WIDTH * 0.2, 30, Color.DKGRAY, Color.DKGRAY, player.getHealth() / player.getMaxHealth());
+            screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.GRAY, Color.RED, player.getHealth() / player.getMaxHealth());
     }
 
     @Override

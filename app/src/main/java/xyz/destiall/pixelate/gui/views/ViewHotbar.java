@@ -73,7 +73,7 @@ public class ViewHotbar implements View {
     @Override
     public void render(Screen screen) {
         int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
-        int y = Pixelate.HEIGHT - 200;
+        int y = Pixelate.HEIGHT - (int)(Pixelate.HEIGHT * 0.14);
         for (int i = 0; i < 9; i++) {
             int a = 0;
             Bitmap image = this.image;

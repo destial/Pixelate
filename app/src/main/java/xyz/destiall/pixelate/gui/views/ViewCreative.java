@@ -20,6 +20,7 @@ import xyz.destiall.pixelate.items.inventory.CreativeInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
  * Written by Rance
@@ -80,6 +81,7 @@ public class ViewCreative implements View {
                     if (item == dragging) {
                         drawX = (int) (draggingX - image.getWidth() / 2f);
                         drawY = (int) (draggingY - image.getHeight() / 2f);
+                        ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
                     } else {
                         drawX = posX + 15;
                         drawY = posY + 15;

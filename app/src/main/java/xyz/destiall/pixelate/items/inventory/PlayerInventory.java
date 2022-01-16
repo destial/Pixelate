@@ -74,6 +74,24 @@ public class PlayerInventory extends EntityInventory {
         }
     }
 
+    @Override
+    public void clear()
+    {
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] != null) {
+                setItemStackInventory(items[i], null);
+                items[i] = null;
+            }
+        }
+        for (int i = 0; i < crafting.length; i++) {
+            if (crafting[i] != null) {
+                setItemStackInventory(crafting[i], null);
+                crafting[i] = null;
+
+            }
+        }
+    }
+
     /**
      * Clear the current items in the crafting slots
      */

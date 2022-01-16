@@ -47,8 +47,10 @@ public class LootTable {
                 break;
             case DIAMOND_ORE:
                 amt = 50;
+                break;
             case EMERALD_ORE:
                 amt = 65;
+                break;
         }
         return (int)(amt * (1+luck*0.2));
     }

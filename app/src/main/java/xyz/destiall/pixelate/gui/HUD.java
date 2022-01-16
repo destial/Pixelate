@@ -9,6 +9,7 @@ import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.gui.views.ViewChest;
 import xyz.destiall.pixelate.gui.views.ViewControls;
 import xyz.destiall.pixelate.gui.views.ViewCreative;
+import xyz.destiall.pixelate.gui.views.ViewDeath;
 import xyz.destiall.pixelate.gui.views.ViewFurnace;
 import xyz.destiall.pixelate.gui.views.ViewHotbar;
 import xyz.destiall.pixelate.gui.views.ViewInventory;
@@ -29,6 +30,7 @@ public class HUD implements Updateable, Renderable, Listener {
     private ViewChest chest;
     private ViewPaused pauseMenu;
     private ViewCreative creative;
+    private ViewDeath respawnMenu;
     private DisplayType displayType;
 
     public enum DisplayType {
@@ -37,7 +39,8 @@ public class HUD implements Updateable, Renderable, Listener {
         FURNACE_INVENTORY,
         CHEST_INVENTORY,
         CREATIVE_INVENTORY,
-        PAUSE_GAME
+        PAUSE_GAME,
+        RESPAWN_MENU
     }
 
     private static HUD get() {
@@ -86,6 +89,20 @@ public class HUD implements Updateable, Renderable, Listener {
                 pauseMenu = null;
             }
         }
+        else if (displayType == DisplayType.RESPAWN_MENU)
+        {
+            displayType = DisplayType.GAME_VIEW;
+            if (respawnMenu != null)
+            {
+                respawnMenu.destroy();
+                respawnMenu = null;
+            }
+        }
+    }
+
+    public void setRespawnMenu() {
+        displayType = DisplayType.RESPAWN_MENU;
+        this.respawnMenu = new ViewDeath();
     }
 
     public void setPauseMenu() {
@@ -160,6 +177,10 @@ public class HUD implements Updateable, Renderable, Listener {
                 if (pauseMenu != null)
                     pauseMenu.render(screen);
                 break;
+            case RESPAWN_MENU:
+                if(respawnMenu != null)
+                    respawnMenu.render(screen);
+                break;
             default: // Game View
                 buttons.render(screen);
                 hotbar.render(screen);
@@ -188,6 +209,10 @@ public class HUD implements Updateable, Renderable, Listener {
             case PAUSE_GAME:
                 if (pauseMenu != null)
                     pauseMenu.update();
+                break;
+            case RESPAWN_MENU:
+                if (respawnMenu != null)
+                    respawnMenu.update();
                 break;
             default: // Game View
                 buttons.update();

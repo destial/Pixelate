@@ -310,16 +310,24 @@ public class World implements Updateable, Renderable, Module, Modular {
         EventTileBreak ev = new EventTileBreak(tile, drops);
         Pixelate.HANDLER.call(ev);
         if (ev.isCancelled()) return null;
+
         Location tileLoc = tile.getLocation();
+        dropItems(drops, tileLoc);
+
+        tile.setMaterial(Material.STONE);
+        return drops;
+    }
+
+    public void dropItems(List<ItemStack> drops, Location center)
+    {
+        Location loc = center;
         for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
             ItemStack drop = drops.get((int) i);
             double x = Math.cos(i) * Tile.SIZE * 0.3;
             double y = Math.sin(i) * Tile.SIZE * 0.3;
-            dropItem(drop, tileLoc.add(x, y));
-            tileLoc.subtract(x, y);
+            dropItem(drop, loc.add(x, y));
+            loc.subtract(x, y);
         }
-        tile.setMaterial(Material.STONE);
-        return drops;
     }
 
     /**

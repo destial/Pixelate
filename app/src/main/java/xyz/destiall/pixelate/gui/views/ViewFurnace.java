@@ -23,6 +23,7 @@ import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
  * Written by Rance
@@ -65,7 +66,7 @@ public class ViewFurnace implements View {
 
         // Smelting slot
         posX = startingCrafting;
-        posY = 100;
+        posY = (int)(Pixelate.HEIGHT * 0.1f);
         if (!positions.containsKey(98)) {
             positions.put(98, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
         }
@@ -83,6 +84,7 @@ public class ViewFurnace implements View {
             if (item == dragging) {
                 drawX = (int) (draggingX - image.getWidth() / 2f);
                 drawY = (int) (draggingY - image.getHeight() / 2f);
+                ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
             } else {
                 drawX = posX + 15;
                 drawY = posY + 15;
@@ -97,10 +99,10 @@ public class ViewFurnace implements View {
             ItemStack.renderInventory(screen, item, drawX, drawY);
         }
 
-        posY = 100 + (int) (image.getWidth() * 1.5);
+        posY = (int)(Pixelate.HEIGHT * 0.1f) + (int) (image.getWidth() * 1.5);
         // Progress slot
-        screen.bar(posX + image.getWidth() * 0.1, posY - 53, Tile.SIZE, 25, Color.GRAY, Color.BLUE, furnace.getSmeltProgress() / furnace.getTimeToSmelt());
-        screen.bar(posX + image.getWidth() * 0.1, posY - 28, Tile.SIZE, 25, Color.GRAY, Color.YELLOW, furnace.getBurnerRemainingPercentage());
+        screen.bar(posX + image.getWidth() * 0.1, posY - (int)(image.getWidth() * 0.45), Tile.SIZE, 25, Color.GRAY, Color.BLUE, furnace.getSmeltProgress() / furnace.getTimeToSmelt());
+        screen.bar(posX + image.getWidth() * 0.1, posY - (int)(image.getWidth() * 0.25), Tile.SIZE, 25, Color.GRAY, Color.YELLOW, furnace.getBurnerRemainingPercentage());
 
 
         // Burner slot
@@ -121,6 +123,7 @@ public class ViewFurnace implements View {
             if (item == dragging) {
                 drawX = (int) (draggingX - image.getWidth() / 2f);
                 drawY = (int) (draggingY - image.getHeight() / 2f);
+                ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
             } else {
                 drawX = posX + 15;
                 drawY = posY + 15;
@@ -137,7 +140,7 @@ public class ViewFurnace implements View {
 
         // Output slot
         int cOutX = startingCrafting + (3 * image.getWidth());
-        int cOutY = 100 + (image.getWidth());
+        int cOutY = (int)(Pixelate.HEIGHT * 0.1f) + (image.getWidth());
         if (!positions.containsKey(100)) {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
@@ -158,6 +161,7 @@ public class ViewFurnace implements View {
             if (item == dragging) {
                 drawX = (int) (draggingX - image.getWidth() / 2f);
                 drawY = (int) (draggingY - image.getHeight() / 2f);
+                ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
             } else {
                 drawX = posX + 15;
                 drawY = posY + 15;
@@ -178,7 +182,7 @@ public class ViewFurnace implements View {
         for (int y = 0; y < (playerInventory.getSize() / 9); y++) {
             for (int x = 0; x < 9; x++) {
                 posX = starting + (x * image.getWidth());
-                posY = 600 + (y * image.getHeight());
+                posY = (int)(Pixelate.HEIGHT * 0.5f) + (y * image.getHeight());
                 screen.draw(image, posX, posY);
                 item = playerInventory.getItem(i);
                 if (item != null) {
@@ -193,6 +197,7 @@ public class ViewFurnace implements View {
                     if (item == dragging) {
                         drawX = (int) (draggingX - image.getWidth() / 2f);
                         drawY = (int) (draggingY - image.getHeight() / 2f);
+                        ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
                     } else {
                         drawX = posX + 15;
                         drawY = posY + 15;

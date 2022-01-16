@@ -3,7 +3,9 @@ package xyz.destiall.pixelate.gui.views;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import xyz.destiall.java.events.EventHandler;
@@ -19,8 +21,11 @@ import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
+import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.utils.MathematicUtils;
+import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
  * Written by Rance
@@ -58,7 +63,7 @@ public class ViewInventory implements View {
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
                 int posX = startingCrafting + (x * image.getWidth());
-                int posY = 100 + (y * image.getWidth());
+                int posY = (int)(Pixelate.HEIGHT * 0.1f) + (y * image.getWidth());
                 screen.draw(image, posX, posY);
                 ItemStack item = playerInventory.getCraftingItem(a);
                 if (item != null) {
@@ -73,6 +78,8 @@ public class ViewInventory implements View {
                     if (item == dragging) {
                         drawX = (int) (draggingX - image.getWidth() / 2f);
                         drawY = (int) (draggingY - image.getHeight() / 2f);
+
+                        ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
                     } else {
                         drawX = posX + 15;
                         drawY = posY + 15;
@@ -93,7 +100,7 @@ public class ViewInventory implements View {
             }
         }
         int cOutX = startingCrafting + (6 * image.getWidth());
-        int cOutY = 100 + (image.getWidth() / 2);
+        int cOutY = (int)(Pixelate.HEIGHT * 0.1f) + (image.getWidth() / 2);
         if (!positions.containsKey(100)) {
             positions.put(100, new AABB(cOutX, cOutY, cOutX + image.getWidth(), cOutY + image.getHeight()));
         }
@@ -118,7 +125,7 @@ public class ViewInventory implements View {
         for (int y = 0; y < (playerInventory.getSize() / 9); y++) {
             for (int x = 0; x < 9; x++) {
                 int posX = starting + (x * image.getWidth());
-                int posY = 400 + (y * image.getHeight());
+                int posY = (int)(Pixelate.HEIGHT * 0.50f) + (y * image.getHeight());
                 screen.draw(image, posX, posY);
                 ItemStack item = playerInventory.getItem(i);
                 if (item != null) {
@@ -136,6 +143,7 @@ public class ViewInventory implements View {
                     } else {
                         drawX = (int) (draggingX - image.getWidth() / 2f);
                         drawY = (int) (draggingY - image.getHeight() / 2f);
+                        ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
                     }
                     screen.draw(image, drawX, drawY);
                     if (item.getAmount() > 1) {
@@ -158,6 +166,8 @@ public class ViewInventory implements View {
     public void update() {
         Glint.INSTANCE.update();
     }
+
+
 
     @EventHandler
     private void onTouch(EventTouch e) {

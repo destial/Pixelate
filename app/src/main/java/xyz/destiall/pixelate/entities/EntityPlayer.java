@@ -3,6 +3,8 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -44,6 +46,8 @@ import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.score.Score;
+import xyz.destiall.pixelate.score.ScoreType;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.timer.Timer;
@@ -59,6 +63,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
     private transient double swingAnimationTimer;
     private transient final float originalAnimSpeed;
     private final Experience exp;
+    private final Score score;
     private Gamemode gamemode;
 
     public EntityPlayer() {
@@ -85,6 +90,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
         exp = new Experience();
+        score = new Score();
         gamemode = Gamemode.SURVIVAL;
     }
 
@@ -102,6 +108,20 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @Override
     public void die() {
+        HUD.INSTANCE.setRespawnMenu();
+        List<ItemStack> items = new ArrayList<ItemStack>();
+        items = Arrays.asList(inventory.getItems().clone());
+        List<ItemStack> toDrop = new ArrayList<ItemStack>();
+        for(ItemStack item : items)
+            if(item != null) toDrop.add(item);
+        inventory.clear();
+        World w;
+        if ((w = location.getWorld()) != null) w.dropItems(toDrop, location);
+
+    }
+
+    public void respawn()
+    {
         World w;
         if ((w = location.getWorld()) != null) teleport(w.getNearestEmpty(0, 0));
         health = 20.f;
@@ -231,6 +251,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
         return (float) exp.getXP() / Experience.getRequiredXP(exp.getLevel());
     }
 
+    public int getScore()
+    {
+        return score.getScore();
+    }
+
     /**
      * Get the experience level of this player
      * @return The experience level
@@ -250,6 +275,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler
     private void onPickUp(EventItemPickup e) {
         if (e.getPicker() != this) return;
+        if  (health <= 0) {
+            e.setCancelled(true);
+            return;
+        }
         World w;
         if ((w = location.getWorld()) == null) return;
         w.playSound(Sound.SoundType.PICK_UP, location, 1.f);
@@ -301,6 +330,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
             playPunchAnimation = false;
             return;
         }
+        Material mat = tile.getMaterial();
         if (!playPunchAnimation) spriteSheet.setCurrentFrame(0);
         playPunchAnimation = true;
         float bbProgress = tile.getBlockBreakProgress(); //Out of 100.0
@@ -333,8 +363,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
                 }
             }
             //XP Drops
-            int xpDrop = LootTable.getInstance().getXPDrops(tile.getMaterial(), luck);
+            int xpDrop = LootTable.getInstance().getXPDrops(mat, luck);
             exp.addXP(xpDrop);
+            score.addScore(ScoreType.GATHER_XP, xpDrop);
+
+            //Add to score
+            score.addScore(ScoreType.BREAK_ORE, 1);
         }
     }
 
