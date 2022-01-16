@@ -7,7 +7,9 @@ import java.util.List;
 
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
+import xyz.destiall.pixelate.gui.buttons.ImageButton;
 import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
@@ -99,7 +101,7 @@ public class ViewControls implements View {
         right.onRelease(() -> Pixelate.HANDLER.call(eventRightReleaseButton));
         buttons.add(right);
 
-        Button world = new CircleButton(new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.1), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9)), 25, Color.MAGENTA);
+        Button world = new CircleButton(new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.8), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9)), 25, Color.MAGENTA);
         world.onTap(() -> {
             StateGame gameState = (StateGame) Pixelate.getGSM().getState("Game");
             WorldManager wm = gameState.getWorldManager();
@@ -110,6 +112,12 @@ public class ViewControls implements View {
                 Pixelate.setWorld("Cave");
         });
         buttons.add(world);
+
+        Button shop = new ImageButton(R.drawable.storeicon, new Vector2(Pixelate.WIDTH * 0.9, Pixelate.HEIGHT * 0.1), 0.12f);
+        shop.onTap(() -> {
+           HUD.INSTANCE.setShopMenu();
+        });
+        buttons.add(shop);
     }
 
     @Override
@@ -124,9 +132,10 @@ public class ViewControls implements View {
         screen.bar(Pixelate.WIDTH * 0.325, Pixelate.HEIGHT * 0.82, Pixelate.WIDTH * 0.35, 30, Color.DKGRAY, Color.GREEN, player.getXPProgress());
         screen.text(String.valueOf(player.getXPLevel()), Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.814, 60, Color.GREEN);
 
-        if (player.getGamemode() != Gamemode.CREATIVE)
+        if (player.getGamemode() != Gamemode.CREATIVE) {
             screen.bar(Pixelate.WIDTH * 0.252, Pixelate.HEIGHT * 0.777, Pixelate.WIDTH * 0.2, 30, Color.DKGRAY, Color.DKGRAY, player.getHealth() / player.getMaxHealth());
             screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.GRAY, Color.RED, player.getHealth() / player.getMaxHealth());
+        }
     }
 
     @Override

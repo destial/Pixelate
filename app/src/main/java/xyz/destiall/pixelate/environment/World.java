@@ -302,6 +302,7 @@ public class World implements Updateable, Renderable, Module, Modular {
             ItemMeta meta = item.getItemMeta();
             luck = meta.hasEnchantment(Enchantment.FORTUNE) ? meta.getEnchantLevel(Enchantment.FORTUNE) : luck;
         }
+        Material tileMat = tile.getMaterial();
         List<ItemStack> drops = LootTable.getInstance().getDrops(tile.getMaterial(), luck);
         if (tile instanceof ContainerTile) {
             ContainerTile containerTile = (ContainerTile) tile;
@@ -313,6 +314,17 @@ public class World implements Updateable, Renderable, Module, Modular {
 
         Location tileLoc = tile.getLocation();
         dropItems(drops, tileLoc);
+
+        Sound.SoundType sound = Sound.SoundType.BLOCK_BREAK_STONE;
+        switch(tileMat)
+        {
+            case WOOD:
+                sound = Sound.SoundType.BLOCK_BREAK_WOOD;
+                break;
+            default:
+                sound = Sound.SoundType.BLOCK_BREAK_STONE;
+        }
+        playSound(sound, tile.getLocation(), 1.0f);
 
         tile.setMaterial(Material.STONE);
         return drops;

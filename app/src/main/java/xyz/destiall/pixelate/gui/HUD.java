@@ -14,6 +14,7 @@ import xyz.destiall.pixelate.gui.views.ViewFurnace;
 import xyz.destiall.pixelate.gui.views.ViewHotbar;
 import xyz.destiall.pixelate.gui.views.ViewInventory;
 import xyz.destiall.pixelate.gui.views.ViewPaused;
+import xyz.destiall.pixelate.gui.views.ViewShop;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 
@@ -31,6 +32,7 @@ public class HUD implements Updateable, Renderable, Listener {
     private ViewPaused pauseMenu;
     private ViewCreative creative;
     private ViewDeath respawnMenu;
+    private ViewShop shopMenu;
     private DisplayType displayType;
 
     public enum DisplayType {
@@ -40,7 +42,8 @@ public class HUD implements Updateable, Renderable, Listener {
         CHEST_INVENTORY,
         CREATIVE_INVENTORY,
         PAUSE_GAME,
-        RESPAWN_MENU
+        RESPAWN_MENU,
+        SHOP_MENU
     }
 
     private static HUD get() {
@@ -98,6 +101,15 @@ public class HUD implements Updateable, Renderable, Listener {
                 respawnMenu = null;
             }
         }
+        else if (displayType == DisplayType.SHOP_MENU)
+        {
+            displayType = DisplayType.GAME_VIEW;
+            if(shopMenu != null)
+            {
+                shopMenu.destroy();
+                shopMenu = null;
+            }
+        }
     }
 
     public void setRespawnMenu() {
@@ -108,6 +120,11 @@ public class HUD implements Updateable, Renderable, Listener {
     public void setPauseMenu() {
         displayType = DisplayType.PAUSE_GAME;
         this.pauseMenu = new ViewPaused();
+    }
+
+    public void setShopMenu() {
+        displayType = DisplayType.SHOP_MENU;
+        this.shopMenu = new ViewShop();
     }
 
     public void setInventory(PlayerInventory playerInventory) {
@@ -181,6 +198,12 @@ public class HUD implements Updateable, Renderable, Listener {
                 if(respawnMenu != null)
                     respawnMenu.render(screen);
                 break;
+            case SHOP_MENU:
+                if(shopMenu != null)
+                {
+                    shopMenu.render(screen);
+                }
+                break;
             default: // Game View
                 buttons.render(screen);
                 hotbar.render(screen);
@@ -213,6 +236,12 @@ public class HUD implements Updateable, Renderable, Listener {
             case RESPAWN_MENU:
                 if (respawnMenu != null)
                     respawnMenu.update();
+                break;
+            case SHOP_MENU:
+                if (shopMenu != null)
+                {
+                    shopMenu.update();
+                }
                 break;
             default: // Game View
                 buttons.update();

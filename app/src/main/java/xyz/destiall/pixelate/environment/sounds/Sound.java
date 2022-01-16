@@ -117,7 +117,15 @@ public class Sound implements Updateable {
     public enum SoundType {
         EXPLOSION(R.raw.explosion),
         SIZZLE(R.raw.sizzle),
-        PICK_UP(R.raw.pickup)
+        PICK_UP(R.raw.pickup),
+        BLOCK_BREAK_STONE(R.raw.stone),
+        BLOCK_BREAK_WOOD(R.raw.wood),
+        BLOCK_BREAK_SAND(R.raw.sand),
+        BLOCK_BREAK_GRAVEL(R.raw.gravel),
+        BLOCK_BREAK_SNOW(R.raw.snow),
+        ENTITY_LEVELUP(R.raw.levelup),
+        ENTITY_ORBPICKUP(R.raw.orb),
+        EAT(R.raw.eat),
 
         ;
 

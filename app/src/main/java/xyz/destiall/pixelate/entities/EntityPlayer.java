@@ -94,6 +94,18 @@ public class EntityPlayer extends EntityLiving implements Listener {
         gamemode = Gamemode.SURVIVAL;
     }
 
+    public void setPlayerBitmap(Bitmap image)
+    {
+        spriteSheet = new SpriteSheet();
+        spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0));
+        spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1));
+        spriteSheet.addAnimation("WALK RIGHT" , Imageable.createAnimation(image, 6, 3,2));
+        spriteSheet.addAnimation("WALK LEFT"  , Imageable.createAnimation(image, 6, 3,3));
+        spriteSheet.addAnimation("PUNCH RIGHT", Imageable.createAnimation(image, 6, 3,4));
+        spriteSheet.addAnimation("PUNCH LEFT" , Imageable.createAnimation(image, 6, 3,5));
+        spriteSheet.setCurrentAnimation("LOOK RIGHT");
+    }
+
     @Override
     public void damage(float damage) {
         if (gamemode == Gamemode.CREATIVE) return;
@@ -364,8 +376,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
             }
             //XP Drops
             int xpDrop = LootTable.getInstance().getXPDrops(mat, luck);
-            exp.addXP(xpDrop);
+            if(exp.addXP(xpDrop)) w.playSound(Sound.SoundType.ENTITY_LEVELUP, this.getLocation(), 1.0f);
             score.addScore(ScoreType.GATHER_XP, xpDrop);
+            if(xpDrop > 0)
+                w.playSound(Sound.SoundType.ENTITY_ORBPICKUP, this.getLocation(), 0.5f);
 
             //Add to score
             score.addScore(ScoreType.BREAK_ORE, 1);

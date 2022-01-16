@@ -2,6 +2,7 @@ package xyz.destiall.pixelate.gui.buttons;
 
 import android.graphics.Bitmap;
 
+import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -20,16 +21,23 @@ public class ImageButton extends Imageable implements Button {
     private Runnable hold;
     private Runnable release;
 
-    public ImageButton(int id, Vector2 topleft) {
+    public ImageButton(int id, Vector2 topleft, float scale) {
         super(ResourceManager.getBitmap(id), 1, 1);
         this.topleft = topleft;
         aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + image.getWidth(), topleft.getY() + image.getHeight());
+
+        if(scale != 1.0)
+        {
+            Bitmap scaled = Imageable.resizeImage(image, scale);
+            setImage(scaled, 1,1);
+        }
     }
 
     @Override
     public void setImage(Bitmap image, int rows, int columns) {
         super.setImage(image, rows, columns);
-        aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + this.image.getWidth(), topleft.getY() + this.image.getHeight());
+        if(topleft != null)
+            aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + this.image.getWidth(), topleft.getY() + this.image.getHeight());
     }
 
     @Override
