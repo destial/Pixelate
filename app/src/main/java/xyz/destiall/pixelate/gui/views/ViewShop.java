@@ -2,7 +2,6 @@ package xyz.destiall.pixelate.gui.views;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +9,6 @@ import java.util.List;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
-import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.events.controls.ControlEvent;
-import xyz.destiall.pixelate.events.controls.EventGamePause;
 import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
@@ -30,8 +26,6 @@ import xyz.destiall.pixelate.states.StateGame;
  * Written by Yong Hong
  */
 public class ViewShop implements View {
-
-
     private final int scale;
 
     private static Bitmap bg;
@@ -40,10 +34,8 @@ public class ViewShop implements View {
 
     private final List<Button> buttons;
 
-
-
     public ViewShop() {
-        buttons = new ArrayList<Button>();
+        buttons = new ArrayList<>();
         if (bg == null) {
             bg = ResourceManager.getBitmap(R.drawable.pixelatestores);
             bg = Imageable.resizeImage(bg, (float) Pixelate.HEIGHT / bg.getHeight());

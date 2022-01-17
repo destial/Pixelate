@@ -8,10 +8,12 @@ import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.states.StateGame;
 
+/**
+ * Written By Yong Hong
+ */
 public class Reward {
 
-    public enum RewardType
-    {
+    public enum RewardType {
         SKIN,
     }
 
@@ -43,20 +45,19 @@ public class Reward {
         return rewardCount;
     }
 
-    public void applyRewards()
-    {
-        switch(rewardType)
-        {
-            case SKIN:
-            {
-                EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
-                if(rewardName == "Brown Skin")
+    public void applyRewards() {
+        if (rewardType == RewardType.SKIN) {
+            EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+            switch (rewardName) {
+                case "Brown Skin":
                     player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerbrown));
-                else if (rewardName == "Red Skin")
+                    break;
+                case "Red Skin":
                     player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerred));
-                else if (rewardName == "White Skin")
+                    break;
+                case "White Skin":
                     player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerwhite));
-                break;
+                    break;
             }
         }
     }

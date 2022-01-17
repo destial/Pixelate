@@ -3,8 +3,6 @@ package xyz.destiall.pixelate.items.lootbox.crates;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import java.util.List;
-
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.graphics.Renderable;
@@ -15,6 +13,9 @@ import xyz.destiall.pixelate.items.lootbox.RewardTable;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.timer.Timer;
 
+/**
+ * Written By Yong Hong
+ */
 public class Crate implements Renderable, Updateable {
     public enum CostType {
         EXP,
