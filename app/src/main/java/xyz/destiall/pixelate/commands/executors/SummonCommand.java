@@ -1,6 +1,7 @@
 package xyz.destiall.pixelate.commands.executors;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import xyz.destiall.pixelate.commands.Command;
 import xyz.destiall.pixelate.entities.Entity;
@@ -10,11 +11,15 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.score.Scoreboard;
 
 /**
  * Written by Rance
  */
 public class SummonCommand implements Command {
+
+    static int score = 100;
+
     @Override
     public boolean onCommand(EntityPlayer player, String command, String[] args) {
         if (args.length == 0) return false;
@@ -24,6 +29,11 @@ public class SummonCommand implements Command {
         switch (type.toLowerCase()) {
             case "tnt":
                 world.spawnEntity(EntityPrimedTNT.class, player.getLocation());
+                break;
+            case "addfakescore":
+                System.out.println("Reached");
+                score += 100;
+                Scoreboard.getInstance().addToLeaderboard("LOCALUSER", (float)score, System.currentTimeMillis());
                 break;
             case "zombie":
                 world.spawnMonster(Entity.Type.ZOMBIE, player.getLocation());

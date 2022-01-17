@@ -48,6 +48,7 @@ import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.score.Score;
 import xyz.destiall.pixelate.score.ScoreType;
+import xyz.destiall.pixelate.score.Scoreboard;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.timer.Timer;
@@ -129,7 +130,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
         inventory.clear();
         World w;
         if ((w = location.getWorld()) != null) w.dropItems(toDrop, location);
-
+        exp.setXP(0);
+        exp.setLevel(0);
+        Scoreboard.getInstance().addToLeaderboard("LOCALUSER", (float)score.getScore(), System.currentTimeMillis());
+        score.clearScore();
     }
 
     public void respawn()

@@ -1,5 +1,6 @@
 package xyz.destiall.pixelate.items.meta;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +25,10 @@ public interface ItemMeta {
      * @return true if not null, otherwise false
      */
     boolean hasDisplayName();
+
+    List<String> getLore();
+    boolean hasLore();
+    void setLore(List<String> lore);
 
     /**
      * Set this item to be unbreakable

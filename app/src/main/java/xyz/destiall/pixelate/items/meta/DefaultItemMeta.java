@@ -16,6 +16,7 @@ public class DefaultItemMeta implements ItemMeta {
     private final List<ItemFlag> flags = new ArrayList<>();
     private int durability;
     private String display;
+    private List<String> lore;
     private boolean unbreakable;
 
     @Override
@@ -27,6 +28,12 @@ public class DefaultItemMeta implements ItemMeta {
     public String getDisplayName() {
         return display;
     }
+
+    @Override
+    public List<String> getLore() { return lore; }
+
+    @Override
+    public void setLore(List<String> lore) {this.lore = lore;}
 
     @Override
     public void setUnbreakable(boolean unbreakable) {
@@ -42,6 +49,9 @@ public class DefaultItemMeta implements ItemMeta {
     public boolean hasDisplayName() {
         return display != null;
     }
+
+    @Override
+    public boolean hasLore() {return lore != null;}
 
     @Override
     public Map<Enchantment, Integer> getEnchantments() {

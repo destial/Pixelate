@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import xyz.destiall.pixelate.GameSurface;
 import xyz.destiall.pixelate.Pixelate;
@@ -22,6 +24,7 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.meta.Enchantment;
+import xyz.destiall.pixelate.items.meta.ItemMeta;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
@@ -81,7 +84,21 @@ public class StateGame extends State implements Modular {
         sword.getItemMeta().addEnchantment(Enchantment.DAMAGE_ALL, 1);
         ItemStack d_axe = new ItemStack(Material.WOODEN_AXE, 1);
         d_axe.getItemMeta().addEnchantment(Enchantment.DIG_SPEED, 5);
+
         ItemStack d_pickaxe = new ItemStack(Material.DIAMOND_PICKAXE, 1);
+        {
+            ItemMeta meta = d_pickaxe.getItemMeta();
+            List<String> lore = new ArrayList<String>();
+            lore.add("Pick me up like u do with dat axe");
+            lore.add("<33333333333333333333 ~pickaxe");
+            meta.setLore(lore);
+            if(meta.hasLore())
+                System.out.println("Meta las lore");
+            else
+                System.out.println("No lore?");
+            d_pickaxe.setItemMeta(meta);
+        }
+
         ItemStack furnace = new ItemStack(Material.FURNACE, 1);
         ItemStack chest = new ItemStack(Material.CHEST, 1);
         ItemStack tnt = new ItemStack(Material.TNT, 4);

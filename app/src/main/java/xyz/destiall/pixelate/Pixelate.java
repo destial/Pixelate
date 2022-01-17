@@ -151,6 +151,7 @@ public class Pixelate extends Thread {
         return false;
     }
 
+
     public static Bitmap getTileMap() {
         return tileMap;
     }
