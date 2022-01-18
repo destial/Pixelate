@@ -1,5 +1,6 @@
 package xyz.destiall.pixelate.environment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -315,11 +316,16 @@ public class World implements Updateable, Renderable, Module, Modular {
         Location tileLoc = tile.getLocation();
         dropItems(drops, tileLoc);
 
-        Sound.SoundType sound = Sound.SoundType.BLOCK_BREAK_STONE;
-        switch(tileMat)
-        {
+        Sound.SoundType sound;
+        switch (tileMat) {
+            case PLANKS:
+            case CHEST:
+            case WORKBENCH:
             case WOOD:
                 sound = Sound.SoundType.BLOCK_BREAK_WOOD;
+                break;
+            case SAND:
+                sound = Sound.SoundType.BLOCK_BREAK_SAND;
                 break;
             default:
                 sound = Sound.SoundType.BLOCK_BREAK_STONE;
@@ -330,16 +336,23 @@ public class World implements Updateable, Renderable, Module, Modular {
         return drops;
     }
 
-    public void dropItems(List<ItemStack> drops, Location center)
-    {
-        Location loc = center;
+    /**
+     * Drop multiple items at the requested location
+     * @param drops The items to drop
+     * @param center The center of the requested location
+     * @return The list of dropped item entities, never null
+     */
+    public List<EntityItem> dropItems(List<ItemStack> drops, Location center) {
+        Location loc = center.clone();
+        List<EntityItem> droppedEntities = new ArrayList<>();
         for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
             ItemStack drop = drops.get((int) i);
             double x = Math.cos(i) * Tile.SIZE * 0.3;
             double y = Math.sin(i) * Tile.SIZE * 0.3;
-            dropItem(drop, loc.add(x, y));
+            droppedEntities.add(dropItem(drop, loc.add(x, y)));
             loc.subtract(x, y);
         }
+        return droppedEntities;
     }
 
     /**

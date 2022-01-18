@@ -116,7 +116,11 @@ public class PlayerInventory extends EntityInventory {
      * @return The crafting items
      */
     public ItemStack[] getCrafting() {
-        return crafting;
+        return new ItemStack[] {
+                crafting[0], crafting[1], null,
+                crafting[2], crafting[3], null,
+                null, null, null
+        };
     }
 
     /**

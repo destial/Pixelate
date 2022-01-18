@@ -3,19 +3,21 @@ package xyz.destiall.pixelate.utils;
 import java.util.TreeMap;
 
 public class MathematicUtils {
+    private static final TreeMap<Integer, String> romanMap = new TreeMap<>();
+    static {
+        romanMap.put(10, "X");
+        romanMap.put(9, "IX");
+        romanMap.put(5, "V");
+        romanMap.put(4, "IV");
+        romanMap.put(1, "I");
+    }
 
     public static String toRoman(int num) {
-        TreeMap<Integer, String> map = new TreeMap<Integer, String>();
-        map.put(10, "X");
-        map.put(9, "IX");
-        map.put(5, "V");
-        map.put(4, "IV");
-        map.put(1, "I");
-        int l =  map.floorKey(num);
+        int l =  romanMap.floorKey(num);
         if (num == l) {
-            return map.get(num);
+            return romanMap.get(num);
         }
-        return map.get(l) + toRoman(num - l);
+        return romanMap.get(l) + toRoman(num - l);
     }
 
     public static Integer toNumber(String roman) {

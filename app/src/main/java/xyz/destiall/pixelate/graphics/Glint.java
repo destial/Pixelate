@@ -9,7 +9,6 @@ import xyz.destiall.pixelate.R;
  */
 public class Glint implements Updateable {
     public static final Glint INSTANCE = new Glint();
-
     private transient final SpriteSheet spriteSheet;
 
     private Glint() {

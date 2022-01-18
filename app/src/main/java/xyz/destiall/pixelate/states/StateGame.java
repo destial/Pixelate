@@ -19,7 +19,6 @@ import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.modular.Modular;
@@ -50,7 +49,7 @@ public class StateGame extends State implements Modular {
             worldManager.load(Pixelate.GSON.fromJson(new FileReader(level), WorldManager.class));
             player = (EntityPlayer) worldManager.getCurrentWorld().getEntities().stream().filter(e -> e instanceof EntityPlayer).findFirst().orElse(new EntityPlayer());
             Pixelate.HANDLER.registerListener(player);
-            HUD.INSTANCE.setHotbar(player.getInventory());
+            Pixelate.getHud().setHotbar(player.getInventory());
             initialize();
             return true;
         } catch (IOException e) {
@@ -99,7 +98,7 @@ public class StateGame extends State implements Modular {
         player.teleport(loc.subtract(Tile.SIZE, Tile.SIZE));
         worldManager.getCurrentWorld().getEntities().add(player);
         Pixelate.HANDLER.registerListener(player);
-        HUD.INSTANCE.setHotbar(player.getInventory());
+        Pixelate.getHud().setHotbar(player.getInventory());
 
         initialize();
     }
@@ -142,7 +141,7 @@ public class StateGame extends State implements Modular {
     @Override
     public void update() {
         worldManager.update();
-        HUD.INSTANCE.update();
+        Pixelate.getHud().update();
         for (Module m : modules.values()) {
             m.update();
         }
@@ -152,7 +151,7 @@ public class StateGame extends State implements Modular {
     public void render(Canvas canvas) {
         screen.update(canvas, player, Pixelate.WIDTH, Pixelate.HEIGHT);
         worldManager.render(screen);
-        HUD.INSTANCE.render(screen);
+        Pixelate.getHud().render(screen);
         for (Module m : modules.values()) {
             if (m instanceof Renderable) {
                 ((Renderable) m).render(screen);

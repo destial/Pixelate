@@ -35,11 +35,9 @@ import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
-import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
@@ -94,8 +92,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
         gamemode = Gamemode.SURVIVAL;
     }
 
-    public void setPlayerBitmap(Bitmap image)
-    {
+    /**
+     * Set the skin of the player
+     * @param image The sprite image to use
+     */
+    public void setSkin(Bitmap image) {
         spriteSheet = new SpriteSheet();
         spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0));
         spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1));
@@ -120,20 +121,14 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @Override
     public void die() {
-        HUD.INSTANCE.setRespawnMenu();
-        List<ItemStack> items = new ArrayList<ItemStack>();
-        items = Arrays.asList(inventory.getItems().clone());
-        List<ItemStack> toDrop = new ArrayList<ItemStack>();
-        for(ItemStack item : items)
-            if(item != null) toDrop.add(item);
+        Pixelate.getHud().setRespawnMenu();
+        List<ItemStack> toDrop = new ArrayList<>(Arrays.asList(inventory.getItems().clone()));
         inventory.clear();
         World w;
         if ((w = location.getWorld()) != null) w.dropItems(toDrop, location);
-
     }
 
-    public void respawn()
-    {
+    public void respawn() {
         World w;
         if ((w = location.getWorld()) != null) teleport(w.getNearestEmpty(0, 0));
         health = 20.f;
@@ -234,7 +229,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
      * @return The item in hand, or null if none
      */
     public ItemStack getItemInHand() {
-        return getInventory().getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
+        return getInventory().getItem(Pixelate.getHud().getHotbar().getCurrentSlot());
     }
 
     /**
@@ -350,39 +345,44 @@ public class EntityPlayer extends EntityLiving implements Listener {
         float timeRelative = bbProgress / 100.0f * bbDuration;
         timeRelative += Timer.getDeltaTime();
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
+        if (gamemode == Gamemode.CREATIVE) {
+            bbProgressDiff = 500;
+        }
         if (tile.addBlockBreakProgression(bbProgressDiff)) {
-            int luck = 0;
-            ItemStack hand = getItemInHand();
-            if (hand.getType().isTool()) {
-                int use = 1;
-                ItemMeta meta = hand.getItemMeta();
-                if (meta.hasEnchantment(Enchantment.DURABILITY)) {
-                    use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
-                    if (use > 1) {
-                        use = 0;
+            if (gamemode != Gamemode.CREATIVE) {
+                int luck = 0;
+                ItemStack hand = getItemInHand();
+                if (hand.getType().isTool()) {
+                    int use = 1;
+                    ItemMeta meta = hand.getItemMeta();
+                    if (meta.hasEnchantment(Enchantment.DURABILITY)) {
+                        use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
+                        if (use > 1) {
+                            use = 0;
+                        }
+                    }
+                    if (meta.hasEnchantment(Enchantment.FORTUNE)) {
+                        luck = meta.getEnchantLevel(Enchantment.FORTUNE);
+                    }
+                    meta.setDurability(hand.getItemMeta().getDurability() + use);
+                    if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                        hand.setAmount(0);
+                    }
+                    meta.setDurability(hand.getItemMeta().getDurability() + use);
+                    if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                        hand.setAmount(0);
                     }
                 }
-                if (meta.hasEnchantment(Enchantment.FORTUNE)) {
-                    luck = meta.getEnchantLevel(Enchantment.FORTUNE);
-                }
-                meta.setDurability(hand.getItemMeta().getDurability() + use);
-                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
-                    hand.setAmount(0);
-                }
-                meta.setDurability(hand.getItemMeta().getDurability() + use);
-                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
-                    hand.setAmount(0);
-                }
+                //XP Drops
+                int xpDrop = LootTable.getInstance().getXPDrops(mat, luck);
+                if (exp.addXP(xpDrop))
+                    w.playSound(Sound.SoundType.ENTITY_LEVELUP, this.getLocation(), 1.0f);
+                score.addScore(ScoreType.GATHER_XP, xpDrop);
+                if (xpDrop > 0)
+                    w.playSound(Sound.SoundType.ENTITY_ORBPICKUP, this.getLocation(), 0.5f);
+                //Add to score
+                score.addScore(ScoreType.BREAK_ORE, 1);
             }
-            //XP Drops
-            int xpDrop = LootTable.getInstance().getXPDrops(mat, luck);
-            if(exp.addXP(xpDrop)) w.playSound(Sound.SoundType.ENTITY_LEVELUP, this.getLocation(), 1.0f);
-            score.addScore(ScoreType.GATHER_XP, xpDrop);
-            if(xpDrop > 0)
-                w.playSound(Sound.SoundType.ENTITY_ORBPICKUP, this.getLocation(), 0.5f);
-
-            //Add to score
-            score.addScore(ScoreType.BREAK_ORE, 1);
         }
     }
 
@@ -399,11 +399,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
             Pixelate.HANDLER.call(ev);
             if (ev.isCancelled()) return;
             if (tile.getMaterial() == Material.FURNACE) {
-                FurnaceInventory furnaceInventory = (FurnaceInventory) container.getInventory();
-                HUD.INSTANCE.setFurnaceDisplay(getInventory(), (FurnanceTile) container);
+                Pixelate.getHud().setFurnaceDisplay(getInventory(), (FurnanceTile) container);
             } else if (tile.getMaterial() == Material.CHEST) {
                 ChestInventory chestInventory = (ChestInventory) container.getInventory();
-                HUD.INSTANCE.setChestDisplay(getInventory(), chestInventory);
+                Pixelate.getHud().setChestDisplay(getInventory(), chestInventory);
             }
         } else if (tile.getMaterial() == Material.TNT) {
             tile.setMaterial(Material.STONE);
@@ -412,6 +411,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
             Pixelate.HANDLER.call(ev);
             if (ev.isCancelled()) return;
             w.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
+        } else if (tile.getMaterial() == Material.WORKBENCH) {
+            Pixelate.getHud().setCraftingTable(getInventory());
         } else if (current != null && current.getType().isBlock()) {
             if (tile.getTileType() != Tile.TileType.FOREGROUND && !w.findTiles(collision).contains(tile)) {
                 EventTilePlace ev = new EventTilePlace(this, tile, current.getType());
@@ -426,9 +427,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler(priority = EventHandler.Priority.HIGHEST)
     private void onOpenInventory(EventOpenInventory e) {
         if (gamemode == Gamemode.CREATIVE) {
-            HUD.INSTANCE.setCreative(getInventory());
+            Pixelate.getHud().setCreative(getInventory());
         } else {
-            HUD.INSTANCE.setInventory(getInventory());
+            Pixelate.getHud().setInventory(getInventory());
         }
     }
 }

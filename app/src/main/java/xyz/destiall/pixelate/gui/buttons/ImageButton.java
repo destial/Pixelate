@@ -25,7 +25,22 @@ public class ImageButton extends Imageable implements Button {
         this.topleft = topleft;
         aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + image.getWidth(), topleft.getY() + image.getHeight());
 
-        if(scale != 1.0) {
+        if (scale != 1.0) {
+            Bitmap scaled = Imageable.resizeImage(image, scale);
+            setImage(scaled, 1,1);
+        }
+    }
+
+    public Vector2 getTopLeft() {
+        return topleft;
+    }
+
+    public ImageButton(Bitmap image, Vector2 topleft, float scale) {
+        super(image, 1, 1);
+        this.topleft = topleft;
+        aabb = new AABB(topleft.getX(), topleft.getY(), topleft.getX() + image.getWidth(), topleft.getY() + image.getHeight());
+
+        if (scale != 1.0) {
             Bitmap scaled = Imageable.resizeImage(image, scale);
             setImage(scaled, 1,1);
         }

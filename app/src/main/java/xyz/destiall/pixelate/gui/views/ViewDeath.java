@@ -12,7 +12,6 @@ import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.states.StateGame;
 
@@ -73,12 +72,12 @@ public class ViewDeath implements View {
         float y = e.getY();
         if (e.getAction() == ControlEvent.Action.DOWN) {
             if (isOnRespawn(x, y)) {
-                HUD.INSTANCE.returnToGame();
+                Pixelate.getHud().returnToGame();
                 ((StateGame)Pixelate.getGSM().getState("Game")).getPlayer().respawn();
             } else if (isOnExit(x,y)) {
                 // RETURN MAIN MENU;
                 Pixelate.HANDLER.call(new EventGamePause());
-                HUD.INSTANCE.returnToGame();
+                Pixelate.getHud().returnToGame();
             }
         }
     }

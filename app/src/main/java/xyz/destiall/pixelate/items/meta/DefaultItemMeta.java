@@ -14,6 +14,7 @@ import java.util.Objects;
 public class DefaultItemMeta implements ItemMeta {
     private final Map<Enchantment, Integer> enchants = new HashMap<>();
     private final List<ItemFlag> flags = new ArrayList<>();
+    private List<String> lore = new ArrayList<>();
     private int durability;
     private String display;
     private boolean unbreakable;
@@ -41,6 +42,21 @@ public class DefaultItemMeta implements ItemMeta {
     @Override
     public boolean hasDisplayName() {
         return display != null;
+    }
+
+    @Override
+    public boolean hasLore() {
+        return lore != null && !lore.isEmpty();
+    }
+
+    @Override
+    public void setLore(List<String> lore) {
+        this.lore = lore;
+    }
+
+    @Override
+    public List<String> getLore() {
+        return lore;
     }
 
     @Override

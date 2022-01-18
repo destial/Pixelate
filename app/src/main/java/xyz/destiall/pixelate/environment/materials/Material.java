@@ -21,7 +21,8 @@ public enum Material {
     PLANKS(0,4, Tile.TileType.FOREGROUND, 4, ToolType.AXE),
 
     FURNACE(0, 5, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
-    CHEST(0, 6, Tile.TileType.FOREGROUND, 7.5f, ToolType.AXE, true),
+    CHEST(0, 6, Tile.TileType.FOREGROUND, 5.5f, ToolType.AXE, true),
+    WORKBENCH(3, 3, Tile.TileType.FOREGROUND, 3f, ToolType.AXE),
 
     PURPLE_WOOL(1,0, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
     CYAN_WOOL(1,1, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
@@ -75,6 +76,10 @@ public enum Material {
 
     //Other items
     COAL(R.drawable.coal, ToolType.NONE, EfficiencyTier.NONE, -1),
+    DIAMOND(R.drawable.diamond, ToolType.NONE, EfficiencyTier.DIAMOND, -1),
+    EMERALD(R.drawable.emerald, ToolType.NONE, EfficiencyTier.NONE, -1),
+    IRON_INGOT(R.drawable.iron_ingot, ToolType.NONE, EfficiencyTier.IRON, -1),
+    GOLD_INGOT(R.drawable.gold_ingot, ToolType.NONE, EfficiencyTier.GOLD, -1),
     STICK(R.drawable.stick, ToolType.NONE, EfficiencyTier.NONE, -1),
     GUNPOWDER(R.drawable.gunpowder, ToolType.NONE, EfficiencyTier.NONE, -1),
     BONE(R.drawable.bone, ToolType.NONE, EfficiencyTier.NONE, -1),

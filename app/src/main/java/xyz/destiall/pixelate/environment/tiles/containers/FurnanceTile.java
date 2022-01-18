@@ -23,6 +23,8 @@ public class FurnanceTile extends ContainerTile {
     static {
         //Smeltable List
         smeltable.put(Material.COAL_ORE, Material.COAL);
+        smeltable.put(Material.IRON_ORE, Material.IRON_INGOT);
+        smeltable.put(Material.GOLD_ORE, Material.GOLD_INGOT);
         smeltable.put(Material.COBBLESTONE, Material.STONE);
         smeltable.put(Material.WOOD, Material.COAL);
 

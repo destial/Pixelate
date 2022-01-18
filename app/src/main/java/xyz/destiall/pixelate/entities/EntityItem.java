@@ -1,13 +1,13 @@
 package xyz.destiall.pixelate.entities;
 
 import xyz.destiall.pixelate.Pixelate;
-import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.entity.EventItemPickup;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.items.ItemStack;
+import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
 
 /**
@@ -17,11 +17,13 @@ public class EntityItem extends Entity {
     private ItemStack drop;
     private transient float upAndDownTimer;
     private transient boolean down;
+    private transient final EntityPlayer player;
 
     protected EntityItem() {
         scale = 0.5f;
         upAndDownTimer = 0f;
         down = false;
+        player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
     }
 
     public EntityItem(ItemStack itemStack) {
@@ -32,6 +34,7 @@ public class EntityItem extends Entity {
         spriteSheet.setCurrentFrame(0);
         upAndDownTimer = 0f;
         down = false;
+        player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
     }
 
     @Override
@@ -50,18 +53,13 @@ public class EntityItem extends Entity {
             upAndDownTimer = (down ? -1 : 1) * 10;
             down = !down;
         }
-        World w;
-        if ((w = location.getWorld()) == null) return;
-        w.getNearestEntities(location, Tile.SIZE * 0.5).stream().anyMatch(e -> {
-            if (e instanceof EntityPlayer) {
-                EventItemPickup ev = new EventItemPickup(e, this);
-                Pixelate.HANDLER.call(ev);
-                if (ev.isCancelled()) return false;
-                if (((EntityPlayer) e).getInventory().addItem(drop)) this.remove();
-                return true;
-            }
-            return false;
-        });
+        if (player.getLocation(true).getWorld() != location.getWorld()) return;
+        if (player.getLocation(true).distance(location) < Tile.SIZE * 0.5) {
+            EventItemPickup ev = new EventItemPickup(player, this);
+            Pixelate.HANDLER.call(ev);
+            if (ev.isCancelled()) return;
+            if (player.getInventory().addItem(drop)) this.remove();
+        }
     }
 
     @Override

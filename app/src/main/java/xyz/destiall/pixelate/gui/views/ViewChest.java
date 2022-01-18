@@ -15,7 +15,6 @@ import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
@@ -153,7 +152,7 @@ public class ViewChest implements View {
         float y = e.getY();
         if (e.getAction() == ControlEvent.Action.DOWN) {
             if (isOnExit(x, y)) {
-                HUD.INSTANCE.setChestDisplay(null, null);
+                Pixelate.getHud().setChestDisplay(null, null);
             }
             return;
         }

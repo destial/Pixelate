@@ -12,7 +12,6 @@ import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.position.Vector2;
 
 /**
@@ -63,11 +62,11 @@ public class ViewPaused implements View {
         float y = e.getY();
         if (e.getAction() == ControlEvent.Action.DOWN) {
             if (isOnResume(x, y)) {
-                HUD.INSTANCE.returnToGame();
+                Pixelate.getHud().returnToGame();
             } else if (isOnExit(x,y)) {
                 // RETURN MAIN MENU;
                 Pixelate.HANDLER.call(new EventGamePause());
-                HUD.INSTANCE.returnToGame();
+                Pixelate.getHud().returnToGame();
             }
         }
     }

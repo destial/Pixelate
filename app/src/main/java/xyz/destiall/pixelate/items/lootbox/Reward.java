@@ -50,13 +50,13 @@ public class Reward {
             EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
             switch (rewardName) {
                 case "Brown Skin":
-                    player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerbrown));
+                    player.setSkin(ResourceManager.getBitmap(R.drawable.playerbrown));
                     break;
                 case "Red Skin":
-                    player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerred));
+                    player.setSkin(ResourceManager.getBitmap(R.drawable.playerred));
                     break;
                 case "White Skin":
-                    player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerwhite));
+                    player.setSkin(ResourceManager.getBitmap(R.drawable.playerwhite));
                     break;
             }
         }

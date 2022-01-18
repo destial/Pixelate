@@ -25,17 +25,19 @@ public class LootTable {
         List<ItemStack> items = new ArrayList<>();
         if (type == Material.COAL_ORE) {
             items.add(new ItemStack(Material.COAL, 1 + ran.nextInt(0, luck + 1)));
+        } else if (type == Material.DIAMOND_ORE) {
+            items.add(new ItemStack(Material.DIAMOND, 1 + ran.nextInt(0, luck + 1)));
+        } else if (type == Material.EMERALD_ORE) {
+            items.add(new ItemStack(Material.EMERALD, 1 + ran.nextInt(0, luck + 1)));
         }
 
         if (items.isEmpty()) items.add(new ItemStack(type, 1));
         return items;
     }
 
-    public int getXPDrops(Material type, int luck)
-    {
+    public int getXPDrops(Material type, int luck) {
         int amt = 0;
-        switch(type)
-        {
+        switch(type) {
             case COAL_ORE:
                 amt = 20;
                 break;

@@ -118,7 +118,9 @@ public class ItemStack {
 
     @Override
     public ItemStack clone() {
-        return new ItemStack(material, amount);
+        ItemStack clone = new ItemStack(material, amount);
+        clone.meta = meta.clone();
+        return clone;
     }
 
     /**
