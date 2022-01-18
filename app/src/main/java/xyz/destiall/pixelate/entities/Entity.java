@@ -166,7 +166,7 @@ public abstract class Entity implements Updateable, Renderable, Modular {
         Vector2 offset = Screen.convert(location.toVector());
         screen.draw(map, offset.getX(), offset.getY());
 
-        if (Settings.ENABLE_HITBOXES)
+        if (Settings.HITBOXES)
             screen.quadRing(offset.getX(), offset.getY(), map.getWidth(), map.getHeight(), 5f, Color.WHITE);
     }
 

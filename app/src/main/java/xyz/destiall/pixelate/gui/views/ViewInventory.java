@@ -108,7 +108,7 @@ public class ViewInventory implements View {
         screen.draw(image, cOutX, cOutY);
         for (Recipe recipe : Pixelate.getRecipeManager().getRecipes()) {
             if (recipe.isFulfilled(playerInventory.getCrafting())) {
-                ItemStack item = recipe.getItem();
+                ItemStack item = recipe.getResult();
                 Bitmap image;
                 if (images.containsKey(item.getType())) {
                     image = images.get(item.getType());
@@ -214,7 +214,7 @@ public class ViewInventory implements View {
                 for (Recipe recipe : Pixelate.getRecipeManager().getRecipes()) {
                     if (recipe.isFulfilled(playerInventory.getCrafting())) {
                         //playerInventory.setItem(draggingSlot, null);
-                        if (playerInventory.addItem(recipe.getItem())) {
+                        if (playerInventory.addItem(recipe.getResult())) {
                             for (int i = 0; i < 4; i++) {
                                 ItemStack item = playerInventory.getCraftingItem(i);
                                 if (item == null) continue;

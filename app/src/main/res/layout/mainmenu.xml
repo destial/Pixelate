@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:background="@drawable/background">
 
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btn_start"
+            app:srcCompat="@drawable/pixelate"
+            android:layout_centerInParent="true"
+            android:id="@+id/gameTitle" />
 
     <Button
-            android:id="@+id/btn_start"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
+        android:id="@+id/btn_start"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
 
-            android:layout_centerInParent="true"
-            android:background="@drawable/button"
-            android:text="@string/start"
-            android:textColor="#fff"
-            android:textSize="10dp">
-
+        android:background="@drawable/button"
+        android:text="@string/start"
+        android:textColor="#fff"
+        android:textSize="10dp"
+        android:layout_centerInParent="true">
     </Button>
 
     <Button

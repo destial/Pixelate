@@ -162,7 +162,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Vector2 vector = Screen.convert(newLoc);
 
-        if (Settings.ENABLE_BLOCK_TRACE) {
+        if (Settings.BLOCKTRACE) {
             Tile t = newLoc.getTile();
             if (t != null) {
                 Vector2 tile = Screen.convert(t.getVector());
@@ -170,7 +170,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
             }
         }
 
-        if (Settings.ENABLE_CROSSHAIR)
+        if (Settings.CROSSHAIR)
             screen.draw(crosshair, vector.getX(), vector.getY());
 
         if (playSwingAnimation) {

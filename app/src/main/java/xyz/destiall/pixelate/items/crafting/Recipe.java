@@ -80,7 +80,11 @@ public class Recipe {
         });
     }
 
-    public ItemStack getItem() {
+    /**
+     * Get the result of this crafting recipe
+     * @return The item stack result
+     */
+    public ItemStack getResult() {
         return item.clone();
     }
 }

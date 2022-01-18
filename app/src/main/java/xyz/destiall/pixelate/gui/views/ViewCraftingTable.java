@@ -218,7 +218,7 @@ public class ViewCraftingTable implements View {
         int i = 0;
         int y = (int) (Pixelate.HEIGHT * 0.25);
         for (Recipe recipe : recipes) {
-            ItemStack result = recipe.getItem();
+            ItemStack result = recipe.getResult();
             if (possibleRecipes.keySet().stream().anyMatch(it -> it.similar(result))) continue;
             boolean has = true;
             for (Map.Entry<Material, Integer> ingredients : recipe.getIngredients().entrySet()) {

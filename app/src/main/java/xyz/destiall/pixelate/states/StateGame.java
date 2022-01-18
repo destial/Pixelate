@@ -24,6 +24,7 @@ import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.Location;
+import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 
 /**
@@ -48,8 +49,6 @@ public class StateGame extends State implements Modular {
             worldManager = new WorldManager();
             worldManager.load(Pixelate.GSON.fromJson(new FileReader(level), WorldManager.class));
             player = (EntityPlayer) worldManager.getCurrentWorld().getEntities().stream().filter(e -> e instanceof EntityPlayer).findFirst().orElse(new EntityPlayer());
-            Pixelate.HANDLER.registerListener(player);
-            Pixelate.getHud().setHotbar(player.getInventory());
             initialize();
             return true;
         } catch (IOException e) {
@@ -66,39 +65,13 @@ public class StateGame extends State implements Modular {
         worldManager = new WorldManager();
         worldManager.addWorld("Overworld", world);
         worldManager.addWorld("Cave", cave);
-
         world.generateWorld(0, true);
         cave.generateWorld(0, true);
-
         worldManager.setActive("Overworld");
 
         player = new EntityPlayer();
-        Location location = new Location(0, 0, worldManager.getCurrentWorld());
-
-        //Adding example items
-        ItemStack sword = new ItemStack(Material.DIAMOND_SWORD, 1);
-        sword.getItemMeta().addEnchantment(Enchantment.DAMAGE_ALL, 1);
-        ItemStack d_axe = new ItemStack(Material.WOODEN_AXE, 1);
-        d_axe.getItemMeta().addEnchantment(Enchantment.DIG_SPEED, 5);
-        ItemStack d_pickaxe = new ItemStack(Material.DIAMOND_PICKAXE, 1);
-        ItemStack furnace = new ItemStack(Material.FURNACE, 1);
-        ItemStack chest = new ItemStack(Material.CHEST, 1);
-        ItemStack tnt = new ItemStack(Material.TNT, 4);
-        player.getInventory().addItem(sword);
-        player.getInventory().addItem(d_axe);
-        player.getInventory().addItem(d_pickaxe);
-        player.getInventory().addItem(furnace);
-        player.getInventory().addItem(chest);
-        player.getInventory().addItem(tnt);
-
-        player.getInventory().addItem(new ItemStack(Material.COAL_ORE,1));
-
-        Location loc = worldManager.getCurrentWorld().getNearestEmpty(location);
-        world.dropItem(chest, loc.add(Tile.SIZE, Tile.SIZE));
-        player.teleport(loc.subtract(Tile.SIZE, Tile.SIZE));
+        player.teleport(worldManager.getCurrentWorld().getNearestEmpty(0, 0));
         worldManager.getCurrentWorld().getEntities().add(player);
-        Pixelate.HANDLER.registerListener(player);
-        Pixelate.getHud().setHotbar(player.getInventory());
 
         initialize();
     }
@@ -119,6 +92,8 @@ public class StateGame extends State implements Modular {
     }
 
     private void initialize() {
+        Pixelate.HANDLER.registerListener(player);
+        Pixelate.getHud().setHotbar(player.getInventory());
         screen = new Screen(null, player, Pixelate.WIDTH, Pixelate.HEIGHT);
     }
 
@@ -157,9 +132,11 @@ public class StateGame extends State implements Modular {
                 ((Renderable) m).render(screen);
             }
         }
-        screen.text("FPS: " + Timer.getFPS(), 10, 50, 60, Color.WHITE);
-        screen.text("Delta: " + Timer.getDeltaTime() + "ms", 10, 110, 60, Color.WHITE);
-        screen.text("Draw Calls: " + screen.getDrawCalls(), 10, 170, 60, Color.WHITE);
+        if (Settings.DEBUG) {
+            screen.text("FPS: " + Timer.getFPS(), 10, 50, 60, Color.WHITE);
+            screen.text("Delta: " + Timer.getDeltaTime() + "ms", 10, 110, 60, Color.WHITE);
+            screen.text("Draw Calls: " + screen.getDrawCalls(), 10, 170, 60, Color.WHITE);
+        }
     }
 
     @Override

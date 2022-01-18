@@ -19,17 +19,8 @@ public class SkinCrate extends Crate {
         cost = 1;
         costType = CostType.DIAMOND;
 
-        rewardsTable.addReward(
-                new Reward(ResourceManager.getBitmap(R.drawable.cosmetic_playerbrownskin), 1, Reward.RewardType.SKIN, "Brown Skin")
-                ,0.5);
-        rewardsTable.addReward(
-                new Reward(ResourceManager.getBitmap(R.drawable.cosmetic_playerredskin), 1, Reward.RewardType.SKIN, "Red Skin")
-                ,0.12);
-        rewardsTable.addReward(
-                new Reward(ResourceManager.getBitmap(R.drawable.cosmetic_playerwhiteskin), 1, Reward.RewardType.SKIN, "White Skin")
-                ,0.04);
+        rewardsTable.addReward(new Reward(ResourceManager.getBitmap(R.drawable.cosmetic_playerbrownskin), 1, Reward.RewardType.SKIN, "Brown Skin"),0.5);
+        rewardsTable.addReward(new Reward(ResourceManager.getBitmap(R.drawable.cosmetic_playerredskin), 1, Reward.RewardType.SKIN, "Red Skin"),0.12);
+        rewardsTable.addReward(new Reward(ResourceManager.getBitmap(R.drawable.cosmetic_playerwhiteskin), 1, Reward.RewardType.SKIN, "White Skin"),0.04);
     }
-
-
-
 }
