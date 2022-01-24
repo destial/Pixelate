@@ -15,15 +15,10 @@ import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
-import xyz.destiall.pixelate.environment.materials.Material;
-import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
-import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
 

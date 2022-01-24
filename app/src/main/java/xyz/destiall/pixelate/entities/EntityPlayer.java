@@ -18,6 +18,7 @@ import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
+import xyz.destiall.pixelate.environment.tiles.containers.EnchantTableTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.controls.EventChat;
 import xyz.destiall.pixelate.events.controls.EventJoystick;
@@ -401,8 +402,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
             if (tile.getMaterial() == Material.FURNACE) {
                 Pixelate.getHud().setFurnaceDisplay(getInventory(), (FurnanceTile) container);
             } else if (tile.getMaterial() == Material.CHEST) {
-                ChestInventory chestInventory = (ChestInventory) container.getInventory();
-                Pixelate.getHud().setChestDisplay(getInventory(), chestInventory);
+                Pixelate.getHud().setChestDisplay(getInventory(), (ChestInventory) container.getInventory());
+            } else if (tile.getMaterial() == Material.ENCHANT_TABLE) {
+                Pixelate.getHud().setEnchantingTable((EnchantTableTile) tile, getInventory());
             }
         } else if (tile.getMaterial() == Material.TNT) {
             tile.setMaterial(Material.STONE);

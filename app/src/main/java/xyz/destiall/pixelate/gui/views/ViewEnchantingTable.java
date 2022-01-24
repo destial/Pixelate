@@ -3,8 +3,6 @@ package xyz.destiall.pixelate.gui.views;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +10,7 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.materials.Material;
+import xyz.destiall.pixelate.environment.tiles.containers.EnchantTableTile;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
 import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Glint;
@@ -20,7 +19,6 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.buttons.Button;
 import xyz.destiall.pixelate.gui.buttons.ImageButton;
 import xyz.destiall.pixelate.items.ItemStack;
-import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
@@ -29,7 +27,8 @@ import xyz.destiall.pixelate.utils.ViewUtils;
 /**
  * Written by Rance & Yong Hong
  */
-public class ViewCraftingTable implements View {
+public class ViewEnchantingTable implements View {
+    private final EnchantTableTile tile;
     private final Map<Integer, AABB> positions;
     private final HashMap<Material, Bitmap> images;
     private final PlayerInventory playerInventory;
@@ -44,7 +43,8 @@ public class ViewCraftingTable implements View {
     private int draggingX;
     private int draggingY;
 
-    public ViewCraftingTable(PlayerInventory playerInventory) {
+    public ViewEnchantingTable(EnchantTableTile tile, PlayerInventory playerInventory) {
+        this.tile = tile;
         this.playerInventory = playerInventory;
         this.possibleRecipes = new HashMap<>();
         exitButton = new Vector2(Pixelate.WIDTH - 100, 100);
@@ -54,25 +54,14 @@ public class ViewCraftingTable implements View {
         positions = new HashMap<>();
         images = new HashMap<>();
         Pixelate.HANDLER.registerListener(this);
-        calculateRecipes();
     }
 
     @Override
     public void render(Screen screen) {
-        try {
-            for (Map.Entry<ItemStack, ImageButton> possible : possibleRecipes.entrySet()) {
-                ImageButton button = possible.getValue();
-                button.render(screen);
-                ItemStack item = possible.getKey();
-                if (item.getAmount() > 1) {
-                    screen.text("" + item.getAmount(),
-                            button.getTopLeft().getX() + this.image.getWidth() / 2f,
-                            button.getTopLeft().getY() + this.image.getHeight() / 2f,
-                            40, Color.WHITE);
-                }
-            }
-        } catch (Exception ignored) {}
-        screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
+        // Render enchant table
+
+
+
         int starting = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
         int i = 0;
         for (int y = 0; y < (playerInventory.getSize() / 9); y++) {
@@ -127,7 +116,7 @@ public class ViewCraftingTable implements View {
         if (e.getAction() == ControlEvent.Action.DOWN) {
             // int slot = getSlot(x, y);
             if (isOnExit(x, y)) {
-                Pixelate.getHud().setCraftingTable(null);
+                Pixelate.getHud().setEnchantingTable(tile, null);
                 return;
             }
             for (Button button : possibleRecipes.values()) {
@@ -160,11 +149,26 @@ public class ViewCraftingTable implements View {
                     return;
                 }
                 ItemStack itemStack = getItem(x, y);
-                if (itemStack == null) {
-                    playerInventory.setItem(draggingSlot, null);
+                if (slot >= playerInventory.getSize()) {
+                    if (draggingSlot >= playerInventory.getSize()) {
+                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
+                    } else {
+                        playerInventory.setItem(draggingSlot, null);
+                    }
+                    playerInventory.setCrafting(slot - playerInventory.getSize(), dragging);
+                } else if (itemStack == null) {
+                    if (draggingSlot >= playerInventory.getSize()) {
+                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
+                    } else {
+                        playerInventory.setItem(draggingSlot, null);
+                    }
                     playerInventory.setItem(slot, dragging);
                 } else if (itemStack.similar(dragging)) {
-                    playerInventory.setItem(draggingSlot, null);
+                    if (draggingSlot >= playerInventory.getSize()) {
+                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
+                    } else {
+                        playerInventory.setItem(draggingSlot, null);
+                    }
                     itemStack.addAmount(dragging.getAmount());
                 }
                 dragging = null;
@@ -194,50 +198,5 @@ public class ViewCraftingTable implements View {
         images.clear();
         possibleRecipes.clear();
         Pixelate.HANDLER.unregisterListener(this);
-    }
-
-    private void calculateRecipes() {
-        possibleRecipes.clear();
-        Collection<Recipe> recipes = Pixelate.getRecipeManager().getRecipes();
-        int x = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
-        int i = 0;
-        int y = (int) (Pixelate.HEIGHT * 0.25);
-        for (Recipe recipe : recipes) {
-            ItemStack result = recipe.getResult();
-            if (possibleRecipes.keySet().stream().anyMatch(it -> it.similar(result))) continue;
-            boolean has = true;
-            for (Map.Entry<Material, Integer> ingredients : recipe.getIngredients().entrySet()) {
-                if (Arrays.stream(playerInventory.getItems())
-                        .noneMatch(it ->
-                            it != null &&
-                            it.getType() == ingredients.getKey() &&
-                            it.getAmount() >= ingredients.getValue())) {
-                    has = false;
-                    break;
-                }
-            }
-            if (has) {
-                i++;
-                if (i > 9) {
-                    i = 0;
-                    y += image.getHeight();
-                    x = (int) (Pixelate.WIDTH / 2 - image.getWidth() * 4.5);
-                } else {
-                    x += image.getWidth();
-                }
-                ImageButton button = new ImageButton(result.getImage(), new Vector2(x, y), 1);
-                button.onTap(() -> {
-                    for (ItemStack item : playerInventory.getItems()) {
-                        if (item == null) continue;
-                        if (recipe.getIngredients().containsKey(item.getType())) {
-                            item.removeAmount(recipe.getIngredients().get(item.getType()));
-                        }
-                    }
-                    playerInventory.addItem(result);
-                    calculateRecipes();
-                });
-                possibleRecipes.put(result, button);
-            }
-        }
     }
 }

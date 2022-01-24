@@ -2,6 +2,7 @@ package xyz.destiall.pixelate.gui;
 
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.environment.tiles.containers.EnchantTableTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
@@ -11,6 +12,7 @@ import xyz.destiall.pixelate.gui.views.ViewControls;
 import xyz.destiall.pixelate.gui.views.ViewCraftingTable;
 import xyz.destiall.pixelate.gui.views.ViewCreative;
 import xyz.destiall.pixelate.gui.views.ViewDeath;
+import xyz.destiall.pixelate.gui.views.ViewEnchantingTable;
 import xyz.destiall.pixelate.gui.views.ViewFurnace;
 import xyz.destiall.pixelate.gui.views.ViewHotbar;
 import xyz.destiall.pixelate.gui.views.ViewInventory;
@@ -33,6 +35,7 @@ public class HUD implements Updateable, Renderable, Listener {
     private ViewDeath respawnMenu;
     private ViewShop shopMenu;
     private ViewCraftingTable craftingTable;
+    private ViewEnchantingTable enchantingTable;
     private DisplayType displayType;
 
     public enum DisplayType {
@@ -42,6 +45,7 @@ public class HUD implements Updateable, Renderable, Listener {
         CHEST_INVENTORY,
         CREATIVE_INVENTORY,
         CRAFTING_TABLE,
+        ENCHANTING_TABLE,
         PAUSE_GAME,
         RESPAWN_MENU,
         SHOP_MENU
@@ -66,6 +70,7 @@ public class HUD implements Updateable, Renderable, Listener {
         if (shopMenu != null) shopMenu.destroy();
         if (respawnMenu != null) respawnMenu.destroy();
         if (pauseMenu != null) pauseMenu.destroy();
+        if (enchantingTable != null) enchantingTable.destroy();
     }
 
     public ViewHotbar getHotbar() {
@@ -87,6 +92,19 @@ public class HUD implements Updateable, Renderable, Listener {
         }
         displayType = DisplayType.CREATIVE_INVENTORY;
         creative = new ViewCreative(playerInventory);
+    }
+
+    public void setEnchantingTable(EnchantTableTile tile, PlayerInventory playerInventory) {
+        if (playerInventory == null) {
+            if (craftingTable != null) {
+                craftingTable.destroy();
+                craftingTable = null;
+            }
+            displayType = DisplayType.GAME_VIEW;
+            return;
+        }
+        enchantingTable = new ViewEnchantingTable(tile, playerInventory);
+        displayType = DisplayType.ENCHANTING_TABLE;
     }
 
     public void setCraftingTable(PlayerInventory playerInventory) {
@@ -207,6 +225,10 @@ public class HUD implements Updateable, Renderable, Listener {
                 if (craftingTable != null)
                     craftingTable.render(screen);
                 break;
+            case ENCHANTING_TABLE:
+                if (enchantingTable != null)
+                    enchantingTable.render(screen);
+                break;
             case PAUSE_GAME:
                 if (pauseMenu != null)
                     pauseMenu.render(screen);
@@ -247,6 +269,10 @@ public class HUD implements Updateable, Renderable, Listener {
             case CRAFTING_TABLE:
                 if (craftingTable != null)
                     craftingTable.update();
+                break;
+            case ENCHANTING_TABLE:
+                if (enchantingTable != null)
+                    enchantingTable.update();
                 break;
             case PAUSE_GAME:
                 if (pauseMenu != null)

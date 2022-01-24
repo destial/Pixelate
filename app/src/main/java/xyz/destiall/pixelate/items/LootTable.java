@@ -29,6 +29,10 @@ public class LootTable {
             items.add(new ItemStack(Material.DIAMOND, 1 + ran.nextInt(0, luck + 1)));
         } else if (type == Material.EMERALD_ORE) {
             items.add(new ItemStack(Material.EMERALD, 1 + ran.nextInt(0, luck + 1)));
+        } else if (type == Material.LAPIS_ORE) {
+            items.add(new ItemStack(Material.LAPIS, 3 + ran.nextInt(0, luck + 1)));
+        } else if (type == Material.REDSTONE_ORE) {
+            items.add(new ItemStack(Material.REDSTONE, 3 + ran.nextInt(0, luck + 1)));
         }
 
         if (items.isEmpty()) items.add(new ItemStack(type, 1));

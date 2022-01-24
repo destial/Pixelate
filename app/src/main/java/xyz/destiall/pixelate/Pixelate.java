@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
 
 import xyz.destiall.java.events.EventHandling;
 import xyz.destiall.pixelate.activities.GameActivity;
-import xyz.destiall.pixelate.commands.CommandGraph;
+import xyz.destiall.pixelate.commands.CommandMap;
 import xyz.destiall.pixelate.commands.executors.EnchantCommand;
 import xyz.destiall.pixelate.commands.executors.GamemodeCommand;
 import xyz.destiall.pixelate.commands.executors.ItemCommand;
@@ -69,7 +69,7 @@ public class Pixelate extends Thread {
     public static boolean PAUSED = false;
     private final Timer timer;
     private static RecipeManager recipeManager;
-    private static CommandGraph commandGraph;
+    private static CommandMap commandMap;
     private static HUD hud;
     private boolean running;
 
@@ -86,7 +86,7 @@ public class Pixelate extends Thread {
         timer = new Timer();
         stateManager = new GSM();
         stateManager.addState("Game", new StateGame(gameSurface));
-        commandGraph = new CommandGraph();
+        commandMap = new CommandMap();
         recipeManager = new RecipeManager();
         hud = new HUD();
         setupCommands();
@@ -183,8 +183,8 @@ public class Pixelate extends Thread {
         return recipeManager;
     }
 
-    public static CommandGraph getCommands() {
-        return commandGraph;
+    public static CommandMap getCommands() {
+        return commandMap;
     }
 
     public static HUD getHud() {
@@ -192,12 +192,12 @@ public class Pixelate extends Thread {
     }
 
     private static void setupCommands() {
-        commandGraph.registerCommand("spawn", new SpawnCommand());
-        commandGraph.registerCommand("summon", new SummonCommand());
-        commandGraph.registerCommand("gamemode", new GamemodeCommand());
-        commandGraph.registerCommand("settings", new SettingsCommand());
-        commandGraph.registerCommand("item", new ItemCommand());
-        commandGraph.registerCommand("enchant", new EnchantCommand());
+        commandMap.registerCommand("spawn", new SpawnCommand());
+        commandMap.registerCommand("summon", new SummonCommand());
+        commandMap.registerCommand("gamemode", new GamemodeCommand());
+        commandMap.registerCommand("settings", new SettingsCommand());
+        commandMap.registerCommand("item", new ItemCommand());
+        commandMap.registerCommand("enchant", new EnchantCommand());
     }
 
     private static void setupRecipes() {
@@ -494,5 +494,47 @@ public class Pixelate extends Thread {
         diamondSword.setIngredient("P", Material.DIAMOND);
         diamondSword.setIngredient("S", Material.STICK);
         recipeManager.addRecipe(diamondSword);
+
+        Recipe ironBlock = new Recipe("iron_block", new ItemStack(Material.IRON_BLOCK));
+        ironBlock.setShape("I", "I", "I",
+                "I", "I", "I",
+                "I", "I", "I");
+        ironBlock.setIngredient("I", Material.IRON_INGOT);
+        recipeManager.addRecipe(ironBlock);
+
+        Recipe diamondBlock = new Recipe("diamond_block", new ItemStack(Material.DIAMOND_BLOCK));
+        diamondBlock.setShape("I", "I", "I",
+                "I", "I", "I",
+                "I", "I", "I");
+        diamondBlock.setIngredient("I", Material.DIAMOND);
+        recipeManager.addRecipe(diamondBlock);
+
+        Recipe emeraldBlock = new Recipe("emerald_block", new ItemStack(Material.EMERALD_BLOCK));
+        emeraldBlock.setShape("I", "I", "I",
+                "I", "I", "I",
+                "I", "I", "I");
+        emeraldBlock.setIngredient("I", Material.EMERALD);
+        recipeManager.addRecipe(emeraldBlock);
+
+        Recipe goldBlock = new Recipe("gold_block", new ItemStack(Material.GOLD_BLOCK));
+        goldBlock.setShape("I", "I", "I",
+                "I", "I", "I",
+                "I", "I", "I");
+        goldBlock.setIngredient("I", Material.GOLD_INGOT);
+        recipeManager.addRecipe(goldBlock);
+
+        Recipe redstoneBlock = new Recipe("redstone_block", new ItemStack(Material.REDSTONE_BLOCK));
+        redstoneBlock.setShape("I", "I", "I",
+                "I", "I", "I",
+                "I", "I", "I");
+        redstoneBlock.setIngredient("I", Material.REDSTONE);
+        recipeManager.addRecipe(redstoneBlock);
+
+        Recipe lapisBlock = new Recipe("lapis_block", new ItemStack(Material.LAPIS_BLOCK));
+        lapisBlock.setShape("I", "I", "I",
+                "I", "I", "I",
+                "I", "I", "I");
+        lapisBlock.setIngredient("I", Material.LAPIS);
+        recipeManager.addRecipe(lapisBlock);
     }
 }
