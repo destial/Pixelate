@@ -24,13 +24,8 @@ public class ViewUtils {
         {
             enchantments.add(ench.getKey().getEnchantName() + " " + MathematicUtils.toRoman(ench.getValue()));
         }
-        if(item.getItemMeta().hasLore()) {
-            lore.addAll(item.getItemMeta().getLore());
-            System.out.println("Adding lore");
-        }else
-        {
-            System.out.println("no lore");
-        }
+        lore.add("This is a test lore");
+        lore.add("Second test lore line");
 
         float DISPLAYNAME_HEADER = 0.05f;
         float LORE_HEADER = 0.01f;

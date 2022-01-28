@@ -67,16 +67,23 @@ public class Scoreboard {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        orderLeaderboard();
     }
 
-    public void addToLeaderboard(String entryName, Float entryValue, Long time)
+    public void orderLeaderboard()
     {
-        entries.put(entryName+";"+time, entryValue);
         LinkedHashMap<String, Float> newEntries = entries.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (prev, next) -> next, LinkedHashMap::new));
         ;
         entries = newEntries;
+    }
+
+    public void addToLeaderboard(String entryName, Float entryValue, Long time)
+    {
+        entries.put(entryName+";"+time, entryValue);
+        orderLeaderboard();
+
         Context context = Pixelate.getContext();
         FileInputStream fis = null;
         try {
