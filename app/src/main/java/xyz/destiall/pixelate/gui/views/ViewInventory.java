@@ -3,9 +3,7 @@ package xyz.destiall.pixelate.gui.views;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import xyz.destiall.java.events.EventHandler;
@@ -21,14 +19,12 @@ import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
-import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
-import xyz.destiall.pixelate.utils.MathematicUtils;
 import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
- * Written by Rance
+ * Written by Rance & Yong Hong
  */
 public class ViewInventory implements View {
     private final Map<Integer, AABB> positions;
@@ -166,8 +162,6 @@ public class ViewInventory implements View {
     public void update() {
         Glint.INSTANCE.update();
     }
-
-
 
     @EventHandler
     private void onTouch(EventTouch e) {

@@ -26,7 +26,7 @@ import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
- * Written by Rance
+ * Written by Rance & Yong Hong
  */
 public class ViewFurnace implements View {
     private final Map<Integer, AABB> positions;

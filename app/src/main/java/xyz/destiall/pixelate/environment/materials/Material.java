@@ -153,6 +153,13 @@ public enum Material {
         return String.join(" ", newargs);
     }
 
+    public static Material getFromName(String name) {
+        try {
+            return valueOf(name.toUpperCase());
+        } catch (Exception ignored) {}
+        return null;
+    }
+
     /**
      * Get the amount of columns used in the tile map
      * @return The columns

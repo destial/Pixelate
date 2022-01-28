@@ -11,7 +11,9 @@ import com.google.gson.GsonBuilder;
 import xyz.destiall.java.events.EventHandling;
 import xyz.destiall.pixelate.activities.GameActivity;
 import xyz.destiall.pixelate.commands.CommandGraph;
+import xyz.destiall.pixelate.commands.executors.EnchantCommand;
 import xyz.destiall.pixelate.commands.executors.GamemodeCommand;
+import xyz.destiall.pixelate.commands.executors.ItemCommand;
 import xyz.destiall.pixelate.commands.executors.SettingsCommand;
 import xyz.destiall.pixelate.commands.executors.SpawnCommand;
 import xyz.destiall.pixelate.commands.executors.SummonCommand;
@@ -187,6 +189,8 @@ public class Pixelate extends Thread {
         commandGraph.registerCommand("summon", new SummonCommand());
         commandGraph.registerCommand("gamemode", new GamemodeCommand());
         commandGraph.registerCommand("settings", new SettingsCommand());
+        commandGraph.registerCommand("item", new ItemCommand());
+        commandGraph.registerCommand("enchant", new EnchantCommand());
     }
 
     private static void setupRecipes() {

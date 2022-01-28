@@ -27,6 +27,13 @@ public enum Enchantment {
         this.types = types;
     }
 
+    public static Enchantment getFromName(String name) {
+        try {
+            return valueOf(name.toUpperCase());
+        } catch (Exception ignored) {}
+        return null;
+    }
+
     /**
      * Get the enchant name of this enchantment
      * @return The beauty enchantment name

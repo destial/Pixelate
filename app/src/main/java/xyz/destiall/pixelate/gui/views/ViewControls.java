@@ -9,8 +9,6 @@ import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.gui.buttons.ImageButton;
-import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
 import xyz.destiall.pixelate.events.controls.EventChat;
@@ -28,9 +26,11 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.gui.buttons.Button;
 import xyz.destiall.pixelate.gui.buttons.CircleButton;
+import xyz.destiall.pixelate.gui.buttons.ImageButton;
 import xyz.destiall.pixelate.gui.buttons.QuadButton;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.states.StateGame;
+import xyz.destiall.pixelate.status.Gamemode;
 
 /**
  * Written by Rance

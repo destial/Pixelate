@@ -4,15 +4,14 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.items.lootbox.Reward;
-import xyz.destiall.pixelate.items.lootbox.crates.Crate;
 import xyz.destiall.pixelate.position.Vector2;
 
+/**
+ * Written By Yong Hong
+ */
 public class SkinCrate extends Crate {
 
-
-
-    public SkinCrate(Vector2 screenOrigin)
-    {
+    public SkinCrate(Vector2 screenOrigin) {
         super("Skin Crate", screenOrigin);
         crateImage = ResourceManager.getBitmap(R.drawable.crate1);
         crateImage = Imageable.resizeImage(crateImage, 0.2f);
