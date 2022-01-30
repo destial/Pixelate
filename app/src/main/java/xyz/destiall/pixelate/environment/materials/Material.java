@@ -22,6 +22,7 @@ public enum Material {
 
     FURNACE(0, 5, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
     CHEST(0, 6, Tile.TileType.FOREGROUND, 7.5f, ToolType.AXE, true),
+    ANVIL(0, 7, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
 
     PURPLE_WOOL(1,0, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
     CYAN_WOOL(1,1, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
@@ -45,9 +46,9 @@ public enum Material {
     IRON_ORE(4,1, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
     COAL_ORE(4,2, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
     LAPIS_ORE(4,4, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    DIAMOND_ORE(4,5, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    EMERALD_ORE(4,6, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    REDSTONE_ORE(4,7, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
+    DIAMOND_ORE(4,6, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
+    EMERALD_ORE(4,7, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
+    REDSTONE_ORE(4,8, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
 
     MOSSY_COBBLESTONE(5,0, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
     COBBLESTONE(5,8, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),

@@ -101,6 +101,7 @@ public class StateGame extends State implements Modular {
 
         ItemStack furnace = new ItemStack(Material.FURNACE, 1);
         ItemStack chest = new ItemStack(Material.CHEST, 1);
+        ItemStack anvil = new ItemStack(Material.ANVIL, 1);
         ItemStack tnt = new ItemStack(Material.TNT, 4);
         player.getInventory().addItem(sword);
         player.getInventory().addItem(d_axe);
@@ -108,6 +109,7 @@ public class StateGame extends State implements Modular {
         player.getInventory().addItem(furnace);
         player.getInventory().addItem(chest);
         player.getInventory().addItem(tnt);
+        player.getInventory().addItem(anvil);
 
         player.getInventory().addItem(new ItemStack(Material.COAL_ORE,1));
 

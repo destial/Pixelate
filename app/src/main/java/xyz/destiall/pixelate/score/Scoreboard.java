@@ -9,8 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -77,6 +79,26 @@ public class Scoreboard {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (prev, next) -> next, LinkedHashMap::new));
         ;
         entries = newEntries;
+    }
+
+    public List<String> getTopScores(int noCount, boolean unique)
+    {
+        List<String> scores = new ArrayList<String>();
+        List<String> namesBlacklist = new ArrayList<String>();
+
+        for(Map.Entry<String, Float> entry : entries.entrySet())
+        {
+            String name = entry.getKey().split(";")[0];
+            if(unique && namesBlacklist.contains(name)) continue;
+
+            namesBlacklist.add(name);
+            scores.add(entry.getKey() + ";"+entry.getValue());
+            if(scores.size() >= noCount)
+                break;
+
+        }
+
+        return scores;
     }
 
     public void addToLeaderboard(String entryName, Float entryValue, Long time)

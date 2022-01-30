@@ -17,6 +17,7 @@ import xyz.destiall.pixelate.environment.materials.EfficiencyTier;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.controls.EventChat;
@@ -38,6 +39,7 @@ import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
+import xyz.destiall.pixelate.items.inventory.AnvilInventory;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
@@ -405,6 +407,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
             if (tile.getMaterial() == Material.FURNACE) {
                 FurnaceInventory furnaceInventory = (FurnaceInventory) container.getInventory();
                 HUD.INSTANCE.setFurnaceDisplay(getInventory(), (FurnanceTile) container);
+            }else if (tile.getMaterial() == Material.ANVIL)
+            {
+                AnvilInventory anvilInventory = (AnvilInventory) container.getInventory();
+                HUD.INSTANCE.setAnvilDisplay(getInventory(), (AnvilTile) container);
             } else if (tile.getMaterial() == Material.CHEST) {
                 ChestInventory chestInventory = (ChestInventory) container.getInventory();
                 HUD.INSTANCE.setChestDisplay(getInventory(), chestInventory);

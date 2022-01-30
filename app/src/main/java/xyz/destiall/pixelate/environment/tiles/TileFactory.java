@@ -2,6 +2,7 @@ package xyz.destiall.pixelate.environment.tiles;
 
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.materials.Material;
+import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
 import xyz.destiall.pixelate.environment.tiles.containers.ChestTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 
@@ -26,6 +27,11 @@ public class TileFactory {
             return t;
         } else if (mat == Material.CHEST) {
             t = new ChestTile(x, y, world);
+            t.setWorld(world);
+            return t;
+        } else if (mat == Material.ANVIL)
+        {
+            t = new AnvilTile(x,y, world);
             t.setWorld(world);
             return t;
         }

@@ -30,11 +30,6 @@ public class SummonCommand implements Command {
             case "tnt":
                 world.spawnEntity(EntityPrimedTNT.class, player.getLocation());
                 break;
-            case "addfakescore":
-                System.out.println("Reached");
-                score += 100;
-                Scoreboard.getInstance().addToLeaderboard("LOCALUSER", (float)score, System.currentTimeMillis());
-                break;
             case "zombie":
                 world.spawnMonster(Entity.Type.ZOMBIE, player.getLocation());
                 break;

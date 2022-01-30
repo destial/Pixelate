@@ -2,10 +2,12 @@ package xyz.destiall.pixelate.gui;
 
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
+import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
+import xyz.destiall.pixelate.gui.views.ViewAnvil;
 import xyz.destiall.pixelate.gui.views.ViewChest;
 import xyz.destiall.pixelate.gui.views.ViewControls;
 import xyz.destiall.pixelate.gui.views.ViewCreative;
@@ -33,6 +35,7 @@ public class HUD implements Updateable, Renderable, Listener {
     private ViewCreative creative;
     private ViewDeath respawnMenu;
     private ViewShop shopMenu;
+    private ViewAnvil anvil;
     private DisplayType displayType;
 
     public enum DisplayType {
@@ -41,6 +44,7 @@ public class HUD implements Updateable, Renderable, Listener {
         FURNACE_INVENTORY,
         CHEST_INVENTORY,
         CREATIVE_INVENTORY,
+        ANVIL_INVENTORY,
         PAUSE_GAME,
         RESPAWN_MENU,
         SHOP_MENU
@@ -157,6 +161,20 @@ public class HUD implements Updateable, Renderable, Listener {
         furnace = new ViewFurnace(playerInventory, tile);
     }
 
+    public void setAnvilDisplay(PlayerInventory playerInventory, AnvilTile tile) {
+        if (playerInventory == null || tile == null)
+        {
+            if(anvil != null) anvil.destroy();
+            anvil = null;
+            displayType = DisplayType.GAME_VIEW;
+            return;
+        }
+        displayType = DisplayType.ANVIL_INVENTORY;
+        buttons.setJoystick(false);
+        setHotbar(playerInventory);
+        anvil = new ViewAnvil(playerInventory, tile);
+    }
+
     public void setChestDisplay(PlayerInventory playerInventory, ChestInventory chestInventory) {
         displayType = DisplayType.CHEST_INVENTORY;
         if (playerInventory == null || chestInventory == null) {
@@ -204,6 +222,10 @@ public class HUD implements Updateable, Renderable, Listener {
                     shopMenu.render(screen);
                 }
                 break;
+            case ANVIL_INVENTORY:
+                if(anvil != null)
+                    anvil.render(screen);
+                break;
             default: // Game View
                 buttons.render(screen);
                 hotbar.render(screen);
@@ -242,6 +264,10 @@ public class HUD implements Updateable, Renderable, Listener {
                 {
                     shopMenu.update();
                 }
+                break;
+            case ANVIL_INVENTORY:
+                if (anvil != null)
+                    anvil.update();
                 break;
             default: // Game View
                 buttons.update();
