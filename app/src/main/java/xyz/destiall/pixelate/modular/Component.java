@@ -6,5 +6,5 @@ package xyz.destiall.pixelate.modular;
  */
 public interface Component<E> extends Module {
     E getParent();
-    void setParent(E e);
+    Component<E> setParent(E e);
 }

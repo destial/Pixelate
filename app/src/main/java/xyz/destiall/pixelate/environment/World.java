@@ -1,21 +1,18 @@
 package xyz.destiall.pixelate.environment;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import xyz.destiall.java.events.Cancellable;
 import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityItem;
 import xyz.destiall.pixelate.entities.EntityMonster;
-import xyz.destiall.pixelate.entities.EntityPlayer;
-import xyz.destiall.pixelate.entities.EntityPrimedTNT;
 import xyz.destiall.pixelate.environment.effects.Effect;
 import xyz.destiall.pixelate.environment.generator.Generator;
 import xyz.destiall.pixelate.environment.generator.GeneratorBasic;
@@ -24,7 +21,6 @@ import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
-import xyz.destiall.pixelate.events.entity.EventSpawnEntity;
 import xyz.destiall.pixelate.events.tile.EventTileBreak;
 import xyz.destiall.pixelate.events.tile.EventTileReplace;
 import xyz.destiall.pixelate.graphics.Renderable;
@@ -38,6 +34,7 @@ import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.modules.EffectsModule;
 import xyz.destiall.pixelate.modules.SoundsModule;
+import xyz.destiall.pixelate.modules.SpawnModule;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
@@ -68,8 +65,9 @@ public class World implements Updateable, Renderable, Module, Modular {
         if (generator instanceof GeneratorUnderground) {
             environment = Environment.CAVE;
         }
-        addModule(new EffectsModule().setWorld(this));
-        addModule(new SoundsModule().setWorld(this));
+        addModule(new EffectsModule().setParent(this));
+        addModule(new SoundsModule().setParent(this));
+        addModule(new SpawnModule().setParent(this));
     }
 
     /**
@@ -197,12 +195,8 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @return The spawned monster, never null
      */
     public EntityMonster spawnMonster(Entity.Type type, Location location) {
-        EntityMonster monster = new EntityMonster(type);
-        monster.teleport(location);
-        Cancellable cancel = (Cancellable) Pixelate.HANDLER.call(new EventSpawnEntity(monster, this));
-        if (cancel.isCancelled()) return null;
-        entities.add(monster);
-        return monster;
+        if (!hasModule(SpawnModule.class)) return null;
+        return getModule(SpawnModule.class).spawnMonster(type, location);
     }
 
     /**
@@ -212,27 +206,8 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @return The spawned entity, or null if invalid entity class
      */
     public <E extends Entity> E spawnEntity(Class<E> clazz, Location location) {
-        if (clazz == EntityPrimedTNT.class) {
-            Entity e = new EntityPrimedTNT(location.getX(), location.getY(), this);
-            Cancellable cancel = (Cancellable) Pixelate.HANDLER.call(new EventSpawnEntity(e, this));
-            if (cancel.isCancelled()) return null;
-            entities.add(e);
-            return clazz.cast(e);
-        } else if (clazz == EntityMonster.class) {
-            return clazz.cast(spawnMonster(Entity.Type.ZOMBIE, location));
-        } else if (clazz == EntityPlayer.class) {
-            if (entities.stream().anyMatch(e -> e instanceof EntityPlayer)) {
-                return null;
-            }
-            Entity e = new EntityPlayer();
-            Cancellable cancel = (Cancellable) Pixelate.HANDLER.call(new EventSpawnEntity(e, this));
-            if (cancel.isCancelled()) return null;
-            entities.add(e);
-            return clazz.cast(e);
-        } else if (clazz == EntityItem.class) {
-            return clazz.cast(dropItem(new ItemStack(Material.WOOD), location));
-        }
-        return null;
+        if (!hasModule(SpawnModule.class)) return null;
+        return getModule(SpawnModule.class).spawnEntity(clazz, location);
     }
 
     /**
@@ -256,10 +231,8 @@ public class World implements Updateable, Renderable, Module, Modular {
      * @return The dropped item entity, never null
      */
     public EntityItem dropItem(ItemStack item, Vector2 vector) {
-        EntityItem drop = new EntityItem(item);
-        drop.teleport(new Location(vector.getX(), vector.getY(), this));
-        entities.add(drop);
-        return drop;
+        if (!hasModule(SpawnModule.class)) return null;
+        return getModule(SpawnModule.class).dropItem(item, vector);
     }
 
     /**
@@ -270,6 +243,17 @@ public class World implements Updateable, Renderable, Module, Modular {
      */
     public EntityItem dropItem(ItemStack item, Location location) {
         return dropItem(item, location.toVector());
+    }
+
+    /**
+     * Drop multiple items at the requested location
+     * @param drops The items to drop
+     * @param center The center of the requested location
+     * @return The list of dropped item entities, never null
+     */
+    public List<EntityItem> dropItems(List<ItemStack> drops, Location center) {
+        if (!hasModule(SpawnModule.class)) return null;
+        return getModule(SpawnModule.class).dropItems(drops, center);
     }
 
     /**
@@ -334,25 +318,6 @@ public class World implements Updateable, Renderable, Module, Modular {
 
         tile.setMaterial(Material.STONE);
         return drops;
-    }
-
-    /**
-     * Drop multiple items at the requested location
-     * @param drops The items to drop
-     * @param center The center of the requested location
-     * @return The list of dropped item entities, never null
-     */
-    public List<EntityItem> dropItems(List<ItemStack> drops, Location center) {
-        Location loc = center.clone();
-        List<EntityItem> droppedEntities = new ArrayList<>();
-        for (double rad = -Math.PI, i = 0; rad <= Math.PI && i < drops.size(); rad += Math.PI / drops.size(), i++) {
-            ItemStack drop = drops.get((int) i);
-            double x = Math.cos(i) * Tile.SIZE * 0.3;
-            double y = Math.sin(i) * Tile.SIZE * 0.3;
-            droppedEntities.add(dropItem(drop, loc.add(x, y)));
-            loc.subtract(x, y);
-        }
-        return droppedEntities;
     }
 
     /**
@@ -457,5 +422,10 @@ public class World implements Updateable, Renderable, Module, Modular {
             modules.remove(clazz);
         }
         return module;
+    }
+
+    @Override
+    public Collection<Module> getModules() {
+        return modules.values();
     }
 }

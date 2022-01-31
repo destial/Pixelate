@@ -1,5 +1,7 @@
 package xyz.destiall.pixelate.modular;
 
+import java.util.Collection;
+
 /**
  * Written by Rance
  */
@@ -30,4 +32,10 @@ public interface Modular {
      * @return The removed module, null if none
      */
     <N extends Module> N removeModule(Class<N> clazz);
+
+    /**
+     * Get all the modules that is registered in this instance
+     * @return A collection of modules
+     */
+    Collection<Module> getModules();
 }

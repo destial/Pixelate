@@ -167,7 +167,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
             Tile t = newLoc.getTile();
             if (t != null) {
                 Vector2 tile = Screen.convert(t.getVector());
-                screen.quad(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, Color.argb(60, 0, 0, 255));
+                screen.quadRing(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, 2, Color.WHITE);
             }
         }
 
@@ -239,7 +239,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
      */
     public void addXP(int xp) {
         if (exp.addXP(xp)) {
-            location.getWorld().playSound(Sound.SoundType.EXPLOSION, this.getLocation(), 1.0f);
+            World w;
+            if ((w = location.getWorld()) == null) return;
+            w.playSound(Sound.SoundType.ENTITY_ORBPICKUP, this.getLocation(), 1.0f);
         }
     }
 
@@ -259,8 +261,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
         return (float) exp.getXP() / Experience.getRequiredXP(exp.getLevel());
     }
 
-    public int getScore()
-    {
+    /**
+     * Get the current score of this player
+     * @return The score
+     */
+    public int getScore() {
         return score.getScore();
     }
 
@@ -278,7 +283,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         velocity.setY(e.getOffsetY());
         velocity.multiply((Tile.SIZE - 10) / 5f);
     }
-
 
     @EventHandler
     private void onPickUp(EventItemPickup e) {

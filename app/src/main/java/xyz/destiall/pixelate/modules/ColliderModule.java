@@ -58,7 +58,8 @@ public class ColliderModule implements Component<Entity> {
     }
 
     @Override
-    public void setParent(Entity entity) {
+    public ColliderModule setParent(Entity entity) {
         this.entity = entity;
+        return this;
     }
 }

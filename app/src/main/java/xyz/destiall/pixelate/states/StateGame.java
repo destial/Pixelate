@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 
 import xyz.destiall.pixelate.GameSurface;
@@ -166,5 +167,10 @@ public class StateGame extends State implements Modular {
             modules.remove(clazz);
         }
         return module;
+    }
+
+    @Override
+    public Collection<Module> getModules() {
+        return modules.values();
     }
 }
