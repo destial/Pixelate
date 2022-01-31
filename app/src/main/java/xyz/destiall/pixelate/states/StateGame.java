@@ -16,8 +16,10 @@ import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.environment.generator.GeneratorUnderground;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
+import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.settings.Settings;
@@ -66,6 +68,7 @@ public class StateGame extends State implements Modular {
         worldManager.setActive("Overworld");
 
         player = new EntityPlayer();
+
         player.teleport(worldManager.getCurrentWorld().getNearestEmpty(0, 0));
         worldManager.getCurrentWorld().getEntities().add(player);
 

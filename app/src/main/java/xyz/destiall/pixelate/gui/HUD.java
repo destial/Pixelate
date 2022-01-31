@@ -100,10 +100,10 @@ public class HUD implements Updateable, Renderable, Listener {
 
     public void setEnchantingTable(EnchantTableTile tile, PlayerInventory playerInventory) {
         if (playerInventory == null) {
-            if (craftingTable != null) {
-                craftingTable.destroy();
-                craftingTable = null;
+            if (enchantingTable != null) {
+                enchantingTable.destroy();
             }
+            enchantingTable = null;
             displayType = DisplayType.GAME_VIEW;
             return;
         }
@@ -193,9 +193,8 @@ public class HUD implements Updateable, Renderable, Listener {
     }
 
     public void setAnvilDisplay(PlayerInventory playerInventory, AnvilTile tile) {
-        if (playerInventory == null || tile == null)
-        {
-            if(anvil != null) anvil.destroy();
+        if (playerInventory == null || tile == null) {
+            if (anvil != null) anvil.destroy();
             anvil = null;
             displayType = DisplayType.GAME_VIEW;
             return;

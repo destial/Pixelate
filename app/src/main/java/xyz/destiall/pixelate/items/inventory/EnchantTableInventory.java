@@ -18,21 +18,24 @@ public class EnchantTableInventory extends Inventory {
 
     public EnchantTableInventory() {
         generatedEnchantments = new HashMap<>();
+        items = new ItemStack[0];
     }
 
     @Override
     public void removeItem(ItemStack item) {
         if (item == null) return;
-        if (item.equals(enchantSlot)) {
+        if (item == enchantSlot) {
             enchantSlot = null;
         }
-        if (item.equals(lapisSlot)) {
+        if (item == lapisSlot) {
             lapisSlot = null;
         }
     }
 
-    public Map<Enchantment, Integer> generateEnchantments(Tile tile, ItemStack itemStack) {
-        if (generatedEnchantments.containsKey(itemStack)) return generatedEnchantments.get(itemStack);
+    public Map<Enchantment, Integer> generateEnchantments(Tile tile) {
+        if (enchantSlot == null || lapisSlot == null) return null;
+        if (enchantSlot.getItemMeta().isEnchanted()) return null;
+        if (generatedEnchantments.containsKey(enchantSlot)) return generatedEnchantments.get(enchantSlot);
         int bookshelves = 0;
         Location location = tile.getLocation();
         World w;
@@ -48,40 +51,42 @@ public class EnchantTableInventory extends Inventory {
             }
         }
         Map<Enchantment, Integer> enchantment = new HashMap<>();
-        if (itemStack.getType().getToolType() == ToolType.AXE) {
+        if (enchantSlot.getType().getToolType() == ToolType.AXE) {
             enchantment.put(Enchantment.DIG_SPEED, Math.min(bookshelves + 1, Enchantment.DIG_SPEED.getMaxLevel()));
             enchantment.put(Enchantment.DURABILITY, Math.min(bookshelves + 1, Enchantment.DURABILITY.getMaxLevel()));
             enchantment.put(Enchantment.DAMAGE_ALL, Math.min(bookshelves + 1, Enchantment.DAMAGE_ALL.getMaxLevel()));
-        } else if (itemStack.getType().getToolType() == ToolType.PICKAXE) {
+        } else if (enchantSlot.getType().getToolType() == ToolType.PICKAXE) {
             enchantment.put(Enchantment.DIG_SPEED, Math.min(bookshelves + 1, Enchantment.DIG_SPEED.getMaxLevel()));
             enchantment.put(Enchantment.DURABILITY, Math.min(bookshelves + 1, Enchantment.DURABILITY.getMaxLevel()));
             enchantment.put(Enchantment.FORTUNE, Math.min(bookshelves + 1, Enchantment.FORTUNE.getMaxLevel()));
-        } else if (itemStack.getType().getToolType() == ToolType.SWORD) {
+        } else if (enchantSlot.getType().getToolType() == ToolType.SWORD) {
             enchantment.put(Enchantment.DURABILITY, Math.min(bookshelves + 1, Enchantment.DURABILITY.getMaxLevel()));
             enchantment.put(Enchantment.DAMAGE_ALL, Math.min(bookshelves + 1, Enchantment.DAMAGE_ALL.getMaxLevel()));
-        } else if (itemStack.getType().getToolType() == ToolType.SHOVEL) {
+        } else if (enchantSlot.getType().getToolType() == ToolType.SHOVEL) {
             enchantment.put(Enchantment.DIG_SPEED, Math.min(bookshelves + 1, Enchantment.DIG_SPEED.getMaxLevel()));
             enchantment.put(Enchantment.DURABILITY, Math.min(bookshelves + 1, Enchantment.DURABILITY.getMaxLevel()));;
         } else {
             return null;
         }
-        generatedEnchantments.put(itemStack, enchantment);
-        setEnchantSlot(itemStack);
+        generatedEnchantments.put(enchantSlot, enchantment);
         return enchantment;
     }
 
     public void enchant(Map.Entry<Enchantment, Integer> enchantment) {
         if (this.enchantSlot == null || this.lapisSlot == null) return;
         enchantSlot.getItemMeta().addEnchantment(enchantment.getKey(), enchantment.getValue());
-        this.lapisSlot.removeAmount(1);
+        lapisSlot.removeAmount(1);
+        generatedEnchantments.remove(enchantSlot);
     }
 
     public void setEnchantSlot(ItemStack slot) {
         enchantSlot = slot;
+        setItemStackInventory(enchantSlot, this);
     }
 
-    public void setLapisSlot(ItemStack lapisSlot) {
-        this.lapisSlot = lapisSlot;
+    public void setLapisSlot(ItemStack slot) {
+        this.lapisSlot = slot;
+        setItemStackInventory(lapisSlot, this);
     }
 
     public ItemStack getEnchantSlot() {

@@ -61,8 +61,7 @@ public abstract class Inventory {
             inventoryFieldItemStack.setAccessible(true);
             inventoryFieldItemStack.set(item, inventory);
             inventoryFieldItemStack.setAccessible(false);
-        } catch (Exception e) {
-            // e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 }

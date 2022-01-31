@@ -36,7 +36,21 @@ public class AnvilInventory extends Inventory {
     public ItemStack getAdditiveSlot() { return additive; }
     public ItemStack getResultSlot() { return result; }
 
-    public void setRepairItemSlot(ItemStack item) { repairItem = item; }
-    public void setAdditive(ItemStack item) { additive = item; }
-    public void setResultSlot(ItemStack item) { result = item; }
+    public void setRepairItemSlot(ItemStack item) {
+        if (item != null)
+            setItemStackInventory(item, this);
+        repairItem = item;
+    }
+
+    public void setAdditive(ItemStack item) {
+        if (item != null)
+            setItemStackInventory(item, this);
+        additive = item;
+    }
+
+    public void setResultSlot(ItemStack item) {
+        if (item != null)
+            setItemStackInventory(item, this);
+        result = item;
+    }
 }

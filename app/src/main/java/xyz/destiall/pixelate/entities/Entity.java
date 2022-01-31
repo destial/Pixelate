@@ -3,6 +3,7 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import xyz.destiall.pixelate.R;
@@ -237,5 +238,10 @@ public abstract class Entity implements Updateable, Renderable, Modular {
             modules.remove(clazz);
         }
         return module;
+    }
+
+    @Override
+    public Collection<Module> getModules() {
+        return modules.values();
     }
 }

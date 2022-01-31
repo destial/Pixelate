@@ -16,12 +16,11 @@ public class Experience {
         if (xp > 0) {
             int reqXP = getRequiredXP(level);
             this.xp += xp;
-            if(this.xp > reqXP)
-            {
+            while (this.xp > reqXP) {
                 this.xp -= reqXP;
                 this.level += 1;
-                return true;
             }
+            return true;
         }
         return false;
     }

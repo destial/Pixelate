@@ -56,6 +56,7 @@ public class ItemStack {
      * @param amount The amount to add
      */
     public void addAmount(int amount) {
+        if (amount <= 0) return;
         this.amount += amount;
     }
 
@@ -65,7 +66,7 @@ public class ItemStack {
      * @param amount The amount to remove
      */
     public void removeAmount(int amount) {
-        if (amount == 0) return;
+        if (amount <= 0) return;
         this.amount -= amount;
         if (this.amount <= 0) removeFromInventory();
     }

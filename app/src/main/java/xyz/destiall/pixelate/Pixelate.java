@@ -21,6 +21,7 @@ import xyz.destiall.pixelate.commands.executors.KillCommand;
 import xyz.destiall.pixelate.commands.executors.SettingsCommand;
 import xyz.destiall.pixelate.commands.executors.SpawnCommand;
 import xyz.destiall.pixelate.commands.executors.SummonCommand;
+import xyz.destiall.pixelate.commands.executors.XPCommand;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.WorldManager;
@@ -204,8 +205,10 @@ public class Pixelate extends Thread {
         commandMap.registerCommand("item", new ItemCommand());
         commandMap.registerCommand("enchant", new EnchantCommand());
         commandMap.registerCommand("kill", new KillCommand());
+        commandMap.registerCommand("xp", new XPCommand());
     }
 
+    // Every single crafting recipes including their shape and order
     private static void setupRecipes() {
         Recipe plankRecipe = new Recipe("plank1", new ItemStack(Material.PLANKS, 4));
         plankRecipe.setShape("W");
@@ -542,5 +545,57 @@ public class Pixelate extends Thread {
                 "I", "I", "I");
         lapisBlock.setIngredient("I", Material.LAPIS);
         recipeManager.addRecipe(lapisBlock);
+
+        Recipe book = new Recipe("book1", new ItemStack(Material.BOOK));
+        book.setShape("F", "B", "F");
+        book.setIngredient("F", Material.ROTTEN_FLESH);
+        book.setIngredient("B", Material.BONE);
+        recipeManager.addRecipe(book);
+
+        book = new Recipe("book2", new ItemStack(Material.BOOK));
+        book.setShape(null, null, null,
+                "F", "B", "F");
+        book.setIngredient("F", Material.ROTTEN_FLESH);
+        book.setIngredient("B", Material.BONE);
+        recipeManager.addRecipe(book);
+
+        book = new Recipe("book3", new ItemStack(Material.BOOK));
+        book.setShape(
+                null, null, null,
+                null, null, null,
+                "F", "B", "F");
+        book.setIngredient("F", Material.ROTTEN_FLESH);
+        book.setIngredient("B", Material.BONE);
+        recipeManager.addRecipe(book);
+
+        Recipe bookShelf = new Recipe("bookshelf", new ItemStack(Material.BOOKSHELF));
+        bookShelf.setShape(
+                "W", "W", "W",
+                "B", "B", "B",
+                "W", "W", "W");
+        bookShelf.setIngredient("W", Material.PLANKS);
+        bookShelf.setIngredient("B", Material.BOOK);
+        recipeManager.addRecipe(bookShelf);
+
+        Recipe enchantTable = new Recipe("enchant_table", new ItemStack(Material.ENCHANT_TABLE));
+        enchantTable.setShape(
+                null, "B", null,
+                "D", "S", "D",
+                "S", "S", "S"
+        );
+        enchantTable.setIngredient("B", Material.BOOK);
+        enchantTable.setIngredient("D", Material.DIAMOND);
+        enchantTable.setIngredient("S", Material.COBBLESTONE);
+        recipeManager.addRecipe(enchantTable);
+
+        Recipe anvil = new Recipe("anvil", new ItemStack(Material.ANVIL));
+        anvil.setShape(
+                "B", "B", "B",
+                null, "I", null,
+                "I", "I", "I"
+        );
+        anvil.setIngredient("B", Material.IRON_BLOCK);
+        anvil.setIngredient("I", Material.IRON_INGOT);
+        recipeManager.addRecipe(anvil);
     }
 }

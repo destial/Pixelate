@@ -24,7 +24,7 @@ public enum Material {
     FURNACE(0, 5, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
     CHEST(0, 6, Tile.TileType.FOREGROUND, 5.5f, ToolType.AXE, true),
     WORKBENCH(3, 3, Tile.TileType.FOREGROUND, 3f, ToolType.AXE),
-    ENCHANT_TABLE(0, 7, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
+    ENCHANT_TABLE(0, 8, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
     ANVIL(0, 7, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
 
     PURPLE_WOOL(1,0, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
