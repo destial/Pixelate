@@ -3,6 +3,7 @@ package xyz.destiall.pixelate.entities;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import xyz.destiall.pixelate.R;
@@ -166,7 +167,7 @@ public abstract class Entity implements Updateable, Renderable, Modular {
         Vector2 offset = Screen.convert(location.toVector());
         screen.draw(map, offset.getX(), offset.getY());
 
-        if (Settings.ENABLE_HITBOXES)
+        if (Settings.HITBOXES)
             screen.quadRing(offset.getX(), offset.getY(), map.getWidth(), map.getHeight(), 5f, Color.WHITE);
     }
 
@@ -237,5 +238,10 @@ public abstract class Entity implements Updateable, Renderable, Modular {
             modules.remove(clazz);
         }
         return module;
+    }
+
+    @Override
+    public Collection<Module> getModules() {
+        return modules.values();
     }
 }

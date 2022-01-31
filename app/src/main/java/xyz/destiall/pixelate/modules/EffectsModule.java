@@ -21,11 +21,6 @@ public class EffectsModule implements Renderable, Component<World> {
         effects = new LinkedList<>();
     }
 
-    public EffectsModule setWorld(World world) {
-        this.world = world;
-        return this;
-    }
-
     /**
      * Play a particle effect at the requested location
      * @param type The particle type
@@ -71,7 +66,8 @@ public class EffectsModule implements Renderable, Component<World> {
     }
 
     @Override
-    public void setParent(World world) {
+    public EffectsModule setParent(World world) {
         this.world = world;
+        return this;
     }
 }

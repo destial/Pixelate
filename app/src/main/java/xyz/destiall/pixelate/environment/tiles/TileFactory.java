@@ -4,6 +4,7 @@ import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
 import xyz.destiall.pixelate.environment.tiles.containers.ChestTile;
+import xyz.destiall.pixelate.environment.tiles.containers.EnchantTableTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 
 /**
@@ -23,19 +24,16 @@ public class TileFactory {
         Tile t;
         if (mat == Material.FURNACE) {
             t = new FurnanceTile(x, y, world);
-            t.setWorld(world);
-            return t;
         } else if (mat == Material.CHEST) {
             t = new ChestTile(x, y, world);
-            t.setWorld(world);
             return t;
-        } else if (mat == Material.ANVIL)
-        {
+        } else if (mat == Material.ENCHANT_TABLE) {
+            t = new EnchantTableTile(x, y, world);
+        } else if (mat == Material.ANVIL) {
             t = new AnvilTile(x,y, world);
-            t.setWorld(world);
-            return t;
+        } else {
+            t = new Tile(x, y, mat, world, mat.getTileType());
         }
-        t = new Tile(x, y, mat, world, mat.getTileType());
         t.setWorld(world);
         return t;
     }

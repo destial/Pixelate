@@ -26,9 +26,23 @@ public interface ItemMeta {
      */
     boolean hasDisplayName();
 
-    List<String> getLore();
+    /**
+     * If this item has lores set
+     * @return true if not null and not empty, otherwise false
+     */
     boolean hasLore();
+
+    /**
+     * Set the lore of this item
+     * @param lore The lore
+     */
     void setLore(List<String> lore);
+
+    /**
+     * Get the lore of this item
+     * @return The lore, possible null
+     */
+    List<String> getLore();
 
     /**
      * Set this item to be unbreakable

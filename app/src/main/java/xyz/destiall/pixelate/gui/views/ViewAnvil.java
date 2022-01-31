@@ -29,7 +29,7 @@ import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
- * Written by Rance & Yong Hong
+ * Written by Yong Hong
  */
 public class ViewAnvil implements View {
     private final Map<Integer, AABB> positions;
@@ -259,7 +259,7 @@ public class ViewAnvil implements View {
                 return;
             }
             if (isOnExit(x, y)) {
-                HUD.INSTANCE.setAnvilDisplay(null, null);
+                Pixelate.getHud().setAnvilDisplay(null, null);
             }
             return;
         }

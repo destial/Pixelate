@@ -15,12 +15,12 @@ import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.crafting.Recipe;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.timer.Timer;
 import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
@@ -39,6 +39,8 @@ public class ViewInventory implements View {
     private int draggingSlot;
     private int draggingX;
     private int draggingY;
+    private float splitTimer;
+    private int splitSlot;
 
     public ViewInventory(PlayerInventory playerInventory) {
         this.playerInventory = playerInventory;
@@ -49,12 +51,15 @@ public class ViewInventory implements View {
         positions = new HashMap<>();
         images = new HashMap<>();
         Pixelate.HANDLER.registerListener(this);
+        splitTimer = -1;
+        splitSlot = -1;
     }
 
     @Override
     public void render(Screen screen) {
         screen.circle(exitButton.getX(), exitButton.getY(), exitButtonRadius, Color.RED);
         int startingCrafting = Pixelate.WIDTH / 3 - image.getWidth();
+        boolean hasDraggingBeenRendered = false;
         int a = 0;
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
@@ -74,7 +79,7 @@ public class ViewInventory implements View {
                     if (item == dragging) {
                         drawX = (int) (draggingX - image.getWidth() / 2f);
                         drawY = (int) (draggingY - image.getHeight() / 2f);
-
+                        hasDraggingBeenRendered = true;
                         ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
                     } else {
                         drawX = posX + 15;
@@ -103,7 +108,7 @@ public class ViewInventory implements View {
         screen.draw(image, cOutX, cOutY);
         for (Recipe recipe : Pixelate.getRecipeManager().getRecipes()) {
             if (recipe.isFulfilled(playerInventory.getCrafting())) {
-                ItemStack item = recipe.getItem();
+                ItemStack item = recipe.getResult();
                 Bitmap image;
                 if (images.containsKey(item.getType())) {
                     image = images.get(item.getType());
@@ -140,15 +145,19 @@ public class ViewInventory implements View {
                         drawX = (int) (draggingX - image.getWidth() / 2f);
                         drawY = (int) (draggingY - image.getHeight() / 2f);
                         ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, item);
+                        hasDraggingBeenRendered = true;
                     }
                     screen.draw(image, drawX, drawY);
                     if (item.getAmount() > 1) {
-                        screen.text(""+item.getAmount(),
+                        screen.text("" + item.getAmount(),
                                 drawX + this.image.getWidth() / 2f,
                                 drawY + this.image.getHeight() / 2f,
                                 40, Color.WHITE);
                     }
                     ItemStack.renderInventory(screen, item, drawX, drawY);
+                    if (splitSlot == i) {
+                        screen.bar(drawX, drawY, this.image.getWidth(), this.image.getHeight(), Color.alpha(Color.WHITE), Color.argb(100, 255, 255, 255), splitTimer);
+                    }
                 }
                 if (!positions.containsKey(i)) {
                     positions.put(i, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
@@ -156,11 +165,43 @@ public class ViewInventory implements View {
                 i++;
             }
         }
+
+        if (!hasDraggingBeenRendered && dragging != null) {
+            int drawX = (int) (draggingX - image.getWidth() / 2f);
+            int drawY = (int) (draggingY - image.getHeight() / 2f);
+            ViewUtils.displayItemDescription(screen, this.image, drawX, drawY, dragging);
+            screen.draw(dragging.getImage(), drawX, drawY);
+            if (dragging.getAmount() > 1) {
+                screen.text("" + dragging.getAmount(),
+                        drawX + this.image.getWidth() / 2f,
+                        drawY + this.image.getHeight() / 2f,
+                        40, Color.WHITE);
+            }
+        }
     }
 
     @Override
     public void update() {
         Glint.INSTANCE.update();
+        if (splitTimer != -1) {
+            splitTimer += Timer.getDeltaTime();
+        }
+
+        if (splitTimer >= 1) {
+            ItemStack split = splitSlot >= playerInventory.getSize() ? playerInventory.getCraftingItem(playerInventory.getSize() - splitSlot) : playerInventory.getItem(splitSlot);
+            if (split != null) {
+                int remove = split.getAmount() / 2;
+                split.removeAmount(remove);
+                dragging = split.cloneItem();
+                dragging.setAmount(remove);
+                AABB aabb = positions.get(splitSlot);
+                draggingX = (int) (aabb.getMin().getX() + this.image.getWidth() / 2f);
+                draggingY = (int) (aabb.getMin().getY() + this.image.getHeight() / 2f);
+                draggingSlot = -1;
+                splitTimer = -1;
+                //splitSlot = -1;
+            }
+        }
     }
 
     @EventHandler
@@ -173,7 +214,7 @@ public class ViewInventory implements View {
                 for (Recipe recipe : Pixelate.getRecipeManager().getRecipes()) {
                     if (recipe.isFulfilled(playerInventory.getCrafting())) {
                         //playerInventory.setItem(draggingSlot, null);
-                        if (playerInventory.addItem(recipe.getItem())) {
+                        if (playerInventory.addItem(recipe.getResult())) {
                             for (int i = 0; i < 4; i++) {
                                 ItemStack item = playerInventory.getCraftingItem(i);
                                 if (item == null) continue;
@@ -191,11 +232,17 @@ public class ViewInventory implements View {
                     playerInventory.addItem(crafting);
                 }
                 playerInventory.clearCrafting();
-                HUD.INSTANCE.setInventory(null);
+                Pixelate.getHud().setInventory(null);
             }
-            return;
-        }
-        if (e.getAction() == ControlEvent.Action.MOVE) {
+            if (slot != -1 && dragging == null) {
+                ItemStack item = getItem(x, y);
+                if (item != null && item.getAmount() > 1 && dragging == null) {
+                    splitTimer = 0;
+                    splitSlot = slot;
+                }
+            }
+        } else if (e.getAction() == ControlEvent.Action.MOVE) {
+            splitTimer = -1;
             if (dragging != null) {
                 draggingX = (int) x;
                 draggingY = (int) y;
@@ -211,35 +258,44 @@ public class ViewInventory implements View {
                     }
                 }
             }
-            return;
-        }
-        if (e.getAction() == ControlEvent.Action.UP) {
+        } else if (e.getAction() == ControlEvent.Action.UP) {
+            splitTimer = -1;
             if (dragging != null) {
                 int slot = getSlot(x, y);
                 if (slot == -1 || slot == 100 || slot == draggingSlot) {
+                    if (dragging != null && draggingSlot == -1) {
+                        ItemStack item = splitSlot >= playerInventory.getSize() ? playerInventory.getCraftingItem(playerInventory.getSize() - splitSlot) : playerInventory.getItem(splitSlot);
+                        item.addAmount(dragging.getAmount());
+                    }
                     dragging = null;
                     return;
                 }
                 ItemStack itemStack = getItem(x, y);
                 if (slot >= playerInventory.getSize()) {
-                    if (draggingSlot >= playerInventory.getSize()) {
-                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
-                    } else {
-                        playerInventory.setItem(draggingSlot, null);
+                    if (draggingSlot != -1) {
+                        if (draggingSlot >= playerInventory.getSize()) {
+                            playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
+                        } else {
+                            playerInventory.setItem(draggingSlot, null);
+                        }
                     }
                     playerInventory.setCrafting(slot - playerInventory.getSize(), dragging);
                 } else if (itemStack == null) {
-                    if (draggingSlot >= playerInventory.getSize()) {
-                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
-                    } else {
-                        playerInventory.setItem(draggingSlot, null);
+                    if (draggingSlot != -1) {
+                        if (draggingSlot >= playerInventory.getSize()) {
+                            playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
+                        } else {
+                            playerInventory.setItem(draggingSlot, null);
+                        }
                     }
                     playerInventory.setItem(slot, dragging);
                 } else if (itemStack.similar(dragging)) {
-                    if (draggingSlot >= playerInventory.getSize()) {
-                        playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
-                    } else {
-                        playerInventory.setItem(draggingSlot, null);
+                    if (draggingSlot != -1) {
+                        if (draggingSlot >= playerInventory.getSize()) {
+                            playerInventory.setCrafting(draggingSlot - playerInventory.getSize(), null);
+                        } else {
+                            playerInventory.setItem(draggingSlot, null);
+                        }
                     }
                     itemStack.addAmount(dragging.getAmount());
                 }

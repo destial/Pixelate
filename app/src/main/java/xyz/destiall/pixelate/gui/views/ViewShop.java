@@ -17,7 +17,6 @@ import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.gui.buttons.Button;
 import xyz.destiall.pixelate.gui.buttons.CircleButton;
 import xyz.destiall.pixelate.gui.buttons.ImageButton;
@@ -64,7 +63,7 @@ public class ViewShop implements View, Listener {
 
         ImageButton button = new ImageButton(R.drawable.backarrow, new Vector2(Pixelate.WIDTH * 0.8, Pixelate.HEIGHT * 0.17), 0.1f);
         button.onTap(() -> {
-            HUD.INSTANCE.returnToGame();
+            Pixelate.getHud().returnToGame();
         });
         buttons.add(button);
 

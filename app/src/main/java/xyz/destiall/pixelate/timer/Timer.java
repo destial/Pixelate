@@ -66,4 +66,12 @@ public class Timer implements Updateable {
     public static double getElapsedTime() {
         return elapsedTime;
     }
+
+    /**
+     * If 1 second has passed since the last second
+     * @return If 1 second has passed since the last second
+     */
+    public static boolean isSecond() {
+        return isSecond;
+    }
 }

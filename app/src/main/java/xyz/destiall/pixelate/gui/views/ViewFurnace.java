@@ -17,7 +17,6 @@ import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
@@ -239,7 +238,7 @@ public class ViewFurnace implements View {
                 return;
             }
             if (isOnExit(x, y)) {
-                HUD.INSTANCE.setFurnaceDisplay(null, null);
+                Pixelate.getHud().setFurnaceDisplay(null, null);
             }
             return;
         }

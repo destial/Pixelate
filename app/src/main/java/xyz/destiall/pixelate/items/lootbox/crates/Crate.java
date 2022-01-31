@@ -22,27 +22,21 @@ public class Crate implements Renderable, Updateable {
         DIAMOND,
         PIXELPOINT,
     }
+    protected final Reward[] rollingAnimation = new Reward[5];
+    protected final Vector2 screenOrigin;
+    protected final String crateName;
 
     protected RewardTable rewardsTable;
     protected Bitmap crateImage;
-    private final String crateName;
-
     protected boolean currentlyRolling;
-
     protected float animDuration;
     protected float animTimeLeft;
-
     protected float animSpeed;
     protected float animNextCD;
-
     protected float animDurationDrag;
     protected float animDurationDragTimeLeft;
-    Reward[] rollingAnimation = new Reward[5];
-
-    Vector2 screenOrigin;
-
-    int cost;
-    CostType costType;
+    public int cost;
+    public CostType costType;
 
     protected Crate(String crateName, Vector2 screenOrigin) {
         this.crateName = crateName;
@@ -125,7 +119,6 @@ public class Crate implements Renderable, Updateable {
                     finalReward.applyRewards();
                 }
             }
-
         }
     }
 
@@ -160,9 +153,6 @@ public class Crate implements Renderable, Updateable {
             }
             return true;
         }
-
         return false;
     }
-
-
 }

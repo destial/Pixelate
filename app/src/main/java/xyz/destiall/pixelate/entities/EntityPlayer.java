@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -19,6 +20,7 @@ import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
+import xyz.destiall.pixelate.environment.tiles.containers.EnchantTableTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.controls.EventChat;
 import xyz.destiall.pixelate.events.controls.EventJoystick;
@@ -36,7 +38,6 @@ import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
 import xyz.destiall.pixelate.items.inventory.AnvilInventory;
@@ -45,6 +46,7 @@ import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
+import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
@@ -97,8 +99,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
         gamemode = Gamemode.SURVIVAL;
     }
 
-    public void setPlayerBitmap(Bitmap image)
-    {
+    /**
+     * Set the skin of the player
+     * @param image The sprite image to use
+     */
+    public void setSkin(Bitmap image) {
         spriteSheet = new SpriteSheet();
         spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0));
         spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1));
@@ -123,12 +128,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     @Override
     public void die() {
-        HUD.INSTANCE.setRespawnMenu();
-        List<ItemStack> items = new ArrayList<ItemStack>();
-        items = Arrays.asList(inventory.getItems().clone());
-        List<ItemStack> toDrop = new ArrayList<ItemStack>();
-        for(ItemStack item : items)
-            if(item != null) toDrop.add(item);
+        Pixelate.getHud().setRespawnMenu();
+        List<ItemStack> toDrop = new ArrayList<>(Arrays.asList(inventory.getItems().clone()));
         inventory.clear();
         World w;
         if ((w = location.getWorld()) != null) w.dropItems(toDrop, location);
@@ -138,8 +139,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
         score.clearScore();
     }
 
-    public void respawn()
-    {
+    public void respawn() {
         World w;
         if ((w = location.getWorld()) != null) teleport(w.getNearestEmpty(0, 0));
         health = 20.f;
@@ -173,15 +173,15 @@ public class EntityPlayer extends EntityLiving implements Listener {
         Location newLoc = location.clone().add(Tile.SIZE * 0.5 + target.getVector().getX() * Tile.SIZE, Tile.SIZE * 0.5 + target.getVector().getY() * Tile.SIZE);
         Vector2 vector = Screen.convert(newLoc);
 
-        if (Settings.ENABLE_BLOCK_TRACE) {
+        if (Settings.BLOCKTRACE) {
             Tile t = newLoc.getTile();
             if (t != null) {
                 Vector2 tile = Screen.convert(t.getVector());
-                screen.quad(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, Color.argb(60, 0, 0, 255));
+                screen.quadRing(tile.getX(), tile.getY(), Tile.SIZE, Tile.SIZE, 2, Color.WHITE);
             }
         }
 
-        if (Settings.ENABLE_CROSSHAIR)
+        if (Settings.CROSSHAIR)
             screen.draw(crosshair, vector.getX(), vector.getY());
 
         if (playSwingAnimation) {
@@ -240,7 +240,7 @@ public class EntityPlayer extends EntityLiving implements Listener {
      * @return The item in hand, or null if none
      */
     public ItemStack getItemInHand() {
-        return getInventory().getItem(HUD.INSTANCE.getHotbar().getCurrentSlot());
+        return getInventory().getItem(Pixelate.getHud().getHotbar().getCurrentSlot());
     }
 
     /**
@@ -249,7 +249,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
      */
     public void addXP(int xp) {
         if (exp.addXP(xp)) {
-            location.getWorld().playSound(Sound.SoundType.EXPLOSION, this.getLocation(), 1.0f);
+            World w;
+            if ((w = location.getWorld()) == null) return;
+            w.playSound(Sound.SoundType.ENTITY_ORBPICKUP, this.getLocation(), 1.0f);
         }
     }
 
@@ -269,8 +271,11 @@ public class EntityPlayer extends EntityLiving implements Listener {
         return (float) exp.getXP() / Experience.getRequiredXP(exp.getLevel());
     }
 
-    public int getScore()
-    {
+    /**
+     * Get the current score of this player
+     * @return The score
+     */
+    public int getScore() {
         return score.getScore();
     }
 
@@ -288,7 +293,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         velocity.setY(e.getOffsetY());
         velocity.multiply((Tile.SIZE - 10) / 5f);
     }
-
 
     @EventHandler
     private void onPickUp(EventItemPickup e) {
@@ -356,39 +360,44 @@ public class EntityPlayer extends EntityLiving implements Listener {
         float timeRelative = bbProgress / 100.0f * bbDuration;
         timeRelative += Timer.getDeltaTime();
         float bbProgressDiff = timeRelative / bbDuration * 100 - bbProgress;
+        if (gamemode == Gamemode.CREATIVE) {
+            bbProgressDiff = 500;
+        }
         if (tile.addBlockBreakProgression(bbProgressDiff)) {
-            int luck = 0;
-            ItemStack hand = getItemInHand();
-            if (hand.getType().isTool()) {
-                int use = 1;
-                ItemMeta meta = hand.getItemMeta();
-                if (meta.hasEnchantment(Enchantment.DURABILITY)) {
-                    use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
-                    if (use > 1) {
-                        use = 0;
+            if (gamemode != Gamemode.CREATIVE) {
+                int luck = 0;
+                ItemStack hand = getItemInHand();
+                if (hand.getType().isTool()) {
+                    int use = 1;
+                    ItemMeta meta = hand.getItemMeta();
+                    if (meta.hasEnchantment(Enchantment.DURABILITY)) {
+                        use = new Random().nextInt(meta.getEnchantLevel(Enchantment.DURABILITY));
+                        if (use > 1) {
+                            use = 0;
+                        }
+                    }
+                    if (meta.hasEnchantment(Enchantment.FORTUNE)) {
+                        luck = meta.getEnchantLevel(Enchantment.FORTUNE);
+                    }
+                    meta.setDurability(hand.getItemMeta().getDurability() + use);
+                    if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                        hand.setAmount(0);
+                    }
+                    meta.setDurability(hand.getItemMeta().getDurability() + use);
+                    if (meta.getDurability() >= hand.getType().getMaxDurability()) {
+                        hand.setAmount(0);
                     }
                 }
-                if (meta.hasEnchantment(Enchantment.FORTUNE)) {
-                    luck = meta.getEnchantLevel(Enchantment.FORTUNE);
-                }
-                meta.setDurability(hand.getItemMeta().getDurability() + use);
-                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
-                    hand.setAmount(0);
-                }
-                meta.setDurability(hand.getItemMeta().getDurability() + use);
-                if (meta.getDurability() >= hand.getType().getMaxDurability()) {
-                    hand.setAmount(0);
-                }
+                //XP Drops
+                int xpDrop = LootTable.getInstance().getXPDrops(mat, luck);
+                if (exp.addXP(xpDrop))
+                    w.playSound(Sound.SoundType.ENTITY_LEVELUP, this.getLocation(), 1.0f);
+                score.addScore(ScoreType.GATHER_XP, xpDrop);
+                if (xpDrop > 0)
+                    w.playSound(Sound.SoundType.ENTITY_ORBPICKUP, this.getLocation(), 0.5f);
+                //Add to score
+                score.addScore(ScoreType.BREAK_ORE, 1);
             }
-            //XP Drops
-            int xpDrop = LootTable.getInstance().getXPDrops(mat, luck);
-            if(exp.addXP(xpDrop)) w.playSound(Sound.SoundType.ENTITY_LEVELUP, this.getLocation(), 1.0f);
-            score.addScore(ScoreType.GATHER_XP, xpDrop);
-            if(xpDrop > 0)
-                w.playSound(Sound.SoundType.ENTITY_ORBPICKUP, this.getLocation(), 0.5f);
-
-            //Add to score
-            score.addScore(ScoreType.BREAK_ORE, 1);
         }
     }
 
@@ -405,15 +414,17 @@ public class EntityPlayer extends EntityLiving implements Listener {
             Pixelate.HANDLER.call(ev);
             if (ev.isCancelled()) return;
             if (tile.getMaterial() == Material.FURNACE) {
+                Pixelate.getHud().setFurnaceDisplay(getInventory(), (FurnanceTile) container);
                 FurnaceInventory furnaceInventory = (FurnaceInventory) container.getInventory();
-                HUD.INSTANCE.setFurnaceDisplay(getInventory(), (FurnanceTile) container);
+                Pixelate.getHud().setFurnaceDisplay(getInventory(), (FurnanceTile) container);
             }else if (tile.getMaterial() == Material.ANVIL)
             {
                 AnvilInventory anvilInventory = (AnvilInventory) container.getInventory();
-                HUD.INSTANCE.setAnvilDisplay(getInventory(), (AnvilTile) container);
+                Pixelate.getHud().setAnvilDisplay(getInventory(), (AnvilTile) container);
             } else if (tile.getMaterial() == Material.CHEST) {
-                ChestInventory chestInventory = (ChestInventory) container.getInventory();
-                HUD.INSTANCE.setChestDisplay(getInventory(), chestInventory);
+                Pixelate.getHud().setChestDisplay(getInventory(), (ChestInventory) container.getInventory());
+            } else if (tile.getMaterial() == Material.ENCHANT_TABLE) {
+                Pixelate.getHud().setEnchantingTable((EnchantTableTile) tile, getInventory());
             }
         } else if (tile.getMaterial() == Material.TNT) {
             tile.setMaterial(Material.STONE);
@@ -422,6 +433,8 @@ public class EntityPlayer extends EntityLiving implements Listener {
             Pixelate.HANDLER.call(ev);
             if (ev.isCancelled()) return;
             w.spawnEntity(EntityPrimedTNT.class, location.add(Tile.SIZE * 0.25, Tile.SIZE * 0.25));
+        } else if (tile.getMaterial() == Material.WORKBENCH) {
+            Pixelate.getHud().setCraftingTable(getInventory());
         } else if (current != null && current.getType().isBlock()) {
             if (tile.getTileType() != Tile.TileType.FOREGROUND && !w.findTiles(collision).contains(tile)) {
                 EventTilePlace ev = new EventTilePlace(this, tile, current.getType());
@@ -436,9 +449,9 @@ public class EntityPlayer extends EntityLiving implements Listener {
     @EventHandler(priority = EventHandler.Priority.HIGHEST)
     private void onOpenInventory(EventOpenInventory e) {
         if (gamemode == Gamemode.CREATIVE) {
-            HUD.INSTANCE.setCreative(getInventory());
+            Pixelate.getHud().setCreative(getInventory());
         } else {
-            HUD.INSTANCE.setInventory(getInventory());
+            Pixelate.getHud().setInventory(getInventory());
         }
     }
 }

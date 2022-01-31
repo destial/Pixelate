@@ -12,36 +12,31 @@ import xyz.destiall.pixelate.states.StateGame;
  * Written By Yong Hong
  */
 public class Reward {
-
     public enum RewardType {
         SKIN,
     }
 
-    Bitmap rewardImage;
-    final int rewardCount;
-    final String rewardName;
-    final RewardType rewardType;
+    private final Bitmap rewardImage;
+    private final int rewardCount;
+    private final String rewardName;
+    private final RewardType rewardType;
 
-    public Reward(Bitmap map, int rewardCount, RewardType rewardType, String rewardName)
-    {
+    public Reward(Bitmap map, int rewardCount, RewardType rewardType, String rewardName) {
         this.rewardImage = map;
         this.rewardCount = rewardCount;
         this.rewardName = rewardName;
         this.rewardType = rewardType;
     }
 
-    public Bitmap getRewardImage()
-    {
+    public Bitmap getRewardImage() {
         return rewardImage;
     }
 
-    public String getRewardName()
-    {
+    public String getRewardName() {
         return rewardName;
     }
 
-    public int getRewardCount()
-    {
+    public int getRewardCount() {
         return rewardCount;
     }
 
@@ -50,13 +45,13 @@ public class Reward {
             EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
             switch (rewardName) {
                 case "Brown Skin":
-                    player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerbrown));
+                    player.setSkin(ResourceManager.getBitmap(R.drawable.playerbrown));
                     break;
                 case "Red Skin":
-                    player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerred));
+                    player.setSkin(ResourceManager.getBitmap(R.drawable.playerred));
                     break;
                 case "White Skin":
-                    player.setPlayerBitmap(ResourceManager.getBitmap(R.drawable.playerwhite));
+                    player.setSkin(ResourceManager.getBitmap(R.drawable.playerwhite));
                     break;
             }
         }

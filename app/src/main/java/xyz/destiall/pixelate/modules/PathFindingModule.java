@@ -33,8 +33,9 @@ public class PathFindingModule implements Component<Entity> {
     }
 
     @Override
-    public void setParent(Entity self) {
+    public PathFindingModule setParent(Entity self) {
         this.self = self;
+        return this;
     }
 
     @Override

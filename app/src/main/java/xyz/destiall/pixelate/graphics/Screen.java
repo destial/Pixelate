@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 
@@ -144,6 +145,20 @@ public class Screen {
     }
 
     /**
+     * Draw a quad
+     * @param bounds The bounding box
+     * @param color Color of quad
+     */
+    public void quad(AABB bounds, int color) {
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.FILL);
+        Vector2 min = bounds.getMin();
+        Vector2 max = bounds.getMax();
+        CANVAS.drawRect((float) min.getX(), (float) min.getY(), (float) max.getX(), (float) max.getY(), paint);
+        drawCalls++;
+    }
+
+    /**
      * Draw a ring quad
      * @param x Top left x
      * @param y Top left y
@@ -157,6 +172,22 @@ public class Screen {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(thickness);
         CANVAS.drawRect((float) x, (float) y, (float) (x + width), (float) (y + height), paint);
+        drawCalls++;
+    }
+
+    /**
+     * Draw a ring quad
+     * @param bounds The bounding box
+     * @param thickness Thickness of ring
+     * @param color Color of quad
+     */
+    public void quadRing(AABB bounds, float thickness, int color) {
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(thickness);
+        Vector2 min = bounds.getMin();
+        Vector2 max = bounds.getMax();
+        CANVAS.drawRect((float) min.getX(), (float) min.getY(), (float) max.getX(), (float) max.getY(), paint);
         drawCalls++;
     }
 

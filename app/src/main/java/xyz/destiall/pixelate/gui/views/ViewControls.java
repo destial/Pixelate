@@ -1,6 +1,7 @@
 package xyz.destiall.pixelate.gui.views;
 
 import android.graphics.Color;
+import android.view.KeyEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import xyz.destiall.pixelate.environment.WorldManager;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
 import xyz.destiall.pixelate.events.controls.EventChat;
 import xyz.destiall.pixelate.events.controls.EventJoystick;
+import xyz.destiall.pixelate.events.controls.EventKeyboard;
 import xyz.destiall.pixelate.events.controls.EventLeftHoldButton;
 import xyz.destiall.pixelate.events.controls.EventLeftReleaseButton;
 import xyz.destiall.pixelate.events.controls.EventLeftTapButton;
@@ -23,7 +25,6 @@ import xyz.destiall.pixelate.events.controls.EventRightReleaseButton;
 import xyz.destiall.pixelate.events.controls.EventRightTapButton;
 import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.gui.buttons.Button;
 import xyz.destiall.pixelate.gui.buttons.CircleButton;
 import xyz.destiall.pixelate.gui.buttons.ImageButton;
@@ -75,7 +76,7 @@ public class ViewControls implements View {
         // Button location initialisation
         Button pause = new CircleButton(new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.9), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9)), 25, Color.RED);
         pause.onTap(() -> {
-            HUD.INSTANCE.setPauseMenu();
+            Pixelate.getHud().setPauseMenu();
             Pixelate.PAUSED = true;
         });
         buttons.add(pause);
@@ -114,9 +115,7 @@ public class ViewControls implements View {
         buttons.add(world);
 
         Button shop = new ImageButton(R.drawable.storeicon, new Vector2(Pixelate.WIDTH * 0.9, Pixelate.HEIGHT * 0.1), 0.12f);
-        shop.onTap(() -> {
-           HUD.INSTANCE.setShopMenu();
-        });
+        shop.onTap(() -> Pixelate.getHud().setShopMenu());
         buttons.add(shop);
     }
 
@@ -129,10 +128,10 @@ public class ViewControls implements View {
         screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.argb(220, 128, 128 ,128));
 
         EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
-        screen.bar(Pixelate.WIDTH * 0.325, Pixelate.HEIGHT * 0.82, Pixelate.WIDTH * 0.35, 30, Color.DKGRAY, Color.GREEN, player.getXPProgress());
-        screen.text(String.valueOf(player.getXPLevel()), Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.814, 60, Color.GREEN);
-
         if (player.getGamemode() != Gamemode.CREATIVE) {
+            screen.bar(Pixelate.WIDTH * 0.325, Pixelate.HEIGHT * 0.82, Pixelate.WIDTH * 0.35, 30, Color.DKGRAY, Color.GREEN, player.getXPProgress());
+            screen.text(String.valueOf(player.getXPLevel()), Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.814, 60, Color.GREEN);
+
             screen.bar(Pixelate.WIDTH * 0.252, Pixelate.HEIGHT * 0.777, Pixelate.WIDTH * 0.2, 30, Color.DKGRAY, Color.DKGRAY, player.getHealth() / player.getMaxHealth());
             screen.bar(Pixelate.WIDTH * 0.25, Pixelate.HEIGHT * 0.77, Pixelate.WIDTH * 0.2, 30, Color.GRAY, Color.RED, player.getHealth() / player.getMaxHealth());
         }
@@ -197,6 +196,15 @@ public class ViewControls implements View {
             return;
         }
         chat.setText("Chat: " + message);
+    }
+
+    @EventHandler
+    public void onKeyboard(EventKeyboard e) {
+        if (e.getEvent().getAction() == KeyEvent.ACTION_DOWN) {
+            if (e.getKeyCode() == KeyEvent.KEYCODE_SLASH) {
+                Pixelate.HANDLER.call(eventOpenKeyboard);
+            }
+        }
     }
 
     @EventHandler

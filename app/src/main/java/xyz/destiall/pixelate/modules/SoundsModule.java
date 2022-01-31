@@ -20,11 +20,6 @@ public class SoundsModule implements Component<World> {
         soundsPlaying = new ArrayList<>();
     }
 
-    public SoundsModule setWorld(World world) {
-        this.world = world;
-        return this;
-    }
-
     /**
      * Play a sound at the requested location
      * @param effect The sound to play
@@ -63,7 +58,8 @@ public class SoundsModule implements Component<World> {
     }
 
     @Override
-    public void setParent(World world) {
+    public SoundsModule setParent(World world) {
         this.world = world;
+        return this;
     }
 }

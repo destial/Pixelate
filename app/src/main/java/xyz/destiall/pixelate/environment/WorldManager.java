@@ -14,11 +14,13 @@ import xyz.destiall.pixelate.modular.Module;
  * Written by Yong Hong
  */
 public class WorldManager implements Updateable, Renderable, Module {
+    private transient boolean loaded;
     private Map<String, World> worlds;
     private String activeWorld;
 
     public WorldManager() {
         worlds = new HashMap<>();
+        loaded = false;
     }
 
     /**
@@ -27,13 +29,15 @@ public class WorldManager implements Updateable, Renderable, Module {
      * @param wm The loaded world manager
      */
     public void load(WorldManager wm) {
+        if (loaded) return;
+        loaded = true;
         worlds = wm.worlds;
         for (World world : worlds.values()) {
             for (Tile tile : world.getTiles()) {
                 tile.setWorld(world);
             }
             for (Entity entity : world.getEntities()) {
-                entity.teleport(entity.getLocation().setWorld(world));
+                entity.teleport(entity.getLocation(true).setWorld(world));
             }
         }
         activeWorld = wm.activeWorld;

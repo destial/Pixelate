@@ -1,5 +1,8 @@
 package xyz.destiall.pixelate.score;
 
+/**
+ * Written By Yong Hong
+ */
 public class Score {
     int score;
 
@@ -8,10 +11,8 @@ public class Score {
         score = 0;
     }
 
-    public void addScore(ScoreType scoreType, int quant)
-    {
-        switch(scoreType)
-        {
+    public void addScore(ScoreType scoreType, int quant) {
+        switch(scoreType) {
             case GATHER_XP:
                 score += quant;
                 break;
@@ -19,6 +20,7 @@ public class Score {
             case KILL_HOSTILE:
                 score += quant * 15;
                 break;
+
             case BREAK_ORE:
                 score += quant * 5;
                 break;

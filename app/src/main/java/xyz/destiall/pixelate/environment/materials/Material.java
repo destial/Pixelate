@@ -19,9 +19,12 @@ public enum Material {
     WOOD(0, 1, Tile.TileType.FOREGROUND, 4, ToolType.AXE),
     GRASS(0,2, Tile.TileType.BACKGROUND, 3, ToolType.SHOVEL),
     PLANKS(0,4, Tile.TileType.FOREGROUND, 4, ToolType.AXE),
+    BOOKSHELF(1,4, Tile.TileType.FOREGROUND, 4, ToolType.AXE),
 
     FURNACE(0, 5, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
-    CHEST(0, 6, Tile.TileType.FOREGROUND, 7.5f, ToolType.AXE, true),
+    CHEST(0, 6, Tile.TileType.FOREGROUND, 5.5f, ToolType.AXE, true),
+    WORKBENCH(3, 3, Tile.TileType.FOREGROUND, 3f, ToolType.AXE),
+    ENCHANT_TABLE(0, 8, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
     ANVIL(0, 7, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE, true),
 
     PURPLE_WOOL(1,0, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
@@ -42,13 +45,20 @@ public enum Material {
     LIME_WOOL(2,7, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
     YELLOW_WOOL(2,8, Tile.TileType.FOREGROUND, 2.7f, ToolType.SHEAR),
 
-    GOLD_ORE(4,0, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    IRON_ORE(4,1, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    COAL_ORE(4,2, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    LAPIS_ORE(4,4, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    DIAMOND_ORE(4,6, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    EMERALD_ORE(4,7, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
-    REDSTONE_ORE(4,8, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
+    GOLD_ORE(4,0, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
+    IRON_ORE(4,1, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
+    COAL_ORE(4,2, Tile.TileType.FOREGROUND, 5.f, ToolType.PICKAXE),
+    LAPIS_ORE(4,4, Tile.TileType.FOREGROUND, 5.f, ToolType.PICKAXE),
+    DIAMOND_ORE(4,5, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
+    EMERALD_ORE(4,6, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
+    REDSTONE_ORE(4,7, Tile.TileType.FOREGROUND, 5.f, ToolType.PICKAXE),
+
+    IRON_BLOCK(3, 7, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),
+    GOLD_BLOCK(3, 2, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),
+    EMERALD_BLOCK(3, 6, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),
+    DIAMOND_BLOCK(3, 5, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),
+    REDSTONE_BLOCK(3, 8, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),
+    LAPIS_BLOCK(3, 2, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),
 
     MOSSY_COBBLESTONE(5,0, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
     COBBLESTONE(5,8, Tile.TileType.FOREGROUND, 10, ToolType.PICKAXE),
@@ -76,10 +86,17 @@ public enum Material {
 
     //Other items
     COAL(R.drawable.coal, ToolType.NONE, EfficiencyTier.NONE, -1),
+    REDSTONE(R.drawable.redstone_dust, ToolType.NONE, EfficiencyTier.NONE, -1),
+    LAPIS(R.drawable.lapis_lazuli, ToolType.NONE, EfficiencyTier.NONE, -1),
+    DIAMOND(R.drawable.diamond, ToolType.NONE, EfficiencyTier.DIAMOND, -1),
+    EMERALD(R.drawable.emerald, ToolType.NONE, EfficiencyTier.NONE, -1),
+    IRON_INGOT(R.drawable.iron_ingot, ToolType.NONE, EfficiencyTier.IRON, -1),
+    GOLD_INGOT(R.drawable.gold_ingot, ToolType.NONE, EfficiencyTier.GOLD, -1),
     STICK(R.drawable.stick, ToolType.NONE, EfficiencyTier.NONE, -1),
     GUNPOWDER(R.drawable.gunpowder, ToolType.NONE, EfficiencyTier.NONE, -1),
     BONE(R.drawable.bone, ToolType.NONE, EfficiencyTier.NONE, -1),
     ROTTEN_FLESH(R.drawable.rotten_flesh, ToolType.NONE, EfficiencyTier.NONE, -1),
+    BOOK(R.drawable.book_normal, ToolType.NONE, EfficiencyTier.NONE, -1),
 
     ;
 
@@ -154,9 +171,14 @@ public enum Material {
         return String.join(" ", newargs);
     }
 
+    /**
+     * Get the Material from a name
+     * @param name The material name
+     * @return The material, or null if not found
+     */
     public static Material getFromName(String name) {
         try {
-            return valueOf(name.toUpperCase());
+            return valueOf(name.toUpperCase().replace(" ", "_"));
         } catch (Exception ignored) {}
         return null;
     }
