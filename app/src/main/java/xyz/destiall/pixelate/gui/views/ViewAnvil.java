@@ -9,7 +9,9 @@ import java.util.Map;
 import xyz.destiall.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.materials.Material;
+import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
@@ -26,6 +28,7 @@ import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.utils.ViewUtils;
 
 /**
@@ -71,8 +74,9 @@ public class ViewAnvil implements View {
         ItemStack item;
 
         // RepairItem slot
-        posX = startingCrafting;
-        posY = (int)(Pixelate.HEIGHT * 0.1f);
+        posX = (int) (startingCrafting - (image.getWidth()) * 2);
+        posY = (int)(Pixelate.HEIGHT * 0.1f) + (image.getWidth());
+
         if (!positions.containsKey(98)) {
             positions.put(98, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));
         }
@@ -105,7 +109,7 @@ public class ViewAnvil implements View {
             ItemStack.renderInventory(screen, item, drawX, drawY);
         }
 
-        posY = (int)(Pixelate.HEIGHT * 0.1f) + (int) (image.getWidth() * 1.5);
+        posX = (int) (startingCrafting - (image.getWidth()) * 0.5);
 
         // Additive slot
         if (!positions.containsKey(99)) {
@@ -232,6 +236,8 @@ public class ViewAnvil implements View {
         if(resultantAdditive.getAmount() <= 0) resultantAdditive = null;
         anvilInventory.setAdditive(resultantAdditive);
         anvilInventory.setRepairItemSlot(null);
+        EntityPlayer player = ((StateGame)Pixelate.getGSM().getState("Game")).getPlayer();
+        player.getLocation().getWorld().playSound(Sound.SoundType.ANVIL_USE, player.getLocation(), 1.f);
     }
 
     @Override

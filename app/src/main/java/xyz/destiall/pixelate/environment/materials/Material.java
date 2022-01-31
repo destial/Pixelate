@@ -49,9 +49,9 @@ public enum Material {
     IRON_ORE(4,1, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
     COAL_ORE(4,2, Tile.TileType.FOREGROUND, 5.f, ToolType.PICKAXE),
     LAPIS_ORE(4,4, Tile.TileType.FOREGROUND, 5.f, ToolType.PICKAXE),
-    DIAMOND_ORE(4,5, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
-    EMERALD_ORE(4,6, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
-    REDSTONE_ORE(4,7, Tile.TileType.FOREGROUND, 5.f, ToolType.PICKAXE),
+    DIAMOND_ORE(4,6, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
+    EMERALD_ORE(4,7, Tile.TileType.FOREGROUND, 7.5f, ToolType.PICKAXE),
+    REDSTONE_ORE(4,8, Tile.TileType.FOREGROUND, 5.f, ToolType.PICKAXE),
 
     IRON_BLOCK(3, 7, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),
     GOLD_BLOCK(3, 2, Tile.TileType.FOREGROUND, 10.f, ToolType.PICKAXE),

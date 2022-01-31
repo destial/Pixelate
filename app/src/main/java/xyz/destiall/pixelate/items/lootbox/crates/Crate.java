@@ -5,12 +5,14 @@ import android.graphics.Color;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.EntityPlayer;
+import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.graphics.Renderable;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.items.lootbox.Reward;
 import xyz.destiall.pixelate.items.lootbox.RewardTable;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
 
 /**
@@ -107,6 +109,8 @@ public class Crate implements Renderable, Updateable {
                     rollingAnimation[i - 1] = rollingAnimation[i];
                 }
                 rollingAnimation[4] = rewardsTable.generateReward();
+                EntityPlayer player = ((StateGame)Pixelate.getGSM().getState("Game")).getPlayer();
+                player.getLocation().getWorld().playSound(Sound.SoundType.CLICK, player.getLocation(), 1.f);
             }
 
             animTimeLeft -= dt;
@@ -117,6 +121,9 @@ public class Crate implements Renderable, Updateable {
                     currentlyRolling = false;
                     Reward finalReward = rollingAnimation[2];
                     finalReward.applyRewards();
+                    EntityPlayer player = ((StateGame)Pixelate.getGSM().getState("Game")).getPlayer();
+                    player.getLocation().getWorld().playSound(Sound.SoundType.ENTITY_LEVELUP, player.getLocation(), 1.f);
+
                 }
             }
         }
@@ -139,16 +146,13 @@ public class Crate implements Renderable, Updateable {
     }
 
     public boolean openCrate(EntityPlayer player) {
-        System.out.println("Reached1");
         if (rewardsTable.getRewards().size() < 1) return false;
         if (!currentlyRolling) {
-            System.out.println("Reached2");
             currentlyRolling = true;
             animTimeLeft = animDuration;
             animDurationDragTimeLeft = animDurationDrag;
             this.animNextCD = this.animSpeed;
             for (int i = 0; i < 5; ++i) {
-                System.out.println("Reached3");
                 rollingAnimation[i] = rewardsTable.generateReward();
             }
             return true;

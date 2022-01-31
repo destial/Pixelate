@@ -126,6 +126,9 @@ public class Sound implements Updateable {
         ENTITY_LEVELUP(R.raw.levelup),
         ENTITY_ORBPICKUP(R.raw.orb),
         EAT(R.raw.eat),
+        CLICK(R.raw.click),
+        ANVIL_USE(R.raw.anvil_use),
+
 
         ;
 

@@ -21,7 +21,7 @@ public class AnvilTile extends ContainerTile {
         //Additive pairs
         {
             List<Material> mats = new ArrayList<Material>();
-            mats.add(Material.DIAMOND_ORE);
+            mats.add(Material.DIAMOND);
 
             additivePairs.put(Material.DIAMOND_SWORD, mats);
             additivePairs.put(Material.DIAMOND_PICKAXE, mats);
@@ -38,7 +38,6 @@ public class AnvilTile extends ContainerTile {
 
         if(repairItem == null || additiveItem == null)
         {
-            getInventory().setResultSlot(null);
             return;
         }
         System.out.println(repairItem.getType().toString() + " , " + additiveItem.getType().toString());
@@ -48,7 +47,7 @@ public class AnvilTile extends ContainerTile {
             case DIAMOND_PICKAXE:
             case DIAMOND_SWORD:
             {
-                if(additiveItem.getType() == Material.DIAMOND_ORE)
+                if(additiveItem.getType() == Material.DIAMOND)
                 {
                     if(repairItem.getItemMeta().getDurability() < repairItem.getType().getMaxDurability())
                     {
