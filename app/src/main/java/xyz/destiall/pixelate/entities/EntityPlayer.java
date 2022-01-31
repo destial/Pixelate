@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +18,7 @@ import xyz.destiall.pixelate.environment.materials.EfficiencyTier;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
+import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
 import xyz.destiall.pixelate.environment.tiles.containers.ContainerTile;
 import xyz.destiall.pixelate.environment.tiles.containers.EnchantTableTile;
 import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
@@ -38,15 +40,19 @@ import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.LootTable;
+import xyz.destiall.pixelate.items.inventory.AnvilInventory;
 import xyz.destiall.pixelate.items.inventory.ChestInventory;
+import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.items.meta.Enchantment;
 import xyz.destiall.pixelate.items.meta.ItemMeta;
+import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.score.Score;
 import xyz.destiall.pixelate.score.ScoreType;
+import xyz.destiall.pixelate.score.Scoreboard;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.timer.Timer;
@@ -127,6 +133,10 @@ public class EntityPlayer extends EntityLiving implements Listener {
         inventory.clear();
         World w;
         if ((w = location.getWorld()) != null) w.dropItems(toDrop, location);
+        exp.setXP(0);
+        exp.setLevel(0);
+        Scoreboard.getInstance().addToLeaderboard("LOCALUSER", (float)score.getScore(), System.currentTimeMillis());
+        score.clearScore();
     }
 
     public void respawn() {
@@ -405,6 +415,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
             if (ev.isCancelled()) return;
             if (tile.getMaterial() == Material.FURNACE) {
                 Pixelate.getHud().setFurnaceDisplay(getInventory(), (FurnanceTile) container);
+                FurnaceInventory furnaceInventory = (FurnaceInventory) container.getInventory();
+                Pixelate.getHud().setFurnaceDisplay(getInventory(), (FurnanceTile) container);
+            }else if (tile.getMaterial() == Material.ANVIL)
+            {
+                AnvilInventory anvilInventory = (AnvilInventory) container.getInventory();
+                Pixelate.getHud().setAnvilDisplay(getInventory(), (AnvilTile) container);
             } else if (tile.getMaterial() == Material.CHEST) {
                 Pixelate.getHud().setChestDisplay(getInventory(), (ChestInventory) container.getInventory());
             } else if (tile.getMaterial() == Material.ENCHANT_TABLE) {

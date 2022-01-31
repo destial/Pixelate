@@ -53,7 +53,7 @@ public class GeneratorUnderground implements Generator {
                 if (noiseValue > 0.59) {
                     if(noiseValue > 0.7 && noiseValue < 0.8) {
                         //Ore Spawning Algorithm
-                        if (Math.random() < 0.05) //Chance to populate area with ores
+                        if (Math.random() < 0.2) //Chance to populate area with ores
                         {
                             orePopulationZones.add(new Location(x, y, world));
                         }
@@ -89,11 +89,10 @@ public class GeneratorUnderground implements Generator {
                     oreLoot = Material.LAPIS_ORE;
                     break;
                 case 3:
+                case 4:
                     oreLoot = Material.DIAMOND_ORE;
                     break;
-                case 4:
-                    oreLoot = Material.EMERALD_ORE;
-                    break;
+
             }
             //Max Radius 3x3
             for(int x = loc.getX()-(int)Tile.SIZE*2; x<loc.getX()+(int)Tile.SIZE; x+=Tile.SIZE)

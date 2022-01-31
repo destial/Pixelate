@@ -26,6 +26,10 @@ public interface ItemMeta {
      */
     boolean hasDisplayName();
 
+    List<String> getLore();
+    boolean hasLore();
+    void setLore(List<String> lore);
+
     /**
      * If this item has lores set
      * @return true if not null and not empty, otherwise false

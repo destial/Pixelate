@@ -33,8 +33,6 @@ public class ViewUtils {
         }
 
         List<String> lore = item.getItemMeta().getLore();
-        //lore.add("This is a test lore");
-        //lore.add("Second test lore line");
 
         float loreSize = 0.05f + MATERIALNAME_HEADER + DISPLAYNAME_HEADER;
         if (lore != null && lore.size() > 0) loreSize += LORE_HEADER + LORE_SPACING * lore.size();

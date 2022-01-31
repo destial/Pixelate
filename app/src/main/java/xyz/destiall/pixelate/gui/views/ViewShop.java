@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.dialogs.ConfirmationDialogFragment;
+import xyz.destiall.pixelate.events.controls.EventDialogueAction;
+import xyz.destiall.pixelate.events.controls.EventOpenDialogue;
 import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
@@ -24,7 +28,7 @@ import xyz.destiall.pixelate.states.StateGame;
 /**
  * Written by Yong Hong
  */
-public class ViewShop implements View {
+public class ViewShop implements View, Listener {
     private final int scale;
 
     private static Bitmap bg;
@@ -33,12 +37,15 @@ public class ViewShop implements View {
 
     private final List<Button> buttons;
 
+    private Crate selectedCrate;
+
     public ViewShop() {
         buttons = new ArrayList<>();
         if (bg == null) {
             bg = ResourceManager.getBitmap(R.drawable.pixelatestores);
             bg = Imageable.resizeImage(bg, (float) Pixelate.HEIGHT / bg.getHeight());
         }
+        selectedCrate = null;
 
         crates = new ArrayList<Crate>();
         crates.add(new SkinCrate( new Vector2(Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.5f)) );
@@ -47,7 +54,9 @@ public class ViewShop implements View {
         {
             CircleButton button = new CircleButton(new Vector2(cr.getScreenOrigin().getX() + Pixelate.WIDTH * 0.1, cr.getScreenOrigin().getY() + Pixelate.HEIGHT * 0.3), 30, Color.GREEN);
             button.onTap(() -> {
-                cr.openCrate(((StateGame) Pixelate.getGSM().getState("Game")).getPlayer());
+                ConfirmationDialogFragment cdf = new ConfirmationDialogFragment();
+                cdf.show(Pixelate.getContext().getSupportFragmentManager(), "ConfirmationFragment");
+                selectedCrate = cr;
             });
             buttons.add(button);
         }
@@ -63,6 +72,17 @@ public class ViewShop implements View {
         Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
         scale = (int) (image.getWidth() * 0.8);
         Pixelate.HANDLER.registerListener(this);
+    }
+
+    @EventHandler
+    public void onConfirmation(EventDialogueAction e)
+    {
+        System.out.println("Opened1");
+        if(e.getAction() == EventDialogueAction.Dialog_Action.YES)
+        {
+            System.out.println("Opened");
+            selectedCrate.openCrate(((StateGame) Pixelate.getGSM().getState("Game")).getPlayer());
+        }
     }
 
     @Override
@@ -92,12 +112,14 @@ public class ViewShop implements View {
             float x = e.getX();
             float y = e.getY();
             switch (e.getAction()) {
+
                 case DOWN:
                     for (Button button : buttons) {
                         if (button.isOn(x, y)) {
                             if (!button.isHolding()) {
                                 button.setHold(true);
                                 button.tap();
+
                             }
                         }
                     }
@@ -120,6 +142,7 @@ public class ViewShop implements View {
                         if (button.isHolding()) {
                             button.setHold(false);
                             button.release();
+
                         }
                     }
                     break;

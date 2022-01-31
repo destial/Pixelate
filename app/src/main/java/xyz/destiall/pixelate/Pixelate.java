@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -14,6 +17,7 @@ import xyz.destiall.pixelate.commands.CommandMap;
 import xyz.destiall.pixelate.commands.executors.EnchantCommand;
 import xyz.destiall.pixelate.commands.executors.GamemodeCommand;
 import xyz.destiall.pixelate.commands.executors.ItemCommand;
+import xyz.destiall.pixelate.commands.executors.KillCommand;
 import xyz.destiall.pixelate.commands.executors.SettingsCommand;
 import xyz.destiall.pixelate.commands.executors.SpawnCommand;
 import xyz.destiall.pixelate.commands.executors.SummonCommand;
@@ -157,6 +161,7 @@ public class Pixelate extends Thread {
         return false;
     }
 
+
     public static Bitmap getTileMap() {
         return tileMap;
     }
@@ -198,6 +203,7 @@ public class Pixelate extends Thread {
         commandMap.registerCommand("settings", new SettingsCommand());
         commandMap.registerCommand("item", new ItemCommand());
         commandMap.registerCommand("enchant", new EnchantCommand());
+        commandMap.registerCommand("kill", new KillCommand());
     }
 
     private static void setupRecipes() {
