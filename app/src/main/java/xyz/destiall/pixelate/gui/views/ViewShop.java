@@ -6,13 +6,12 @@ import android.graphics.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.destiall.java.events.EventHandler;
-import xyz.destiall.java.events.Listener;
+import xyz.destiall.utility.java.events.EventHandler;
+import xyz.destiall.utility.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.dialogs.ConfirmationDialogFragment;
 import xyz.destiall.pixelate.events.controls.EventDialogueAction;
-import xyz.destiall.pixelate.events.controls.EventOpenDialogue;
 import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Imageable;
 import xyz.destiall.pixelate.graphics.ResourceManager;
@@ -32,7 +31,7 @@ public class ViewShop implements View, Listener {
     private final int scale;
 
     private static Bitmap bg;
-    private List<Crate> crates;
+    private final List<Crate> crates;
     private static Bitmap diamond;
 
     private final List<Button> buttons;

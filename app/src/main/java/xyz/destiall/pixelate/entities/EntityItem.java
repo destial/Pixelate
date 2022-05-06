@@ -9,6 +9,7 @@ import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -23,26 +24,26 @@ public class EntityItem extends Entity {
         scale = 0.5f;
         upAndDownTimer = 0f;
         down = false;
-        player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+        player = ((StateGame) Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer();
     }
 
     public EntityItem(ItemStack itemStack) {
         scale = 0.5f;
         this.drop = itemStack;
-        spriteSheet.addAnimation("DROP", Imageable.createAnimation(itemStack.getImage(), 1, 1, 0));
-        spriteSheet.setCurrentAnimation("DROP");
+        spriteSheet.addAnimation(StringUtils.DROP, Imageable.createAnimation(itemStack.getImage(), 1, 1, 0, scale));
+        spriteSheet.setCurrentAnimation(StringUtils.DROP);
         spriteSheet.setCurrentFrame(0);
         upAndDownTimer = 0f;
         down = false;
-        player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+        player = ((StateGame) Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer();
     }
 
     @Override
     public void refresh() {
         //setImage(drop.getImage(), 1, 1);
         spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("DROP", Imageable.createAnimation(drop.getImage(), 1, 1, 0));
-        spriteSheet.setCurrentAnimation("DROP");
+        spriteSheet.addAnimation(StringUtils.DROP, Imageable.createAnimation(drop.getImage(), 1, 1, 0, scale));
+        spriteSheet.setCurrentAnimation(StringUtils.DROP);
         spriteSheet.setCurrentFrame(0);
     }
 
@@ -54,7 +55,7 @@ public class EntityItem extends Entity {
             down = !down;
         }
         if (player.getLocation(true).getWorld() != location.getWorld()) return;
-        if (player.getLocation(true).distance(location) < Tile.SIZE * 0.5) {
+        if (player.getLocation(true).distanceSquared(location) < (Tile.SIZE * 0.5) * (Tile.SIZE * 0.5)) {
             EventItemPickup ev = new EventItemPickup(player, this);
             Pixelate.HANDLER.call(ev);
             if (ev.isCancelled()) return;

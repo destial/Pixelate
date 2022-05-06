@@ -1,6 +1,6 @@
 package xyz.destiall.pixelate.gui;
 
-import xyz.destiall.java.events.Listener;
+import xyz.destiall.utility.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.tiles.containers.EnchantTableTile;
 import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;

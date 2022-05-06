@@ -7,6 +7,7 @@ import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.states.StateGame;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -90,7 +91,7 @@ public class Location {
 
     @Nullable
     public World getWorld() {
-        return ((StateGame) Pixelate.getGSM().getState("Game")).getWorldManager().getWorlds().get(world);
+        return ((StateGame) Pixelate.getGSM().getState(StringUtils.GAME)).getWorldManager().getWorlds().get(world);
     }
 
     public Vector2 toVector() {

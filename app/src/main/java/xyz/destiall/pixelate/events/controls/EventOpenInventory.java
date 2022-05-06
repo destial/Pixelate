@@ -1,7 +1,7 @@
 package xyz.destiall.pixelate.events.controls;
 
-import xyz.destiall.java.events.Cancellable;
-import xyz.destiall.java.events.Event;
+import xyz.destiall.utility.java.events.Cancellable;
+import xyz.destiall.utility.java.events.Event;
 
 /**
  * Called when the player opens their inventory

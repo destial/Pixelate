@@ -16,7 +16,7 @@ import xyz.destiall.pixelate.timer.Timer;
  */
 public class AnvilTile extends ContainerTile {
 
-    static HashMap<Material, List<Material>> additivePairs = new HashMap<Material, List<Material>>();
+    static HashMap<Material, List<Material>> additivePairs = new HashMap<>();
     static {
         //Additive pairs
         {

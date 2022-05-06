@@ -6,7 +6,7 @@ import android.graphics.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.utility.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
@@ -18,7 +18,6 @@ import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
 import xyz.destiall.pixelate.gui.buttons.Button;
-import xyz.destiall.pixelate.gui.buttons.ImageButton;
 import xyz.destiall.pixelate.gui.buttons.QuadButton;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;

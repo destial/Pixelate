@@ -6,25 +6,21 @@ import android.graphics.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.utility.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
-import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.environment.tiles.containers.AnvilTile;
-import xyz.destiall.pixelate.environment.tiles.containers.FurnanceTile;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
 import xyz.destiall.pixelate.events.controls.EventPhoneShake;
 import xyz.destiall.pixelate.events.controls.EventTouch;
 import xyz.destiall.pixelate.graphics.Glint;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.graphics.Screen;
-import xyz.destiall.pixelate.gui.HUD;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.AnvilInventory;
-import xyz.destiall.pixelate.items.inventory.FurnaceInventory;
 import xyz.destiall.pixelate.items.inventory.PlayerInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Vector2;
@@ -75,7 +71,7 @@ public class ViewAnvil implements View {
 
         // RepairItem slot
         posX = (int) (startingCrafting - (image.getWidth()) * 2);
-        posY = (int)(Pixelate.HEIGHT * 0.1f) + (image.getWidth());
+        posY = (int) (Pixelate.HEIGHT * 0.1f) + (image.getWidth());
 
         if (!positions.containsKey(98)) {
             positions.put(98, new AABB(posX, posY, posX + image.getWidth(), posY + image.getHeight()));

@@ -6,7 +6,7 @@ import android.graphics.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.utility.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.events.controls.ControlEvent;
@@ -49,7 +49,6 @@ public class ViewDeath implements View {
 
         displayScoreboard = false;
         scoreboardValues = new ArrayList<String>();
-
 
         if (bg == null) {
             bg = ResourceManager.getBitmap(R.drawable.deathscreen);

@@ -65,7 +65,7 @@ public abstract class Entity implements Updateable, Renderable, Modular {
      * @return An immutable location
      */
     public Location getLocation() {
-        return getLocation(false);
+        return getLocation(true);
     }
 
     /**
@@ -90,7 +90,7 @@ public abstract class Entity implements Updateable, Renderable, Modular {
      * @return An immutable velocity
      */
     public Vector2 getVelocity() {
-        return velocity.clone();
+        return velocity;
     }
 
     /**
@@ -161,9 +161,6 @@ public abstract class Entity implements Updateable, Renderable, Modular {
     @Override
     public void render(Screen screen) {
         Bitmap map = spriteSheet.getCurrentSprite();
-        if (scale != 1 && scale > 0) {
-            map = Imageable.resizeImage(map, scale);
-        }
         Vector2 offset = Screen.convert(location.toVector());
         screen.draw(map, offset.getX(), offset.getY());
 

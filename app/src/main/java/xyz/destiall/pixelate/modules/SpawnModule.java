@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import xyz.destiall.java.events.Cancellable;
+import xyz.destiall.utility.java.events.Cancellable;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityItem;

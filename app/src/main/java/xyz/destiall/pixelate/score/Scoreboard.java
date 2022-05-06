@@ -24,9 +24,8 @@ public class Scoreboard {
     private static final String fileName = "scoreboard";
     LinkedHashMap<String, Float> entries;
 
-    private Scoreboard()
-    {
-        entries = new LinkedHashMap<String, Float>();
+    private Scoreboard() {
+        entries = new LinkedHashMap<>();
         //Read from File
         Context context = Pixelate.getContext();
         FileInputStream fis = null;
@@ -36,10 +35,8 @@ public class Scoreboard {
             String fileContents = "#Scoreboard Storage\n";
             try (FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE)) {
                 fos.write(fileContents.getBytes(StandardCharsets.UTF_8));
-            } catch (FileNotFoundException fileNotFoundException) {
+            } catch (IOException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
             }
         }
         InputStreamReader inputStreamReader =
@@ -53,11 +50,10 @@ public class Scoreboard {
                 {
                     System.out.println("Parsing line: " + line);
                     String entryName;
-                    Long time;
-                    Float entryScore;
-                    String split[] = line.split(";");
-                    if(split.length == 3) //score;entryname;time
-                    {
+                    long time;
+                    float entryScore;
+                    String[] split = line.split(";");
+                    if (split.length == 3) { //score;entryname;time
                         entryName = split[0];
                         entryScore = Float.parseFloat(split[1]);
                         time = Long.parseLong(split[2]);
@@ -72,8 +68,7 @@ public class Scoreboard {
         orderLeaderboard();
     }
 
-    public void orderLeaderboard()
-    {
+    public void orderLeaderboard() {
         LinkedHashMap<String, Float> newEntries = entries.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (prev, next) -> next, LinkedHashMap::new));
@@ -81,53 +76,43 @@ public class Scoreboard {
         entries = newEntries;
     }
 
-    public List<String> getTopScores(int noCount, boolean unique)
-    {
-        List<String> scores = new ArrayList<String>();
-        List<String> namesBlacklist = new ArrayList<String>();
+    public List<String> getTopScores(int noCount, boolean unique) {
+        List<String> scores = new ArrayList<>();
+        List<String> namesBlacklist = new ArrayList<>();
 
-        for(Map.Entry<String, Float> entry : entries.entrySet())
-        {
+        for (Map.Entry<String, Float> entry : entries.entrySet()) {
             String name = entry.getKey().split(";")[0];
-            if(unique && namesBlacklist.contains(name)) continue;
+            if (unique && namesBlacklist.contains(name)) continue;
 
             namesBlacklist.add(name);
             scores.add(entry.getKey() + ";"+entry.getValue());
-            if(scores.size() >= noCount)
+            if (scores.size() >= noCount)
                 break;
-
         }
 
         return scores;
     }
 
-    public void addToLeaderboard(String entryName, Float entryValue, Long time)
-    {
+    public void addToLeaderboard(String entryName, Float entryValue, Long time) {
         entries.put(entryName+";"+time, entryValue);
         orderLeaderboard();
 
         Context context = Pixelate.getContext();
-        FileInputStream fis = null;
         try {
-            fis = context.openFileInput(fileName);
+            context.openFileInput(fileName);
             String toAdd = entryName + ";" + entryValue + ";" + time + '\n';
             try (FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_APPEND)) {
                 fos.write(toAdd.getBytes());
-            } catch (FileNotFoundException fileNotFoundException) {
+            } catch (IOException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
             }
         } catch (FileNotFoundException e) {
-
+            e.printStackTrace();
         }
 
-
-        System.out.println("Sorted Values");
         int index = 0;
-        for(Map.Entry<String, Float> entry : entries.entrySet())
-        {
-            String split[] = entry.getKey().split(";");
+        for (Map.Entry<String, Float> entry : entries.entrySet()) {
+            String[] split = entry.getKey().split(";");
             String entryName2 = split[0];
             Long time2 = Long.parseLong(split[1]);
             Float entryScore2 = entry.getValue();
@@ -135,22 +120,21 @@ public class Scoreboard {
         }
     }
 
-    public void clearLeaderboard()
-    {
+    public void clearLeaderboard() {
         entries.clear();
         Context context = Pixelate.getContext();
-        FileInputStream fis = null;
         try {
             context.deleteFile(fileName);
-        }catch(Exception e) { }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
 
 
-    public static Scoreboard getInstance()
-    {
-        if(instance == null)
+    public static Scoreboard getInstance() {
+        if (instance == null)
             instance = new Scoreboard();
         return instance;
     }

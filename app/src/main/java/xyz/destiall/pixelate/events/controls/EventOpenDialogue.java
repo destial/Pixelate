@@ -1,4 +1,5 @@
 package xyz.destiall.pixelate.events.controls;
 
-public class EventOpenDialogue {
-}
+import xyz.destiall.utility.java.events.Event;
+
+public class EventOpenDialogue extends Event {}

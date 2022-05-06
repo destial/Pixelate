@@ -2,8 +2,8 @@ package xyz.destiall.pixelate.events.tile;
 
 import java.util.List;
 
-import xyz.destiall.java.events.Cancellable;
-import xyz.destiall.java.events.Event;
+import xyz.destiall.utility.java.events.Cancellable;
+import xyz.destiall.utility.java.events.Event;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.ItemStack;
 

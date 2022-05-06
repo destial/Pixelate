@@ -1,11 +1,11 @@
 package xyz.destiall.pixelate.events.controls;
 
-import xyz.destiall.java.events.Event;
+import xyz.destiall.utility.java.events.Event;
 
 /**
  * Called when a message was entered into the chat
  */
-public class EventChat extends Event{
+public class EventChat extends Event {
     private String message;
     public EventChat(String message) {
         this.message = message;

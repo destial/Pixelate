@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import xyz.destiall.java.events.EventHandler;
-import xyz.destiall.java.events.Listener;
+import xyz.destiall.utility.java.events.EventDispatcher;
+import xyz.destiall.utility.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.World;
@@ -56,6 +56,7 @@ import xyz.destiall.pixelate.score.Scoreboard;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.status.Gamemode;
 import xyz.destiall.pixelate.timer.Timer;
+import xyz.destiall.utility.java.events.EventHandler;
 
 /**
  * Written by Rance & Yong Hong
@@ -73,25 +74,25 @@ public class EntityPlayer extends EntityLiving implements Listener {
 
     public EntityPlayer() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.player);
-        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
-        spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0));
-        spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1));
-        spriteSheet.addAnimation("WALK RIGHT" , Imageable.createAnimation(image, 6, 3,2));
-        spriteSheet.addAnimation("WALK LEFT"  , Imageable.createAnimation(image, 6, 3,3));
-        spriteSheet.addAnimation("PUNCH RIGHT", Imageable.createAnimation(image, 6, 3,4));
-        spriteSheet.addAnimation("PUNCH LEFT" , Imageable.createAnimation(image, 6, 3,5));
-        spriteSheet.setCurrentAnimation("LOOK RIGHT");
         scale = 0.5f;
+        spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0, scale));
+        spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1, scale));
+        spriteSheet.addAnimation("WALK RIGHT" , Imageable.createAnimation(image, 6, 3,2, scale));
+        spriteSheet.addAnimation("WALK LEFT"  , Imageable.createAnimation(image, 6, 3,3, scale));
+        spriteSheet.addAnimation("PUNCH RIGHT", Imageable.createAnimation(image, 6, 3,4, scale));
+        spriteSheet.addAnimation("PUNCH LEFT" , Imageable.createAnimation(image, 6, 3,5, scale));
+        spriteSheet.setCurrentAnimation("LOOK RIGHT");
+        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
         inventory = new PlayerInventory(this, 27);
         playSwingAnimation = false;
         playPunchAnimation = false;
         slash = new SpriteSheet();
         Bitmap slashSheet = ResourceManager.getBitmap(R.drawable.slashanimation);
-        slash.addAnimation("RIGHT", Imageable.createAnimation(slashSheet, 4, 4, 0));
-        slash.addAnimation("UP"   , Imageable.createAnimation(slashSheet, 4, 4, 1));
-        slash.addAnimation("LEFT" , Imageable.createAnimation(slashSheet, 4, 4, 2));
-        slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3));
+        slash.addAnimation("RIGHT", Imageable.createAnimation(slashSheet, 4, 4, 0, 0.3f));
+        slash.addAnimation("UP"   , Imageable.createAnimation(slashSheet, 4, 4, 1, 0.3f));
+        slash.addAnimation("LEFT" , Imageable.createAnimation(slashSheet, 4, 4, 2, 0.3f));
+        slash.addAnimation("DOWN" , Imageable.createAnimation(slashSheet, 4, 4, 3, 0.3f));
         crosshair = ResourceManager.getBitmap(R.drawable.crosshair);
         originalAnimSpeed = animationSpeed;
         exp = new Experience();
@@ -105,12 +106,12 @@ public class EntityPlayer extends EntityLiving implements Listener {
      */
     public void setSkin(Bitmap image) {
         spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0));
-        spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1));
-        spriteSheet.addAnimation("WALK RIGHT" , Imageable.createAnimation(image, 6, 3,2));
-        spriteSheet.addAnimation("WALK LEFT"  , Imageable.createAnimation(image, 6, 3,3));
-        spriteSheet.addAnimation("PUNCH RIGHT", Imageable.createAnimation(image, 6, 3,4));
-        spriteSheet.addAnimation("PUNCH LEFT" , Imageable.createAnimation(image, 6, 3,5));
+        spriteSheet.addAnimation("LOOK RIGHT" , Imageable.createAnimation(image, 6, 3, 0, scale));
+        spriteSheet.addAnimation("LOOK LEFT"  , Imageable.createAnimation(image, 6, 3,1, scale));
+        spriteSheet.addAnimation("WALK RIGHT" , Imageable.createAnimation(image, 6, 3,2, scale));
+        spriteSheet.addAnimation("WALK LEFT"  , Imageable.createAnimation(image, 6, 3,3, scale));
+        spriteSheet.addAnimation("PUNCH RIGHT", Imageable.createAnimation(image, 6, 3,4, scale));
+        spriteSheet.addAnimation("PUNCH LEFT" , Imageable.createAnimation(image, 6, 3,5, scale));
         spriteSheet.setCurrentAnimation("LOOK RIGHT");
     }
 
@@ -199,7 +200,6 @@ public class EntityPlayer extends EntityLiving implements Listener {
         if (swingAnimationTimer != 0) {
             slash.setCurrentFrame((int) swingAnimationTimer);
             Bitmap map = slash.getCurrentSprite();
-            map = Imageable.resizeImage(map, 0.3f);
             Vector2 offset = vector.subtract(Tile.SIZE * 0.5, Tile.SIZE * 0.5);
             screen.draw(map, offset.getX(), offset.getY());
         }

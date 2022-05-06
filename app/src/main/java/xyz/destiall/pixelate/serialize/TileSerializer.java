@@ -12,7 +12,7 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import xyz.destiall.java.reflection.Reflect;
+import xyz.destiall.utility.java.reflection.Reflect;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 import xyz.destiall.pixelate.items.meta.ItemMeta;

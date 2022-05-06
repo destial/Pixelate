@@ -11,7 +11,7 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-import xyz.destiall.java.reflection.Reflect;
+import xyz.destiall.utility.java.reflection.Reflect;
 import xyz.destiall.pixelate.items.ItemStack;
 import xyz.destiall.pixelate.items.inventory.Inventory;
 
@@ -35,7 +35,7 @@ public class InventorySerializer implements JsonSerializer<Inventory>, JsonDeser
         Class<?> enClass = Reflect.getClass(clazz);
         if (enClass == null) return null;
         Inventory inventory = context.deserialize(data, enClass);
-        Method set = Reflect.getMethod(Inventory.class, "setItemStackInventory");
+        Method set = Reflect.getDeclaredMethod(Inventory.class, "setItemStackInventory");
         set.setAccessible(true);
         for (ItemStack stack : inventory.getItems()) {
             try {

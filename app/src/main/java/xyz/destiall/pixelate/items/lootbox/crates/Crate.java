@@ -14,6 +14,7 @@ import xyz.destiall.pixelate.items.lootbox.RewardTable;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written By Yong Hong
@@ -109,7 +110,7 @@ public class Crate implements Renderable, Updateable {
                     rollingAnimation[i - 1] = rollingAnimation[i];
                 }
                 rollingAnimation[4] = rewardsTable.generateReward();
-                EntityPlayer player = ((StateGame)Pixelate.getGSM().getState("Game")).getPlayer();
+                EntityPlayer player = ((StateGame)Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer();
                 player.getLocation().getWorld().playSound(Sound.SoundType.CLICK, player.getLocation(), 1.f);
             }
 
@@ -121,7 +122,7 @@ public class Crate implements Renderable, Updateable {
                     currentlyRolling = false;
                     Reward finalReward = rollingAnimation[2];
                     finalReward.applyRewards();
-                    EntityPlayer player = ((StateGame)Pixelate.getGSM().getState("Game")).getPlayer();
+                    EntityPlayer player = ((StateGame)Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer();
                     player.getLocation().getWorld().playSound(Sound.SoundType.ENTITY_LEVELUP, player.getLocation(), 1.f);
 
                 }

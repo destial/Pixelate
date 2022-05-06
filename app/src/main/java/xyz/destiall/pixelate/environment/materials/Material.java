@@ -106,6 +106,7 @@ public enum Material {
     private final int drawable;
     private final boolean block;
     private final boolean container;
+    private final String name;
 
     private final float defaultBreakDuration;
     private final int maxDurability;
@@ -155,6 +156,14 @@ public enum Material {
         this.container = container;
         this.maxDurability = maxDurability;
         this.image = null;
+        String enumName = name().toLowerCase();
+        enumName = enumName.replace("_", " ");
+        String[] parts = enumName.split(" ");
+        StringBuilder builder = new StringBuilder();
+        for (String part : parts) {
+            builder.append(part.substring(0, 1).toUpperCase()).append(part.substring(1)).append(" ");
+        }
+        name = builder.toString();
     }
 
     /**
@@ -162,13 +171,8 @@ public enum Material {
      * @return A cleaned and pretty name
      */
     public String getName() {
-        String[] args = name().toLowerCase().split("_");
-        String[] newargs = new String[args.length];
-        int i = 0;
-        for (String a : args) {
-            newargs[i++] = a.substring(0, 1).toUpperCase() + a.substring(1);
-        }
-        return String.join(" ", newargs);
+
+        return name;
     }
 
     /**

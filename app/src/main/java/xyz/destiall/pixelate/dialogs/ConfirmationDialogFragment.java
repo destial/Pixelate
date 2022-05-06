@@ -13,8 +13,7 @@ public class ConfirmationDialogFragment extends DialogFragment  {
     public static boolean IsShown = false;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         IsShown = true;
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -37,6 +36,5 @@ public class ConfirmationDialogFragment extends DialogFragment  {
                 });
         // Create the AlertDialog object and return it
         return builder.create();
-
     }
 }

@@ -1,7 +1,7 @@
 package xyz.destiall.pixelate.events.entity;
 
-import xyz.destiall.java.events.Cancellable;
-import xyz.destiall.java.events.Event;
+import xyz.destiall.utility.java.events.Cancellable;
+import xyz.destiall.utility.java.events.Event;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.environment.World;
 

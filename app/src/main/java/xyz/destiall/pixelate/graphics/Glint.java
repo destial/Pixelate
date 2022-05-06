@@ -11,6 +11,9 @@ public class Glint implements Updateable {
     public static final Glint INSTANCE = new Glint();
     private transient final SpriteSheet spriteSheet;
 
+    private static final String GLINT = "GLINT";
+    private static final String GLINT2 = "GLINT2";
+
     private Glint() {
         Bitmap image = ResourceManager.getBitmap(R.drawable.hotbar);
         int width = (int) (image.getWidth() * 0.7);
@@ -19,9 +22,9 @@ public class Glint implements Updateable {
         int dWidth = (int) (image.getWidth() * 0.8);
         int dHeight = (int) (image.getWidth() * 0.8);
         spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("GLINT", Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.glint), 5, 5, 0, dWidth, dHeight));
-        spriteSheet.addAnimation("GLINT2", Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.glint), 5, 5, 0, width, height));
-        spriteSheet.setCurrentAnimation("GLINT");
+        spriteSheet.addAnimation(GLINT, Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.glint), 5, 5, 0, dWidth, dHeight));
+        spriteSheet.addAnimation(GLINT2, Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.glint), 5, 5, 0, width, height));
+        spriteSheet.setCurrentAnimation(GLINT);
         spriteSheet.setSpeed(10);
     }
 
@@ -37,7 +40,7 @@ public class Glint implements Updateable {
      * @param y Top left y
      */
     public void renderHotbar(Screen screen, int x, int y) {
-        spriteSheet.setCurrentAnimation("GLINT");
+        spriteSheet.setCurrentAnimation(GLINT);
         screen.draw(spriteSheet.getCurrentSprite(), x, y);
     }
 
@@ -48,7 +51,7 @@ public class Glint implements Updateable {
      * @param y Top left y
      */
     public void renderInventory(Screen screen, int x, int y) {
-        spriteSheet.setCurrentAnimation("GLINT2");
+        spriteSheet.setCurrentAnimation(GLINT2);
         screen.draw(spriteSheet.getCurrentSprite(), x, y);
     }
 }

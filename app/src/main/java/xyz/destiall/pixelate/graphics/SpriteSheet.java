@@ -103,7 +103,7 @@ public class SpriteSheet implements Updateable {
      * @return The current sprite
      */
     public Bitmap getCurrentSprite() {
-        return getCurrentAnimation()[animationFrame];
+        return getCurrentAnimation() != null ? getCurrentAnimation()[animationFrame] : null;
     }
 
     /**
@@ -111,7 +111,7 @@ public class SpriteSheet implements Updateable {
      * @return The number of columns
      */
     public int getColumns() {
-        return getCurrentAnimation().length;
+        return getCurrentAnimation() != null ? getCurrentAnimation().length : 0;
     }
 
     @Override

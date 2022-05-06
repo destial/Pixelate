@@ -64,6 +64,6 @@ public class ViewUtils {
         }
 
         loreY += Pixelate.HEIGHT * 0.07;
-        screen.text("Pixelate: " + item.getType(), loreX, loreY, 28, Color.GRAY);
+        screen.text(item.getType().getName(), loreX, loreY, 28, Color.GRAY);
     }
 }

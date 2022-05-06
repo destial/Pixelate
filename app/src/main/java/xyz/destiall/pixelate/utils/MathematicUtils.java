@@ -9,11 +9,11 @@ import java.util.TreeMap;
 public class MathematicUtils {
     private static final TreeMap<Integer, String> romanMap = new TreeMap<>();
     static {
-        romanMap.put(10, "X");
-        romanMap.put(9, "IX");
-        romanMap.put(5, "V");
-        romanMap.put(4, "IV");
-        romanMap.put(1, "I");
+        romanMap.put(10, StringUtils.ROMAN_X);
+        romanMap.put(9, StringUtils.ROMAN_IX);
+        romanMap.put(5, StringUtils.ROMAN_V);
+        romanMap.put(4, StringUtils.ROMAN_IV);
+        romanMap.put(1, StringUtils.ROMAN_I);
     }
 
     public static String toRoman(int num) {
@@ -26,11 +26,11 @@ public class MathematicUtils {
 
     public static Integer toNumber(String roman) {
         if (roman.isEmpty()) return 0;
-        if (roman.startsWith("X")) return 10 + toNumber(roman.substring(1));
-        if (roman.startsWith("IX")) return 9 + toNumber(roman.substring(2));
-        if (roman.startsWith("V")) return 5 + toNumber(roman.substring(1));
-        if (roman.startsWith("IV")) return 4 + toNumber(roman.substring(2));
-        if (roman.startsWith("I")) return 1 + toNumber(roman.substring(1));
-        throw new IllegalArgumentException("Out Of Range");
+        if (roman.startsWith(StringUtils.ROMAN_X)) return 10 + toNumber(roman.substring(1));
+        if (roman.startsWith(StringUtils.ROMAN_IX)) return 9 + toNumber(roman.substring(2));
+        if (roman.startsWith(StringUtils.ROMAN_V)) return 5 + toNumber(roman.substring(1));
+        if (roman.startsWith(StringUtils.ROMAN_IV)) return 4 + toNumber(roman.substring(2));
+        if (roman.startsWith(StringUtils.ROMAN_I)) return 1 + toNumber(roman.substring(1));
+        return 0;
     }
 }

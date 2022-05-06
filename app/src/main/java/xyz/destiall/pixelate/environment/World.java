@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import xyz.destiall.java.events.Listener;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.entities.Entity;
 import xyz.destiall.pixelate.entities.EntityItem;
@@ -38,6 +37,7 @@ import xyz.destiall.pixelate.modules.SpawnModule;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.utility.java.events.Listener;
 
 /**
  * Written by Rance & Yong Hong

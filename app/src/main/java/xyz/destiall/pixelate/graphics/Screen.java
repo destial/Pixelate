@@ -52,7 +52,7 @@ public class Screen {
      * @return screenSpace vector
      */
     public static Vector2 convert(@NonNull Vector2 worldSpace) {
-        return worldSpace.clone().add(offset);
+        return worldSpace.add(offset);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Screen {
      * @return worldSpace vector
      */
     public static Vector2 world(@NonNull Vector2 screenSpace) {
-        return screenSpace.clone().subtract(offset);
+        return screenSpace.subtract(offset);
     }
 
     /**

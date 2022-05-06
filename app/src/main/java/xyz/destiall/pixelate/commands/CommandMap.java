@@ -6,6 +6,7 @@ import java.util.Map;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.states.StateGame;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -27,7 +28,7 @@ public class CommandMap {
         String cmd = args.length == 0 ? command.toLowerCase() : args[0];
         Command executor = mappings.get(cmd);
         if (executor != null) {
-            return executor.onCommand(((StateGame) Pixelate.getGSM().getState("Game")).getPlayer(), cmd, Arrays.copyOfRange(args, 1, args.length));
+            return executor.onCommand(((StateGame) Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer(), cmd, Arrays.copyOfRange(args, 1, args.length));
         }
         return false;
     }

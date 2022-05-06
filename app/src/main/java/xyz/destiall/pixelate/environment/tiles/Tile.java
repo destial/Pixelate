@@ -58,7 +58,7 @@ public class Tile implements Updateable, Renderable {
      * @return An immutable vector
      */
     public Vector2 getVector() {
-        return location.toVector().clone();
+        return location.toVector();
     }
 
     /**

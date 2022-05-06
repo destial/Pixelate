@@ -14,34 +14,19 @@ public abstract class Imageable {
     protected float width;
     protected int rows;
     protected int columns;
-    private byte[] bytes;
 
     public Imageable() {}
 
-    public void refresh() {
-        image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        setImage(image, rows, columns);
-    }
-
     public Imageable(Bitmap image, int rows, int columns) {
         setImage(image, rows, columns);
-        saveBytes();
     }
 
     public void setImage(Bitmap image, int rows, int columns) {
-        boolean saveBytes = image != this.image;
         this.image = image;
         this.rows = rows;
         this.columns = columns;
         height = image.getHeight() / (float) rows;
         width = image.getWidth() / (float) columns;
-        if (saveBytes) saveBytes();
-    }
-
-    private void saveBytes() {
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 0, byteStream);
-        bytes = byteStream.toByteArray();
     }
 
     /**
@@ -134,6 +119,24 @@ public abstract class Imageable {
         Bitmap[] animation = new Bitmap[cols];
         for (int i = 0; i < cols; i++) {
             animation[i] = createSubImageAt(source, rows, cols, row, i);
+        }
+        return animation;
+    }
+
+    /**
+     * Create an animation from the requested row from the given source image
+     * @param source The source image
+     * @param rows The total rows
+     * @param cols The total columns
+     * @param row The row to animate
+     * @param scale The scale of the source
+     * @return The animation array
+     */
+    public static Bitmap[] createAnimation(Bitmap source, int rows, int cols, int row, float scale) {
+        Bitmap[] animation = new Bitmap[cols];
+        Bitmap scaled = resizeImage(source, scale);
+        for (int i = 0; i < cols; i++) {
+            animation[i] = createSubImageAt(scaled, rows, cols, row, i);
         }
         return animation;
     }

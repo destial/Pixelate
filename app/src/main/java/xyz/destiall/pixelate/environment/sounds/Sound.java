@@ -8,6 +8,7 @@ import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.graphics.Updateable;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.states.StateGame;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -23,7 +24,7 @@ public class Sound implements Updateable {
 
     public Sound(SoundType effect) {
         setType(effect);
-        entityPlayer = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+        entityPlayer = ((StateGame) Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer();
     }
 
     public void setType(SoundType effect) {

@@ -19,6 +19,7 @@ import xyz.destiall.pixelate.items.inventory.EntityInventory;
 import xyz.destiall.pixelate.position.AABB;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.position.Vector2;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance & Yong Hong
@@ -31,10 +32,10 @@ public class EntityMonster extends EntityLiving {
     protected EntityMonster() {}
 
     public EntityMonster(Entity.Type type) {
-        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
         this.type = type;
-        refresh();
         scale = 0.5f;
+        refresh();
+        location = new Location((int) (Pixelate.WIDTH * 0.5), (int) (Pixelate.HEIGHT * 0.5));
         health = 20f;
         this.type = type;
         collision = new AABB(location.getX(), location.getY(), location.getX() + Tile.SIZE - 10, location.getY() + Tile.SIZE - 10);
@@ -64,34 +65,26 @@ public class EntityMonster extends EntityLiving {
         Bitmap image = ResourceManager.getBitmap(type.getDrawable());
         drops.clear();
         spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("LOOK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(), 0));
-        spriteSheet.addAnimation("LOOK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),1));
+        spriteSheet.addAnimation(StringUtils.LOOK_RIGHT, Imageable.createAnimation(image, type.getRows(), type.getColumns(), 0, scale));
+        spriteSheet.addAnimation(StringUtils.LOOK_LEFT, Imageable.createAnimation(image, type.getRows(), type.getColumns(),1, scale));
         switch (type) {
             case CREEPER:
-                spriteSheet.addAnimation("BLOW RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),4));
-                spriteSheet.addAnimation("BLOW LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(), 5));
+                spriteSheet.addAnimation(StringUtils.BLOW_RIGHT, Imageable.createAnimation(image, type.getRows(), type.getColumns(),4, scale));
+                spriteSheet.addAnimation(StringUtils.BLOW_LEFT, Imageable.createAnimation(image, type.getRows(), type.getColumns(), 5, scale));
                 drops.add(Material.GUNPOWDER);
             case ZOMBIE:
-                spriteSheet.addAnimation("WALK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),2));
-                spriteSheet.addAnimation("WALK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),3));
+                spriteSheet.addAnimation(StringUtils.WALK_RIGHT, Imageable.createAnimation(image, type.getRows(), type.getColumns(),2, scale));
+                spriteSheet.addAnimation(StringUtils.WALK_LEFT, Imageable.createAnimation(image, type.getRows(), type.getColumns(),3, scale));
                 drops.add(Material.ROTTEN_FLESH);
                 break;
             case SKELETON:
-                spriteSheet.addAnimation("WALK RIGHT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),0));
-                spriteSheet.addAnimation("WALK LEFT", Imageable.createAnimation(image, type.getRows(), type.getColumns(),1));
+                spriteSheet.addAnimation(StringUtils.WALK_RIGHT, Imageable.createAnimation(image, type.getRows(), type.getColumns(),0, scale));
+                spriteSheet.addAnimation(StringUtils.WALK_LEFT, Imageable.createAnimation(image, type.getRows(), type.getColumns(),1, scale));
                 drops.add(Material.BONE);
                 break;
             default: break;
         }
-        spriteSheet.setCurrentAnimation("LOOK RIGHT");
-    }
-
-    @Override
-    public void updateSprite() {
-        facing = Direction.RIGHT;
-        if (velocity.getX() < 0) facing = Direction.LEFT;
-        String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
-        spriteSheet.setCurrentAnimation(anim);
+        spriteSheet.setCurrentAnimation(StringUtils.LOOK_RIGHT);
     }
 
     public Type getType() {

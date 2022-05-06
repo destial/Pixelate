@@ -46,8 +46,6 @@ public class LootTable {
                 amt = 20;
                 break;
             case REDSTONE_ORE:
-                amt = 30;
-                break;
             case LAPIS_ORE:
                 amt = 30;
                 break;

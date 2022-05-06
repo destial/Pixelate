@@ -6,12 +6,15 @@ import java.util.UUID;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.environment.World;
+import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.events.entity.EventEntityDamage;
 import xyz.destiall.pixelate.events.entity.EventEntityDamageByEntity;
 import xyz.destiall.pixelate.items.InventoryHolder;
 import xyz.destiall.pixelate.items.inventory.EntityInventory;
 import xyz.destiall.pixelate.items.inventory.Inventory;
+import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.timer.Timer;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -147,9 +150,23 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     }
 
     protected void updateSprite() {
-        // Set animation sprite for entity based on velocity
-        String anim = (velocity.isZero() ? "LOOK " : "WALK ") + facing.name();
-        if (spriteSheet.hasAnimation(anim)) spriteSheet.setCurrentAnimation(anim);
+        facing = Direction.RIGHT;
+        if (velocity.getX() < 0) facing = Direction.LEFT;
+        String anim = facing.name();
+        if (velocity.isZero()) {
+            if (facing == Direction.LEFT) {
+                anim = StringUtils.LOOK_LEFT;
+            } else if (facing == Direction.RIGHT) {
+                anim = StringUtils.LOOK_RIGHT;
+            }
+        } else {
+            if (facing == Direction.LEFT) {
+                anim = StringUtils.WALK_LEFT;
+            } else if (facing == Direction.RIGHT) {
+                anim = StringUtils.WALK_RIGHT;
+            }
+        }
+        spriteSheet.setCurrentAnimation(anim);
     }
 
     protected void updateDirection() {
@@ -169,7 +186,8 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
 
     protected void collide() {
         // Move entity
-        location.add(velocity);
+        Vector2 collisionVelocity = velocity.length() > Tile.SIZE ? velocity.clone().multiply(Tile.SIZE / velocity.length()) : velocity;
+        location.add(collisionVelocity);
 
         // Constraint with in world borders
         constraint();
@@ -179,13 +197,13 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
 
         // Only update collision if entity is moving and is in a valid world
         World w;
-        if (!velocity.isZero() && (w = location.getWorld()) != null) {
+        if (!collisionVelocity.isZero() && (w = location.getWorld()) != null) {
 
             // If the tile stepping into is a collidable tile
             if (w.isForegroundTile(collision)) {
 
                 // Revert position
-                location.subtract(velocity);
+                location.subtract(collisionVelocity);
 
                 // Check x direction
                 location.add(velocity.getX(), 0);
@@ -216,11 +234,10 @@ public abstract class EntityLiving extends Entity implements InventoryHolder {
     protected void updateAABB() {
         // Get the scale and size of the entity based on the animation image (lazy hack)
         Bitmap map = spriteSheet.getCurrentSprite();
-        if (scale == 0) scale = 1;
 
         // Set collision bounds based on image
         collision.setMin(location.getX(), location.getY());
-        collision.setMax(location.getX() + (int)(map.getWidth() * scale), location.getY() + (int)(map.getHeight() * scale));
+        collision.setMax(location.getX() + map.getWidth(), location.getY() + map.getHeight());
     }
 
     protected void constraint() {

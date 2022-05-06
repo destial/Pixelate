@@ -3,7 +3,7 @@ package xyz.destiall.pixelate.gui.views;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.utility.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.events.controls.ControlEvent;

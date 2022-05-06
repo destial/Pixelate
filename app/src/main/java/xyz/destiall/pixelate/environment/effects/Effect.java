@@ -12,6 +12,7 @@ import xyz.destiall.pixelate.graphics.SpriteSheet;
 import xyz.destiall.pixelate.modules.EffectsModule;
 import xyz.destiall.pixelate.position.Location;
 import xyz.destiall.pixelate.timer.Timer;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -29,15 +30,15 @@ public class Effect extends Entity {
 
     public Effect(EffectType type) {
         this.type = type;
-        spriteSheet.addAnimation("EFFECT", Imageable.createAnimation(type.image, 1, type.columns, 0));
-        spriteSheet.setCurrentAnimation("EFFECT");
+        spriteSheet.addAnimation(StringUtils.EFFECT, Imageable.createAnimation(type.image, 1, type.columns, 0));
+        spriteSheet.setCurrentAnimation(StringUtils.EFFECT);
         animationSpeed *= 0.2f;
     }
 
     public void refresh() {
         spriteSheet = new SpriteSheet();
-        spriteSheet.addAnimation("EFFECT", Imageable.createAnimation(type.image, 1, type.columns, 0));
-        spriteSheet.setCurrentAnimation("EFFECT");
+        spriteSheet.addAnimation(StringUtils.EFFECT, Imageable.createAnimation(type.image, 1, type.columns, 0));
+        spriteSheet.setCurrentAnimation(StringUtils.EFFECT);
     }
 
     public void teleport(Location location) {

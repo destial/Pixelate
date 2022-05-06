@@ -10,8 +10,7 @@ import xyz.destiall.pixelate.graphics.Imageable;
  */
 public class TileBreakProgression extends Imageable {
     private static TileBreakProgression instance = null;
-
-    Bitmap[] animationTiles;
+    private final Bitmap[] animationTiles;
 
     public static TileBreakProgression getInstance() {
         if (instance == null)
@@ -28,12 +27,9 @@ public class TileBreakProgression extends Imageable {
         }
     }
 
-    public Bitmap getTileBreakProgression(int stage)
-    {
+    public Bitmap getTileBreakProgression(int stage) {
         if (stage < 0) stage = 0;
         else if (stage >= this.getColumns()) stage = this.getColumns() - 1;
         return animationTiles[stage];
     }
-
-
 }

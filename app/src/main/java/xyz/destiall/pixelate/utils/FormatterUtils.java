@@ -1,5 +1,7 @@
 package xyz.destiall.pixelate.utils;
 
+import android.annotation.SuppressLint;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -9,6 +11,8 @@ import java.util.TimeZone;
  */
 
 public class FormatterUtils {
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("MMM d',' yyyy HH:mm:ss z");
 
     /**
      * Helps return a beautified string of time.
@@ -16,16 +20,12 @@ public class FormatterUtils {
      * @param timeZone - EST, UTC...
      * @return Returns an error if Epoc is negative or zero.
      */
-    public static String formatTime(Long epocTime, String timeZone)
-    {
-        if(epocTime > 0)
-        {
-            SimpleDateFormat formatter= new SimpleDateFormat("MMM d',' yyyy HH:mm:ss z");
-            formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+    public static String formatTime(Long epocTime, String timeZone) {
+        if (epocTime > 0) {
+            FORMAT.setTimeZone(TimeZone.getTimeZone(timeZone));
             Date date = new Date(epocTime);
-
-            return formatter.format(date);
+            return FORMAT.format(date);
         }
-        return "INVALID TIME FORMAT";
+        return StringUtils.INVALID_TIME_FORMAT;
     }
 }

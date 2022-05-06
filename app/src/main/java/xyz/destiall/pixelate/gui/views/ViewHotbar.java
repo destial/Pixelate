@@ -7,7 +7,7 @@ import android.view.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.utility.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
@@ -122,6 +122,9 @@ public class ViewHotbar implements View {
         if (current != null) {
             ItemMeta meta = current.getItemMeta();
             String name = meta.hasDisplayName() ? meta.getDisplayName() : current.getType().getName();
+            if (name == null) {
+                name = current.getType().getName();
+            }
             screen.text(name, Pixelate.WIDTH * 0.5f - (name.length() * 10), y - 160, 40, Color.WHITE);
         }
     }

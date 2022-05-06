@@ -6,7 +6,7 @@ import android.view.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import xyz.destiall.java.events.EventHandler;
+import xyz.destiall.utility.java.events.EventHandler;
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
@@ -32,6 +32,7 @@ import xyz.destiall.pixelate.gui.buttons.QuadButton;
 import xyz.destiall.pixelate.position.Vector2;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.status.Gamemode;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -104,13 +105,13 @@ public class ViewControls implements View {
 
         Button world = new CircleButton(new Vector2(Pixelate.WIDTH - (Pixelate.WIDTH * 0.8), Pixelate.HEIGHT - (Pixelate.HEIGHT * 0.9)), 25, Color.MAGENTA);
         world.onTap(() -> {
-            StateGame gameState = (StateGame) Pixelate.getGSM().getState("Game");
+            StateGame gameState = (StateGame) Pixelate.getGSM().getState(StringUtils.GAME);
             WorldManager wm = gameState.getWorldManager();
             String currentworld = wm.getCurrentWorldName();
-            if (currentworld.equals("Cave"))
-                Pixelate.setWorld("Overworld");
+            if (currentworld.equals(StringUtils.CAVE))
+                Pixelate.setWorld(StringUtils.OVERWORLD);
             else
-                Pixelate.setWorld("Cave");
+                Pixelate.setWorld(StringUtils.CAVE);
         });
         buttons.add(world);
 
@@ -127,7 +128,7 @@ public class ViewControls implements View {
         screen.ring(outerCircleCenter.getX(), outerCircleCenter.getY(), outerCircleRadius, 10, Color.argb(235, 54, 54, 54));
         screen.circle(innerCircleCenter.getX(), innerCircleCenter.getY(), innerCircleRadius, Color.argb(220, 128, 128 ,128));
 
-        EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+        EntityPlayer player = ((StateGame) Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer();
         if (player.getGamemode() != Gamemode.CREATIVE) {
             screen.bar(Pixelate.WIDTH * 0.325, Pixelate.HEIGHT * 0.82, Pixelate.WIDTH * 0.35, 30, Color.DKGRAY, Color.GREEN, player.getXPProgress());
             screen.text(String.valueOf(player.getXPLevel()), Pixelate.WIDTH * 0.5f, Pixelate.HEIGHT * 0.814, 60, Color.GREEN);
@@ -207,6 +208,8 @@ public class ViewControls implements View {
         }
     }
 
+    private int joystickPointerId;
+
     @EventHandler
     public void onTouch(EventTouch e) {
         if (!Pixelate.PAUSED) {
@@ -216,6 +219,7 @@ public class ViewControls implements View {
                 case DOWN:
                     if (isOnJoystick(x, y)) {
                         setJoystick(true);
+                        joystickPointerId = e.getId();
                     }
                     for (Button button : buttons) {
                         if (button.isOn(x, y)) {
@@ -227,7 +231,7 @@ public class ViewControls implements View {
                     }
                     break;
                 case MOVE:
-                    if (isJoystick()) {
+                    if (isJoystick() && joystickPointerId == e.getId()) {
                         setActuator(x, y);
                     }
                     for (Button button : buttons) {
@@ -246,6 +250,7 @@ public class ViewControls implements View {
                     if (isJoystick()) {
                         setJoystick(false);
                         setActuator(0, 0);
+                        joystickPointerId = -1;
                         Pixelate.HANDLER.call(eventJoystick.update(0, 0, ControlEvent.Action.UP));
                     }
                     for (Button button : buttons) {

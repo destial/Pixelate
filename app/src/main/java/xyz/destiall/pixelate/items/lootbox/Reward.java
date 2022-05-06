@@ -7,6 +7,7 @@ import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.entities.EntityPlayer;
 import xyz.destiall.pixelate.graphics.ResourceManager;
 import xyz.destiall.pixelate.states.StateGame;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written By Yong Hong
@@ -42,7 +43,7 @@ public class Reward {
 
     public void applyRewards() {
         if (rewardType == RewardType.SKIN) {
-            EntityPlayer player = ((StateGame) Pixelate.getGSM().getState("Game")).getPlayer();
+            EntityPlayer player = ((StateGame) Pixelate.getGSM().getState(StringUtils.GAME)).getPlayer();
             switch (rewardName) {
                 case "Brown Skin":
                     player.setSkin(ResourceManager.getBitmap(R.drawable.playerbrown));

@@ -1,6 +1,6 @@
 package xyz.destiall.pixelate.events.controls;
 
-import xyz.destiall.java.events.Event;
+import xyz.destiall.utility.java.events.Event;
 
 /**
  * An abstract input event
@@ -8,7 +8,11 @@ import xyz.destiall.java.events.Event;
 public abstract class ControlEvent extends Event {
     protected Action action;
     public ControlEvent(Action action) {
-        //super(true);
+        super(true);
+        this.action = action;
+    }
+
+    public void setAction(Action action) {
         this.action = action;
     }
 

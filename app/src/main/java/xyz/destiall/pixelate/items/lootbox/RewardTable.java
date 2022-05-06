@@ -9,7 +9,7 @@ import java.util.Set;
  */
 public class RewardTable {
 
-    private Map<Reward, Double> distribution;
+    private final Map<Reward, Double> distribution;
     private double distSum;
 
     public RewardTable() {

@@ -53,8 +53,7 @@ public class PerlinNoise {
         shuffle(permutation, 0, 256);
 
         //Add shuffled to prevent IndexOutOfBounds
-        for (int i = 256; i < 512; ++i)
-            permutation[i] = permutation[i-256];
+        System.arraycopy(permutation, 0, permutation, 256, 256);
 
         return permutation;
     }

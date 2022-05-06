@@ -1,7 +1,7 @@
 package xyz.destiall.pixelate.events.tile;
 
-import xyz.destiall.java.events.Cancellable;
-import xyz.destiall.java.events.Event;
+import xyz.destiall.utility.java.events.Cancellable;
+import xyz.destiall.utility.java.events.Event;
 import xyz.destiall.pixelate.entities.EntityLiving;
 import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.tiles.Tile;

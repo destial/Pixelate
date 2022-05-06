@@ -5,13 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import xyz.destiall.java.events.EventHandling;
 import xyz.destiall.pixelate.activities.GameActivity;
 import xyz.destiall.pixelate.commands.CommandMap;
 import xyz.destiall.pixelate.commands.executors.EnchantCommand;
@@ -44,12 +40,14 @@ import xyz.destiall.pixelate.serialize.TileSerializer;
 import xyz.destiall.pixelate.states.GSM;
 import xyz.destiall.pixelate.states.StateGame;
 import xyz.destiall.pixelate.timer.Timer;
+import xyz.destiall.pixelate.utils.StringUtils;
+import xyz.destiall.utility.java.events.EventDispatcher;
 
 /**
  * Written by Rance
  */
 public class Pixelate extends Thread {
-    public static final EventHandling HANDLER = new EventHandling();
+    public static final EventDispatcher HANDLER = new EventDispatcher();
     public static final Gson GSON = new GsonBuilder()
             .serializeNulls()
             .setLenient()
@@ -82,15 +80,13 @@ public class Pixelate extends Thread {
         super();
         Pixelate.gameSurface = gameSurface;
         Pixelate.surfaceHolder = surfaceHolder;
-        tileMap = ResourceManager.getBitmap(R.drawable.tilemap);
-        tileMap = Imageable.resizeImage(tileMap, 1.52f);
-        blockBreakAnimationMap = ResourceManager.getBitmap(R.drawable.blockbreakanimation);
-        blockBreakAnimationMap = Imageable.resizeImage(blockBreakAnimationMap, 2.12f);
+        tileMap = Imageable.resizeImage(ResourceManager.getBitmap(R.drawable.tilemap), 1.52f);
+        blockBreakAnimationMap = Imageable.resizeImage(ResourceManager.getBitmap(R.drawable.blockbreakanimation), 2.12f);
         HEIGHT = gameSurface.getHeight();
         WIDTH = gameSurface.getWidth();
         timer = new Timer();
         stateManager = new GSM();
-        stateManager.addState("Game", new StateGame(gameSurface));
+        stateManager.addState(StringUtils.GAME, new StateGame(gameSurface));
         commandMap = new CommandMap();
         recipeManager = new RecipeManager();
         hud = new HUD();
@@ -102,18 +98,20 @@ public class Pixelate extends Thread {
     public void run() {
         String savePath = "game.json";
 
-        stateManager.setState("Game");
+        stateManager.setState(StringUtils.GAME);
         if (!stateManager.getCurrentState().load(savePath)) {
             stateManager.getCurrentState().reset();
         }
         while (running)  {
             try {
-                canvas = surfaceHolder.lockCanvas();
-                if (canvas == null) continue;
-                HEIGHT = canvas.getHeight();
-                WIDTH = canvas.getWidth();
-                update();
-                render(canvas);
+                synchronized (surfaceHolder) {
+                    canvas = surfaceHolder.lockCanvas();
+                    if (canvas == null) continue;
+                    HEIGHT = canvas.getHeight();
+                    WIDTH = canvas.getWidth();
+                    update();
+                    render(canvas);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -123,7 +121,7 @@ public class Pixelate extends Thread {
                 }
             }
         }
-        stateManager.getState("Game").save(savePath);
+        stateManager.getState(StringUtils.GAME).save(savePath);
         stateManager.destroy();
         hud.destroy();
     }
@@ -143,7 +141,7 @@ public class Pixelate extends Thread {
     }
 
     public static boolean setWorld(String world) {
-        StateGame gameState = ((StateGame) stateManager.getState("Game"));
+        StateGame gameState = ((StateGame) stateManager.getState(StringUtils.GAME));
         WorldManager wm = gameState.getWorldManager();
         if (wm.isAWorld(world) && !wm.isWorldActive(world)) {
             // Remove player from current world
@@ -161,7 +159,6 @@ public class Pixelate extends Thread {
         }
         return false;
     }
-
 
     public static Bitmap getTileMap() {
         return tileMap;

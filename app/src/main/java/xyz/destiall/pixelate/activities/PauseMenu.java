@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.R;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Yong Hong
@@ -45,7 +46,7 @@ public class PauseMenu extends Activity implements View.OnClickListener {
         if (v == btn_start) {
             intent.setClass(this, GameActivity.class);
             Pixelate.PAUSED = false;
-            Pixelate.getGSM().setState("Game");
+            Pixelate.getGSM().setState(StringUtils.GAME);
         } else if (v == btn_quit) {
             intent.setClass(this, MainMenu.class);
         }

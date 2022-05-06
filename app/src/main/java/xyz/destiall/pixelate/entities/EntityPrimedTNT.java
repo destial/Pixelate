@@ -3,6 +3,7 @@ package xyz.destiall.pixelate.entities;
 import xyz.destiall.pixelate.R;
 import xyz.destiall.pixelate.environment.World;
 import xyz.destiall.pixelate.environment.effects.Effect;
+import xyz.destiall.pixelate.environment.materials.Material;
 import xyz.destiall.pixelate.environment.sounds.Sound;
 import xyz.destiall.pixelate.environment.tiles.Tile;
 import xyz.destiall.pixelate.graphics.Imageable;
@@ -19,12 +20,12 @@ public class EntityPrimedTNT extends Entity {
     protected EntityPrimedTNT() {}
 
     public EntityPrimedTNT(double x, double y, World world) {
+        scale = 0.8f;
+        spriteSheet.addAnimation(Material.TNT.name(), Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2,0, scale));
+        spriteSheet.setCurrentAnimation(Material.TNT.name());
+        spriteSheet.setCurrentFrame(0);
         location.set(x, y);
         location.setWorld(world);
-        scale = 0.8f;
-        spriteSheet.addAnimation("TNT", Imageable.createAnimation(ResourceManager.getBitmap(R.drawable.primed_tnt), 1, 2,0));
-        spriteSheet.setCurrentAnimation("TNT");
-        spriteSheet.setCurrentFrame(0);
         animationSpeed = 5;
         sizzled = false;
     }
