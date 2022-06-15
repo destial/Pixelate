@@ -214,7 +214,7 @@ public abstract class Entity implements Updateable, Renderable, Modular {
     @Override
     public <N extends Module> N getModule(Class<N> clazz) {
         if (!hasModule(clazz)) return null;
-        return (N) modules.get(clazz);
+        return clazz.cast(modules.get(clazz));
     }
 
     @Override

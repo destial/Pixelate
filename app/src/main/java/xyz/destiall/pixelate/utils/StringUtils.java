@@ -21,4 +21,7 @@ public class StringUtils {
     public static final String WALK_RIGHT = "WALK RIGHT";
     public static final String BLOW_LEFT = "BLOW LEFT";
     public static final String BLOW_RIGHT = "BLOW RIGHT";
+    public static final String YES = "Yes";
+    public static final String NO = "No";
+    public static final String CONFIRM_ACTION = "Confirm Action?";
 }

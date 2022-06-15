@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import xyz.destiall.pixelate.Pixelate;
 import xyz.destiall.pixelate.events.controls.EventDialogueAction;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 public class ConfirmationDialogFragment extends DialogFragment  {
     public static boolean IsShown = false;
@@ -17,22 +18,18 @@ public class ConfirmationDialogFragment extends DialogFragment  {
         IsShown = true;
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Confirm Action")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User triggered pause
-                        EventDialogueAction action = new EventDialogueAction(EventDialogueAction.Dialog_Action.YES);
-                        Pixelate.HANDLER.call(action);
-                        IsShown = false;
-                    }
+        builder.setMessage(StringUtils.CONFIRM_ACTION)
+                .setPositiveButton(StringUtils.YES, (dialog, id) -> {
+                    // User triggered pause
+                    EventDialogueAction action = new EventDialogueAction(EventDialogueAction.Dialog_Action.YES);
+                    Pixelate.HANDLER.call(action);
+                    IsShown = false;
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the pause
-                        EventDialogueAction action = new EventDialogueAction(EventDialogueAction.Dialog_Action.NO);
-                        Pixelate.HANDLER.call(action);
-                        IsShown = false;
-                    }
+                .setNegativeButton(StringUtils.NO, (dialog, id) -> {
+                    // User cancelled the pause
+                    EventDialogueAction action = new EventDialogueAction(EventDialogueAction.Dialog_Action.NO);
+                    Pixelate.HANDLER.call(action);
+                    IsShown = false;
                 });
         // Create the AlertDialog object and return it
         return builder.create();

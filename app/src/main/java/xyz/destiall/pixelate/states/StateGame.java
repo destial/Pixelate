@@ -24,6 +24,7 @@ import xyz.destiall.pixelate.modular.Modular;
 import xyz.destiall.pixelate.modular.Module;
 import xyz.destiall.pixelate.settings.Settings;
 import xyz.destiall.pixelate.timer.Timer;
+import xyz.destiall.pixelate.utils.StringUtils;
 
 /**
  * Written by Rance
@@ -61,11 +62,11 @@ public class StateGame extends State implements Modular {
         World cave = new World(new GeneratorUnderground());
 
         worldManager = new WorldManager();
-        worldManager.addWorld("Overworld", world);
-        worldManager.addWorld("Cave", cave);
+        worldManager.addWorld(StringUtils.OVERWORLD, world);
+        worldManager.addWorld(StringUtils.CAVE, cave);
         world.generateWorld(0, true);
         cave.generateWorld(0, true);
-        worldManager.setActive("Overworld");
+        worldManager.setActive(StringUtils.OVERWORLD);
 
         player = new EntityPlayer();
 

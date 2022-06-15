@@ -56,8 +56,7 @@ public class EntityItem extends Entity {
         }
         if (player.getLocation(true).getWorld() != location.getWorld()) return;
         if (player.getLocation(true).distanceSquared(location) < (Tile.SIZE * 0.5) * (Tile.SIZE * 0.5)) {
-            EventItemPickup ev = new EventItemPickup(player, this);
-            Pixelate.HANDLER.call(ev);
+            EventItemPickup ev = (EventItemPickup) Pixelate.HANDLER.call(new EventItemPickup(player, this));
             if (ev.isCancelled()) return;
             if (player.getInventory().addItem(drop)) this.remove();
         }

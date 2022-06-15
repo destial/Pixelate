@@ -128,8 +128,15 @@ public class Vector2 implements Cloneable {
         return this;
     }
 
+    public Vector2 normalizeElse(Vector2 other) {
+        if (isZero()) return other;
+        this.x = x / length();
+        this.y = y / length();
+        return this;
+    }
+
     public Vector2 getNormal() {
-        if (isZero()) return new Vector2(0, 0);
+        if (isZero()) return new Vector2(x, y);
         return new Vector2(x / length(), y / length());
     }
 
@@ -162,4 +169,10 @@ public class Vector2 implements Cloneable {
     public static double lengthOf(double x, double y) {
         return Math.sqrt((x * x) + (y * y));
     }
+
+    public static final Vector2 ZERO = new Vector2(0, 0);
+    public static final Vector2 UP = new Vector2(0, 1);
+    public static final Vector2 DOWN = new Vector2(0, -1);
+    public static final Vector2 LEFT = new Vector2(-1, 0);
+    public static final Vector2 RIGHT = new Vector2(1, 0);
 }
